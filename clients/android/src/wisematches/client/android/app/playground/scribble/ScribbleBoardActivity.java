@@ -4,7 +4,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,9 +13,9 @@ import wisematches.client.android.R;
 import wisematches.client.android.app.WiseMatchesActivity;
 import wisematches.client.android.app.playground.TileSelectionListener;
 import wisematches.client.android.app.playground.scribble.model.*;
+import wisematches.client.android.app.playground.scribble.ScribblePlayerViewAdapter;
 import wisematches.client.android.http.ServerResponse;
 import wisematches.client.android.os.ProgressTask;
-import wisematches.client.android.view.PlayerInfo;
 
 import java.util.*;
 
@@ -131,7 +132,8 @@ public class ScribbleBoardActivity extends WiseMatchesActivity {
 						}
 
 						final JSONArray jsonPlayers = data.getJSONArray("players");
-						final Map<Long, ScribblePlayer> players = new HashMap<>();
+						final List<ScribblePlayer> players = new ArrayList<>();
+						final Map<Long, ScribblePlayer> playersMap = new HashMap<>();
 						for (int i = 0; i < jsonPlayers.length(); i++) {
 							final JSONObject jsonPlayer = jsonPlayers.getJSONObject(i);
 
@@ -151,6 +153,9 @@ public class ScribbleBoardActivity extends WiseMatchesActivity {
 							p.setNewRating(jsonScore.getInt("newRating"));
 							p.setOldRating(jsonScore.getInt("oldRating"));
 							p.setWinner(jsonScore.getBoolean("winner"));
+
+							players.add(p);
+							playersMap.put(p.getId(), p);
 						}
 
 						final JSONArray jsonMoves = data.getJSONArray("moves");
@@ -185,13 +190,13 @@ public class ScribbleBoardActivity extends WiseMatchesActivity {
 											jsonPosition.getInt("column"),
 											WordDirection.valueOf(jsonWord.getString("direction")),
 											tiles);
-									move = new ScribbleMove.Make(number, points, time, players.get(pid), w);
+									move = new ScribbleMove.Make(number, points, time, playersMap.get(pid), w);
 									break;
 								case PASS:
-									move = new ScribbleMove.Pass(number, points, time, players.get(pid));
+									move = new ScribbleMove.Pass(number, points, time, playersMap.get(pid));
 									break;
 								case EXCHANGE:
-									move = new ScribbleMove.Exchange(number, points, time, players.get(pid));
+									move = new ScribbleMove.Exchange(number, points, time, playersMap.get(pid));
 									break;
 							}
 							moves.add(move);
@@ -227,7 +232,7 @@ public class ScribbleBoardActivity extends WiseMatchesActivity {
 
 
 	private void showBoardInfo(ScribbleBoard board) {
-		final EditText viewById2 = (EditText) findViewById(R.id.editText);
+		final TextView viewById2 = (TextView) findViewById(R.id.scribbleBoardDebug);
 
 		final BoardView viewById = (BoardView) findViewById(R.id.scribbleBoardView);
 		viewById.initBoardView(board);
@@ -247,6 +252,8 @@ public class ScribbleBoardActivity extends WiseMatchesActivity {
 			}
 		});
 
+		final ListView playerView = (ListView) findViewById(R.id.scribbleBoardPlayersView);
+		playerView.setAdapter(new ScribblePlayerViewAdapter(this, board.getPlayers()));
 
 		final Button viewById3 = (Button) findViewById(R.id.scribbleBoardBtnMake);
 

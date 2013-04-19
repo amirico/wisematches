@@ -2788,23 +2788,25 @@ wm.scribble.Progress = function (board, language) {
         var cap = board.getPlayboardElement(".gameResolution .game-progress-caption");
         var desc = board.getPlayboardElement(".gameResolution .game-resolution-player");
         var playerTurn = board.getPlayerTurn();
+
+        var resolution = null;
         switch (board.getResolution()) {
-            case 'FINISHED':
-                cap.text(language['resolution.finished']);
-                desc.text(language['resolution.by'] + ' ' + board.getPlayer(playerTurn).info.nickname);
-                break;
             case 'INTERRUPTED':
-                cap.text(language['resolution.interrupted']);
-                desc.text(language['resolution.for'] + ' ' + board.getPlayer(playerTurn).info.nickname);
+                resolution = 'resolution.for';
                 break;
             case 'STALEMATE':
-                cap.text(language['resolution.stalemate']);
-                desc.text(language['resolution.moves']);
+                resolution = 'resolution.moves';
                 break;
             case 'RESIGNED':
-                cap.text(language['resolution.resigned']);
-                desc.text(language['resolution.by'] + ' ' + board.getPlayer(playerTurn).info.nickname);
+                resolution = 'resolution.by';
                 break;
+        }
+
+        cap.text(language['resolution.' + board.getResolution().toLowerCase()]);
+        if (playerTurn == null) {
+            desc.text(language[resolution]);
+        } else {
+            desc.text(language[resolution] + ' ' + board.getPlayer(playerTurn).info.nickname);
         }
     };
 

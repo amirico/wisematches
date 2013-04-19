@@ -52,8 +52,16 @@
       </value>
     </option>
   </component>
+  <component name="ProjectDictionaryState">
+    <dictionary name="klimese">
+      <words>
+        <w>actionbar</w>
+      </words>
+    </dictionary>
+  </component>
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/actionbarsherlock.iml" filepath="C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/actionbarsherlock.iml" />
       <module fileurl="file://$PROJECT_DIR$/android.iml" filepath="$PROJECT_DIR$/android.iml" />
     </modules>
   </component>
@@ -62,6 +70,22 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$/../.." vcs="hg4idea" />
+  </component>
+  <component name="libraryTable">
+    <library name="src">
+      <CLASSES />
+      <JAVADOC />
+      <SOURCES>
+        <root url="file://C:/Software/adt/JakeWharton-ActionBarSherlock-c47975f/actionbarsherlock/src" />
+        <root url="file://C:/Software/adt/JakeWharton-ActionBarSherlock-c47975f/actionbarsherlock/test" />
+        <root url="file://C:/Software/adt/JakeWharton-ActionBarSherlock-c47975f/actionbarsherlock-fest/src/main/java" />
+        <root url="file://C:/Software/adt/JakeWharton-ActionBarSherlock-c47975f/actionbarsherlock-samples/demos/src" />
+        <root url="file://C:/Software/adt/JakeWharton-ActionBarSherlock-c47975f/actionbarsherlock-samples/styled/src" />
+        <root url="file://C:/Software/adt/JakeWharton-ActionBarSherlock-c47975f/actionbarsherlock-samples/fragments/src" />
+        <root url="file://C:/Software/adt/JakeWharton-ActionBarSherlock-c47975f/actionbarsherlock-samples/roboguice/src" />
+        <root url="file://C:/Software/adt/JakeWharton-ActionBarSherlock-c47975f/actionbarsherlock-samples/known-bugs/src" />
+      </SOURCES>
+    </library>
   </component>
 </project>
 

@@ -1,11 +1,13 @@
 package wisematches.client.android.view;
 
+import wisematches.client.android.core.Player;
+
 import java.util.TimeZone;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class PlayerInfo {
+public class PlayerInfo implements Player {
 	private final long id;
 	private final String nickname;
 	private final String language;
@@ -26,10 +28,12 @@ public class PlayerInfo {
 		this.online = online;
 	}
 
+	@Override
 	public long getId() {
 		return id;
 	}
 
+	@Override
 	public String getNickname() {
 		return nickname;
 	}
@@ -42,14 +46,17 @@ public class PlayerInfo {
 		return timeZone;
 	}
 
+	@Override
 	public String getType() {
 		return type;
 	}
 
+	@Override
 	public String getMembership() {
 		return membership;
 	}
 
+	@Override
 	public boolean isOnline() {
 		return online;
 	}
