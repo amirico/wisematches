@@ -10,11 +10,27 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="Content-Language" content="${locale}"/>
 
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<#--JQuery CDN -->
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
+    <link rel="stylesheet" type="text/css"
+          href="http://code.jquery.com/ui/1.10.2/themes/redmond/jquery-ui.min.css"/>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.2/jquery-ui.min.js"></script>
+
+<#--Yandex CDN -->
+<#--
+    <script type="text/javascript" src="http://yandex.st/jquery/2.0.0/jquery.min.js"></script>
 
     <link rel="stylesheet" type="text/css"
-          href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/redmond/jquery-ui.css"/>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+          href="http://yandex.st/jquery-ui/1.10.2/themes/redmond/jquery-ui.min.css"/>
+    <script type="text/javascript" src="http://yandex.st/jquery-ui/1.10.2/jquery-ui.min.js"></script>
+-->
+
+<#--Google CDN -->
+<#--
+    <link rel="stylesheet" type="text/css"
+          href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/redmond/jquery-ui.css"/>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+-->
 
     <link rel="stylesheet" type="text/css" href="<@wm.ui.static "css/jquery.dataTables_themeroller-1.9.4.css"/>">
     <script type="text/javascript" src="<@wm.ui.static "js/jquery.dataTables-1.9.4.min.js"/>"></script>

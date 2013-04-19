@@ -56,7 +56,6 @@ public class BoardView extends FrameLayout {
 		boardSurface = new BoardSurface(scribbleBord, getResources());
 		bitmapFactory = new BitmapFactory(android.graphics.BitmapFactory.decodeResource(getResources(), R.drawable.board_tiles));
 
-
 		for (ScribbleMove move : scribbleBord.getMoves()) {
 			if (move instanceof ScribbleMove.Make) {
 				final ScribbleMove.Make make = (ScribbleMove.Make) move;
@@ -79,6 +78,77 @@ public class BoardView extends FrameLayout {
 						row++;
 					}
 				}
+			}
+		}
+		invalidate();
+	}
+
+
+	public void setTileSelectionListener(TileSelectionListener listener) {
+		this.selectionListeners.add(listener);
+	}
+
+
+	public void clearSelection() {
+		for (int i = 0; i < boardTileSurfaces.length; i++) {
+			for (int j = 0; j < boardTileSurfaces.length; j++) {
+				TileSurface tileSurface = boardTileSurfaces[i][j];
+				if (tileSurface != null && tileSurface.isSelected()) {
+					if (!tileSurface.isPinned()) {
+						boardTileSurfaces[i][j] = null;
+						for (int h = 0; h < handTileSurfaces.length; h++) {
+							if (handTileSurfaces[h] == null) {
+								handTileSurfaces[h] = tileSurface;
+								break;
+							}
+						}
+					}
+					changeTileSelected(tileSurface, false);
+				}
+			}
+		}
+		invalidate();
+	}
+
+	public ScribbleWord getSelectedWord() {
+		return selectedWord;
+	}
+
+
+	@Override
+	protected void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
+
+		if (boardSurface != null) {
+			boardSurface.onDraw(canvas);
+
+			final Rect handRegion = boardSurface.getHandRegion();
+			final Rect boardRegion = boardSurface.getBoardRegion();
+
+			if (highlightMask != null && highlightPosition != null) {
+				Rect r = highlightPosition.rect;
+				canvas.drawBitmap(highlightMask, r.left + highlightPosition.col * TILE_SIZE, r.top + highlightPosition.row * TILE_SIZE, null);
+			}
+
+			for (int row = 0; row < boardTileSurfaces.length; row++) {
+				TileSurface[] boardTileSurface = boardTileSurfaces[row];
+				for (int col = 0; col < boardTileSurface.length; col++) {
+					TileSurface tileSurface = boardTileSurface[col];
+					if (tileSurface != null) {
+						tileSurface.onDraw(canvas, boardRegion.left + col * TILE_SIZE, boardRegion.top + row * TILE_SIZE);
+					}
+				}
+			}
+
+			for (int i = 0; i < handTileSurfaces.length; i++) {
+				TileSurface handTileSurface = handTileSurfaces[i];
+				if (handTileSurface != null) {
+					handTileSurface.onDraw(canvas, handRegion.left + i * TILE_SIZE, handRegion.top);
+				}
+			}
+
+			if (draggingTile != null) {
+				draggingTile.onDraw(canvas, draggingPosition.x - draggingOffset.x, draggingPosition.y - draggingOffset.y);
 			}
 		}
 	}
@@ -131,110 +201,6 @@ public class BoardView extends FrameLayout {
 				break;
 		}
 		invalidate();
-	}
-
-	private Position getTilePosition(int x, int y) {
-		Rect region;
-		region = boardSurface.getBoardRegion();
-		if (region.contains(x, y)) {
-			final int row = (y - region.top) / TILE_SIZE;
-			final int col = (x - region.left) / TILE_SIZE;
-			return new Position(row, col, region, false);
-		}
-
-		region = boardSurface.getHandRegion();
-		if (region.contains(x, y)) {
-			final int row = (y - region.top) / TILE_SIZE;
-			final int col = (x - region.left) / TILE_SIZE;
-			return new Position(row, col, region, true);
-		}
-		return null;
-	}
-
-	private void rollbackDragging() {
-		if (draggingAnchor.hand) {
-			draggingTile.setSelected(false);
-			handTileSurfaces[draggingAnchor.col] = draggingTile;
-		} else {
-			boardTileSurfaces[draggingAnchor.row][draggingAnchor.col] = draggingTile;
-		}
-	}
-
-	private void finishDragging(Position tilePosition) {
-		if (tilePosition == null) {
-			rollbackDragging();
-		} else {
-			if (tilePosition.hand) {
-				final TileSurface tileSurface = handTileSurfaces[tilePosition.col];
-				if (tileSurface == null) {
-					handTileSurfaces[tilePosition.col] = draggingTile;
-					changeTileSelected(draggingTile, false);
-				} else {
-					rollbackDragging();
-				}
-			} else {
-				final TileSurface tileSurface = boardTileSurfaces[tilePosition.row][tilePosition.col];
-				if (tileSurface == null) {
-					boardTileSurfaces[tilePosition.row][tilePosition.col] = draggingTile;
-					changeTileSelected(draggingTile, true);
-				} else {
-					rollbackDragging();
-				}
-			}
-		}
-
-		draggingTile = null;
-		draggingAnchor = null;
-
-		highlightMask = null;
-		highlightPosition = null;
-	}
-
-	private void beginDragging(TileSurface tileSurface, Position tilePosition) {
-		draggingTile = tileSurface;
-
-		draggingTile.setSelected(true);
-
-		draggingAnchor = highlightPosition = tilePosition;
-		highlightMask = bitmapFactory.getHighlighter(draggingTile.getTile().getCost());
-	}
-
-	@Override
-	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
-
-		if (boardSurface != null) {
-			boardSurface.onDraw(canvas);
-
-			final Rect handRegion = boardSurface.getHandRegion();
-			final Rect boardRegion = boardSurface.getBoardRegion();
-
-			if (highlightMask != null && highlightPosition != null) {
-				Rect r = highlightPosition.rect;
-				canvas.drawBitmap(highlightMask, r.left + highlightPosition.col * TILE_SIZE, r.top + highlightPosition.row * TILE_SIZE, null);
-			}
-
-			for (int row = 0; row < boardTileSurfaces.length; row++) {
-				TileSurface[] boardTileSurface = boardTileSurfaces[row];
-				for (int col = 0; col < boardTileSurface.length; col++) {
-					TileSurface tileSurface = boardTileSurface[col];
-					if (tileSurface != null) {
-						tileSurface.onDraw(canvas, boardRegion.left + col * TILE_SIZE, boardRegion.top + row * TILE_SIZE);
-					}
-				}
-			}
-
-			for (int i = 0; i < handTileSurfaces.length; i++) {
-				TileSurface handTileSurface = handTileSurfaces[i];
-				if (handTileSurface != null) {
-					handTileSurface.onDraw(canvas, handRegion.left + i * TILE_SIZE, handRegion.top);
-				}
-			}
-
-			if (draggingTile != null) {
-				draggingTile.onDraw(canvas, draggingPosition.x - draggingOffset.x, draggingPosition.y - draggingOffset.y);
-			}
-		}
 	}
 
 	protected void changeTileSelected(TileSurface tileSurface, boolean selected) {
@@ -299,33 +265,71 @@ public class BoardView extends FrameLayout {
 		}
 	}
 
-	public void clearSelection() {
-		for (int i = 0; i < boardTileSurfaces.length; i++) {
-			for (int j = 0; j < boardTileSurfaces.length; j++) {
-				TileSurface tileSurface = boardTileSurfaces[i][j];
-				if (tileSurface != null && tileSurface.isSelected()) {
-					if (!tileSurface.isPinned()) {
-						boardTileSurfaces[i][j] = null;
-						for (int h = 0; h < handTileSurfaces.length; h++) {
-							if (handTileSurfaces[h] == null) {
-								handTileSurfaces[h] = tileSurface;
-								break;
-							}
-						}
-					}
-					changeTileSelected(tileSurface, false);
+
+	private void rollbackDragging() {
+		if (draggingAnchor.hand) {
+			draggingTile.setSelected(false);
+			handTileSurfaces[draggingAnchor.col] = draggingTile;
+		} else {
+			boardTileSurfaces[draggingAnchor.row][draggingAnchor.col] = draggingTile;
+		}
+	}
+
+	private void finishDragging(Position tilePosition) {
+		if (tilePosition == null) {
+			rollbackDragging();
+		} else {
+			if (tilePosition.hand) {
+				final TileSurface tileSurface = handTileSurfaces[tilePosition.col];
+				if (tileSurface == null) {
+					handTileSurfaces[tilePosition.col] = draggingTile;
+					changeTileSelected(draggingTile, false);
+				} else {
+					rollbackDragging();
+				}
+			} else {
+				final TileSurface tileSurface = boardTileSurfaces[tilePosition.row][tilePosition.col];
+				if (tileSurface == null) {
+					boardTileSurfaces[tilePosition.row][tilePosition.col] = draggingTile;
+					changeTileSelected(draggingTile, true);
+				} else {
+					rollbackDragging();
 				}
 			}
 		}
-		invalidate();
+
+		draggingTile = null;
+		draggingAnchor = null;
+
+		highlightMask = null;
+		highlightPosition = null;
 	}
 
-	public ScribbleWord getSelectedWord() {
-		return selectedWord;
+	private void beginDragging(TileSurface tileSurface, Position tilePosition) {
+		draggingTile = tileSurface;
+
+		draggingTile.setSelected(true);
+
+		draggingAnchor = highlightPosition = tilePosition;
+		highlightMask = bitmapFactory.getHighlighter(draggingTile.getTile().getCost());
 	}
 
-	public void setTileSelectionListener(TileSelectionListener listener) {
-		this.selectionListeners.add(listener);
+	private Position getTilePosition(int x, int y) {
+		Rect region;
+		region = boardSurface.getBoardRegion();
+		if (region.contains(x, y)) {
+			final int row = (y - region.top) / TILE_SIZE;
+			final int col = (x - region.left) / TILE_SIZE;
+			return new Position(row, col, region, false);
+		}
+
+		region = boardSurface.getHandRegion();
+		if (region.contains(x, y)) {
+			final int row = (y - region.top) / TILE_SIZE;
+			final int col = (x - region.left) / TILE_SIZE;
+			return new Position(row, col, region, true);
+		}
+		return null;
 	}
 
 	private static class Position {

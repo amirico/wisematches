@@ -1,9 +1,11 @@
 package wisematches.client.android.app.playground.scribble.model;
 
+import wisematches.client.android.core.Player;
+
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ScribblePlayer {
+public class ScribblePlayer implements Player {
 	private final long id;
 	private final String nickname;
 	private final String type;
@@ -23,22 +25,27 @@ public class ScribblePlayer {
 		this.online = online;
 	}
 
+	@Override
 	public long getId() {
 		return id;
 	}
 
+	@Override
 	public String getNickname() {
 		return nickname;
 	}
 
+	@Override
 	public String getType() {
 		return type;
 	}
 
+	@Override
 	public String getMembership() {
 		return membership;
 	}
 
+	@Override
 	public boolean isOnline() {
 		return online;
 	}

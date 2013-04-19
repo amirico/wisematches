@@ -51,7 +51,7 @@ public class ScribbleGameInfoAdapter extends ArrayAdapter<ScribbleGameInfo> {
 					row.setBackgroundResource(R.drawable.player_online);
 				}
 
-				final View player = context.getLayoutInflater().inflate(R.layout.core_player, null);
+				final View player = context.getLayoutInflater().inflate(R.layout.player, null);
 				((TextView) player.findViewById(R.id.playerNickname)).setText(playerItem.getNickname());
 				row.addView(player);
 

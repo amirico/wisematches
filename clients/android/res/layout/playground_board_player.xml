@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+        >
+
+    <view
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            class="wisematches.client.android.app.PlayerView"
+            android:id="@+id/scribbleBoardPlayerView"
+            android:layout_gravity="left"
+            android:focusableInTouchMode="true"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/scribbleBoardPlayerPoints"
+            android:layout_gravity="right"
+            android:textColor="@android:color/black"
+            android:singleLine="true"/>
+</LinearLayout>
