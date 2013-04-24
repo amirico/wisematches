@@ -70,7 +70,7 @@
 
             <TextView
                     android:id="@+id/loginFldError"
-                    style="@style/error"
+                    style="@style/TextAppearance.WM.Error"
                     android:visibility="visible"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
                     android:text="@string/login.restore.label"
                     android:layout_gravity="center"
                     android:id="@+id/loginLinkForgot"
-                    style="@style/link"
+                    style="@style/TextAppearance.WM.Link"
                     android:singleLine="true"
                     />
         </LinearLayout>

@@ -5,16 +5,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.TextView;
-import wisematches.client.android.CommunicationException;
-import wisematches.client.android.CooperationException;
 import wisematches.client.android.R;
 import wisematches.client.android.app.account.LoginActivity;
-import wisematches.client.android.app.playground.DashboardActivity;
-import wisematches.client.android.view.PlayerInfo;
+import wisematches.client.android.app.playground.ActiveGamesActivity;
+import wisematches.client.android.http.CommunicationException;
+import wisematches.client.android.http.CooperationException;
 
 public class EntryPointActivity extends WiseMatchesActivity {
 	private TextView status;
-	private AsyncTask<Void, Void, PlayerInfo> authTask;
+	private AsyncTask<Void, Void, WiseMatchesApplication.Principal> authTask;
 
 	/**
 	 * Called when the activity is first created.
@@ -32,14 +31,14 @@ public class EntryPointActivity extends WiseMatchesActivity {
 	}
 
 	private void doAuth() {
-		authTask = new AsyncTask<Void, Void, PlayerInfo>() {
+		authTask = new AsyncTask<Void, Void, WiseMatchesApplication.Principal>() {
 			@Override
-			protected PlayerInfo doInBackground(Void... voids) {
-				PlayerInfo player = null;
+			protected WiseMatchesApplication.Principal doInBackground(Void... voids) {
+				WiseMatchesApplication.Principal player = null;
 				try {
 					player = getWMApplication().authenticate();
 					if (player != null) {
-						startActivity(new Intent(EntryPointActivity.this, DashboardActivity.class));
+						startActivity(new Intent(EntryPointActivity.this, ActiveGamesActivity.class));
 					} else {
 						startActivity(new Intent(EntryPointActivity.this, LoginActivity.class));
 					}

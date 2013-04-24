@@ -1,4 +1,4 @@
-package wisematches.client.android;
+package wisematches.client.android.http;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

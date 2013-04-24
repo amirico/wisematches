@@ -5,11 +5,11 @@ import org.json.JSONObject;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ServerResponse {
+public class ClientResponse {
 	private final boolean success;
 	private final JSONObject data;
 
-	public ServerResponse(boolean success, JSONObject data) {
+	public ClientResponse(boolean success, JSONObject data) {
 		this.data = data;
 		this.success = success;
 	}

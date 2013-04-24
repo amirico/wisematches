@@ -1,4 +1,4 @@
-package wisematches.client.android.view.playground;
+package wisematches.client.android.app.playground;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -6,6 +6,7 @@ import org.json.JSONObject;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public class ScribbleGameInfo {
 	private final long boardId;
 	private final String title;

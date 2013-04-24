@@ -1,4 +1,4 @@
-package wisematches.client.android.app.playground.scribble;
+package wisematches.client.android.app.playground;
 
 import android.app.Activity;
 import android.view.View;
@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import wisematches.client.android.R;
-import wisematches.client.android.app.PlayerView;
+import wisematches.client.android.app.account.view.PlayerView;
 import wisematches.client.android.app.playground.scribble.model.ScribblePlayer;
 
 import java.util.List;
@@ -14,11 +14,11 @@ import java.util.List;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ScribblePlayerViewAdapter extends ArrayAdapter<ScribblePlayer> {
+class ScribblePlayerAdapter extends ArrayAdapter<ScribblePlayer> {
 	private final Activity context;
 	private final List<ScribblePlayer> players;
 
-	public ScribblePlayerViewAdapter(Activity context, List<ScribblePlayer> players) {
+	public ScribblePlayerAdapter(Activity context, List<ScribblePlayer> players) {
 		super(context, R.layout.playground_board_player, players);
 		this.context = context;
 		this.players = players;
@@ -42,6 +42,10 @@ public class ScribblePlayerViewAdapter extends ArrayAdapter<ScribblePlayer> {
 		final ScribblePlayer scribblePlayer = players.get(position);
 		holder.points.setText(String.valueOf(scribblePlayer.getPoints()));
 		holder.playerView.setPlayer(scribblePlayer);
+
+		if (position == 0) {
+			holder.playerView.setSelected(true);
+		}
 		return view;
 	}
 

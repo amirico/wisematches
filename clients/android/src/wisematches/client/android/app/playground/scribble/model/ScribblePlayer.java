@@ -1,6 +1,6 @@
 package wisematches.client.android.app.playground.scribble.model;
 
-import wisematches.client.android.core.Player;
+import wisematches.client.android.app.account.model.Player;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

@@ -1,7 +1,5 @@
 package wisematches.client.android.app.playground.scribble.model;
 
-import wisematches.client.android.view.PlayerInfo;
-
 import java.util.Date;
 
 /**

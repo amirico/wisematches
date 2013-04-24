@@ -3,8 +3,8 @@ package wisematches.client.android.app.playground.scribble.surface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import wisematches.client.android.app.BitmapFactory;
 import wisematches.client.android.app.playground.scribble.model.ScribbleTile;
+import wisematches.client.android.graphics.BitmapFactory;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -15,10 +15,6 @@ public class TileSurface {
 
 	private ScribbleTile tile;
 	private final BitmapFactory bitmapFactory;
-
-	public TileSurface(ScribbleTile tile, BitmapFactory bitmapFactory) {
-		this(tile, false, bitmapFactory);
-	}
 
 	public TileSurface(ScribbleTile tile, boolean pinned, BitmapFactory bitmapFactory) {
 		this.tile = tile;

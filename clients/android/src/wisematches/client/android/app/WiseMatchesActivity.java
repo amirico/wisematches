@@ -1,18 +1,27 @@
 package wisematches.client.android.app;
 
-import android.app.Activity;
-import wisematches.client.android.WiseMatchesApplication;
-import wisematches.client.android.http.WiseMatchesServer;
+import com.actionbarsherlock.app.SherlockActivity;
+import wisematches.client.android.app.account.model.Player;
+import wisematches.client.android.graphics.BitmapFactory;
+import wisematches.client.android.http.WiseMatchesClient;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class WiseMatchesActivity extends Activity {
+public class WiseMatchesActivity extends SherlockActivity {
 	public WiseMatchesActivity() {
 	}
 
-	public WiseMatchesServer getWMServer() {
-		return getWMApplication().getWMServer();
+	public Player getPrincipal() {
+		return getWMApplication().getPrincipal();
+	}
+
+	public BitmapFactory getBitmapFactory() {
+		return getWMApplication().getBitmapFactory();
+	}
+
+	public WiseMatchesClient getWiseMatchesClient() {
+		return getWMApplication().getWiseMatchesClient();
 	}
 
 	public WiseMatchesApplication getWMApplication() {

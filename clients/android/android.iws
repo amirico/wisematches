@@ -29,7 +29,7 @@
         <option name="localeLanguage" value="ru" />
         <option name="name" value="Default" />
         <option name="targetHashString" value="android-8" />
-        <option name="theme" value="Theme.NoTitleBar" />
+        <option name="theme" value="Theme" />
       </profile>
     </profiles>
     <option name="selection" value="[Full]" />
@@ -46,47 +46,81 @@
       </GlobalState>
     </option>
   </component>
-  <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="a" />
-  </component>
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/ScribbleBoardActivity.java" line="213" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/src/wisematches/client/android/app/playground/ScribbleBoardActivity.java" line="217" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="51d65069-92c6-43d0-bd58-3e2e6988c8fe" name="Default" comment="+Issue 124: login activity is ready (registration and restore are external - browser).">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/wisematches/client/android/core/Player.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/PlayerView.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/ScribblePlayerViewAdapter.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/playground_board_player.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/CreateGameActivity.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/FinishedGamesActivity.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/ScribbleProgress.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/values/dimen.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pom.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/color/ui_button.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable/ui_button_disabled.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable/ui_separator_dash.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable/ui_state_online.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable/ui_widget_active.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable/ui_widget_content.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable/ui_widget_header.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable/ui_widget_highlight.xml" />
+      <change type="DELETED" beforePath="C:\Source\wm\clients\android\src\wisematches\client\android\view\PlayerInfo.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Source\wm\clients\android\res\drawable\player_online.png" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidManifest.xml" afterPath="$PROJECT_DIR$/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/BoardView.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/BoardView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/view/PlayerInfo.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/view/PlayerInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/model/ScribbleBoard.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/model/ScribbleBoard.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/ScribbleBoardActivity.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/ScribbleBoardActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/view/playground/ScribbleGameInfoAdapter.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/view/playground/ScribbleGameInfoAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/surface/BoardSurface.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/surface/BoardSurface.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/EntryPointActivity.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/EntryPointActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/account/LoginActivity.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/account/LoginActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/account/RegisterActivity.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/account/RegisterActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/account/RestoreActivity.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/account/RestoreActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/model/ScribbleMove.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/model/ScribbleMove.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/model/ScribblePlayer.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/model/ScribblePlayer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/surface/TileSurface.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/surface/TileSurface.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/WiseMatchesActivity.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/WiseMatchesActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/account_signin.xml" afterPath="$PROJECT_DIR$/res/layout/account_signin.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/android.iml" afterPath="$PROJECT_DIR$/android.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/android.ipr" afterPath="$PROJECT_DIR$/android.ipr" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/android.iws" afterPath="$PROJECT_DIR$/android.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../modules/web/src/main/webapp/static/js/jquery.mousewheelIntent-1.2.0.js" afterPath="$PROJECT_DIR$/../../modules/web/src/main/webapp/static/js/jquery.mousewheelIntent-1.2.0.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/colors.xml" afterPath="$PROJECT_DIR$/res/values/colors.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/player.xml" afterPath="$PROJECT_DIR$/res/layout/player.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/playground_board.xml" afterPath="$PROJECT_DIR$/res/layout/playground_board.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/playground_board_player.xml" afterPath="$PROJECT_DIR$/res/layout/playground_board_player.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/playground_dashboard_item.xml" afterPath="$PROJECT_DIR$/res/layout/playground_dashboard_item.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project.properties" afterPath="$PROJECT_DIR$/project.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../modules/web/src/main/webapp/static/js/wisematches-5.1.8.js" afterPath="$PROJECT_DIR$/../../modules/web/src/main/webapp/static/js/wisematches-5.1.8.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../modules/web/src/main/webapp/content/wisematches.ftl" afterPath="$PROJECT_DIR$/../../modules/web/src/main/webapp/content/wisematches.ftl" />
-      <change type="MOVED" beforePath="C:\Source\wm\clients\android\res\layout\core_player.xml" afterPath="$PROJECT_DIR$/res/layout/player.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/splash.xml" afterPath="$PROJECT_DIR$/res/layout/splash.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/styles.xml" afterPath="$PROJECT_DIR$/res/values/styles.xml" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\res\drawable\board_gbtn_focused.xml" afterPath="$PROJECT_DIR$/res/drawable/ui_button_focused.xml" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\src\wisematches\client\android\WiseMatchesApplication.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/WiseMatchesApplication.java" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\src\wisematches\client\android\CooperationException.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/http/CooperationException.java" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\src\wisematches\client\android\CommunicationException.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/http/CommunicationException.java" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\src\wisematches\client\android\app\playground\scribble\model\ScribbleBoard.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/model/ScribbleGame.java" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\src\wisematches\client\android\view\playground\ScribbleGameInfo.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/ScribbleGameInfo.java" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\src\wisematches\client\android\app\playground\scribble\BoardView.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/ScribbleBoard.java" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\src\wisematches\client\android\app\playground\scribble\ScribbleBoardActivity.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/ScribbleBoardActivity.java" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\src\wisematches\client\android\app\playground\scribble\ScribblePlayerViewAdapter.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/ScribblePlayerAdapter.java" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\src\wisematches\client\android\http\ServerResponse.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/http/ClientResponse.java" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\src\wisematches\client\android\app\playground\DashboardActivity.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/ActiveGamesActivity.java" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\res\drawable\board_gbtn_normal.xml" afterPath="$PROJECT_DIR$/res/drawable/ui_button_normal.xml" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\src\wisematches\client\android\app\BitmapFactory.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/graphics/BitmapFactory.java" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\src\wisematches\client\android\http\WiseMatchesServer.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/http/WiseMatchesClient.java" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\src\wisematches\client\android\core\Player.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/account/model/Player.java" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\src\wisematches\client\android\view\playground\ScribbleGameInfoAdapter.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/ScribbleGameAdapter.java" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\src\wisematches\client\android\app\playground\TileSelectionListener.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/ScribbleBoardListener.java" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\res\drawable\board_gbtn.xml" afterPath="$PROJECT_DIR$/res/drawable/ui_button.xml" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\res\drawable\board_gbtn_pressed.xml" afterPath="$PROJECT_DIR$/res/drawable/ui_button_pressed.xml" />
+      <change type="MOVED" beforePath="C:\Source\wm\clients\android\src\wisematches\client\android\app\PlayerView.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/account/view/PlayerView.java" />
     </list>
     <ignored path="android.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/strings.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365754135791" ignored="false" />
     <file path="/a.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365071346978" ignored="false" />
-    <file path="/fragment.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366376494666" ignored="false" />
+    <file path="/fragment.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366709417661" ignored="false" />
     <file path="/ApplicationAtivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365067739322" ignored="false" />
     <file path="/ServerRequest.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365066112309" ignored="false" />
-    <file path="/AndroidManifest.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366375105708" ignored="false" />
+    <file path="/AndroidManifest.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366637915356" ignored="false" />
     <file path="/Dummy.txt" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366370504455" ignored="false" />
     <file path="/SignInActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365505661451" ignored="false" />
     <file path="$PROJECT_DIR$/src/wisematches/client/android/activity/account/AuthorizationActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365068115089" ignored="false" />
-    <file path="/a.dummy" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366359718742" ignored="false" />
+    <file path="/a.dummy" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366720499734" ignored="false" />
     <file path="/signIn.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365070723841" ignored="false" />
     <file path="/EntryPointActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365503079552" ignored="false" />
     <file path="/SignInFailureException.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365071173888" ignored="false" />
@@ -107,12 +141,12 @@
     <file path="/Player.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365165221355" ignored="false" />
     <file path="/splash.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365494198755" ignored="false" />
     <file path="/rotate_indefinitely.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365495094759" ignored="false" />
-    <file path="/styles.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366111724197" ignored="false" />
-    <file path="/colors.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365498094621" ignored="false" />
+    <file path="/styles.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366796112672" ignored="false" />
+    <file path="/colors.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366798830746" ignored="false" />
     <file path="/DashboardActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365673075744" ignored="false" />
     <file path="/WaitingAsyncTask.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365502913887" ignored="false" />
     <file path="/CommunicationException.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365505939420" ignored="false" />
-    <file path="/WiseMatchesApplication.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365510991359" ignored="false" />
+    <file path="/WiseMatchesApplication.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366702989106" ignored="false" />
     <file path="/CooperationException.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365505786315" ignored="false" />
     <file path="/RegistrationActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365504882575" ignored="false" />
     <file path="/RestoreActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365507648873" ignored="false" />
@@ -122,7 +156,7 @@
     <file path="/GameInfo.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365510306496" ignored="false" />
     <file path="/WiseMatchesServer.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366289806248" ignored="false" />
     <file path="/ServerResponse.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365510565041" ignored="false" />
-    <file path="/WiseMatchesActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365510949775" ignored="false" />
+    <file path="/WiseMatchesActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366707422976" ignored="false" />
     <file path="/ScribbleInfo.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365670281020" ignored="false" />
     <file path="/ScribbleInfoAdapter.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365670299476" ignored="false" />
     <file path="/ProposalInfo.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365513121318" ignored="false" />
@@ -133,7 +167,7 @@
     <file path="/GameBoardActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365766151668" ignored="false" />
     <file path="/ScribbleBordInfo.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365671133430" ignored="false" />
     <file path="/ScribbleBoardController.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365671314714" ignored="false" />
-    <file path="/BoardView.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366372923535" ignored="false" />
+    <file path="/BoardView.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366702389392" ignored="false" />
     <file path="/BonusCell.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365681104192" ignored="false" />
     <file path="/BackgroundSurface.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365754282303" ignored="false" />
     <file path="$APPLICATION_HOME_DIR$/plugins/android/lib/android.jar!/org/jetbrains/android/android.xsd" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365752934432" ignored="false" />
@@ -146,25 +180,23 @@
     <file path="/TileSurface.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366293958858" ignored="false" />
     <file path="/Tile.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365757594479" ignored="false" />
     <file path="/TilePosition.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366098730770" ignored="false" />
-    <file path="/playground_board.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366112604996" ignored="false" />
-    <file path="/ScribbleBoardActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366372507707" ignored="false" />
+    <file path="/playground_board.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366722294457" ignored="false" />
+    <file path="/ScribbleBoardActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366798063412" ignored="false" />
     <file path="/board_gbtn.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366111613571" ignored="false" />
     <file path="/ScribbleWord.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366272335972" ignored="false" />
     <file path="/TileSelectionListener.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366271763266" ignored="false" />
     <file path="/WordDirection.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366272327386" ignored="false" />
     <file path="/ScribbleSettings.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366291199744" ignored="false" />
-    <file path="/ScribbleBoard.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366372439251" ignored="false" />
+    <file path="/ScribbleBoard.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366709180287" ignored="false" />
     <file path="/ScribbleMove.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366291980570" ignored="false" />
     <file path="/ScribblePlayer.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366372262263" ignored="false" />
     <file path="/wisematches.ftl" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366360313935" ignored="false" />
     <file path="/wisematches-5.1.8.js" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366361141628" ignored="false" />
     <file path="/jquery.mousewheelIntent-1.2.0.js" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366361331470" ignored="false" />
     <file path="/ScribblePlayerViewAdapter.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366372661311" ignored="false" />
-    <file path="/PlayerView.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366372845149" ignored="false" />
+    <file path="/PlayerView.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366720295679" ignored="false" />
     <file path="/PlayerInfo.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366372047851" ignored="false" />
     <file path="/project.properties" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366375207698" ignored="false" />
-    <file path="$PROJECT_DIR$/gen/wisematches/client/android/Manifest.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366376331668" ignored="false" />
-    <file path="$PROJECT_DIR$/gen/wisematches/client/android/R.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366376331668" ignored="false" />
     <file path="C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/pom.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366377075777" ignored="false" />
     <file path="C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/project.properties" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366377075777" ignored="false" />
     <file path="C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/src/com/actionbarsherlock/app/SherlockDialogFragment.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366377075777" ignored="false" />
@@ -189,6 +221,34 @@
     <file path="C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/src/com/actionbarsherlock/app/SherlockListFragment.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366377075778" ignored="false" />
     <file path="C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/src/com/actionbarsherlock/app/SherlockExpandableListActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366377075778" ignored="false" />
     <file path="C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/src/android/support/v4/app/Watson.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366377075778" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../actionbarsherlock/AndroidManifest.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366634585940" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../actionbarsherlock/pom.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366634585940" ignored="false" />
+    <file path="/pom.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366636967000" ignored="false" />
+    <file path="/BitmapFactory.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366707497446" ignored="false" />
+    <file path="/ScribbleGameInfo.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366707598494" ignored="false" />
+    <file path="/ScribbleGameAdapter.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366794759445" ignored="false" />
+    <file path="/board_widget.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366708710533" ignored="false" />
+    <file path="/account_signin.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366710062669" ignored="false" />
+    <file path="/widget_background.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366714871755" ignored="false" />
+    <file path="/widget_content.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366717283955" ignored="false" />
+    <file path="$PROJECT_DIR$/../../modules/web/src/main/webapp/static/css/asd.css" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366717529089" ignored="false" />
+    <file path="/ui_widget_content.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366718199949" ignored="false" />
+    <file path="/ui_widget_header.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366718214890" ignored="false" />
+    <file path="/dimen.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366718189506" ignored="false" />
+    <file path="/ui_widget_active.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366718451219" ignored="false" />
+    <file path="/ui_widget_high.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366718467999" ignored="false" />
+    <file path="/ScribblePlayerAdapter.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366720379184" ignored="false" />
+    <file path="/playground_board_player.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366721645116" ignored="false" />
+    <file path="/ui_line_dash.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366722272661" ignored="false" />
+    <file path="/ui_player_online.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366794698578" ignored="false" />
+    <file path="/player.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366794714537" ignored="false" />
+    <file path="/playground_dashboard_item.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366794766700" ignored="false" />
+    <file path="/ui_button.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366798396653" ignored="false" />
+    <file path="/ui_button_focused.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366795007117" ignored="false" />
+    <file path="/ui_button_pressed.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366794972397" ignored="false" />
+    <file path="/ui_button_normal.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366795425528" ignored="false" />
+    <file path="/ScribbleProgress.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366811121158" ignored="false" />
+    <file path="/ui_button_disabled.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366798428275" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -202,8 +262,12 @@
   <component name="DaemonCodeAnalyzer">
     <disable_hints />
   </component>
+  <component name="DatabaseView">
+    <flatten value="false" />
+    <groupTables value="false" />
+    <sortChildren value="false" />
+  </component>
   <component name="DebuggerManager">
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -240,23 +304,8 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint url="file://$PROJECT_DIR$/src/wisematches/client/android/http/WiseMatchesServer.java" line="97" class="wisematches.client.android.http.WiseMatchesServer" package="wisematches.client.android.http">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-    </line_breakpoints>
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -280,24 +329,34 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/model/ScribbleHand.java" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/model/ScribbleMove.java" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/surface/TileSurface.java" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/view/ScribblePlayerView.java" />
-        <option value="$PROJECT_DIR$/res/layout/playground_board_player.xml" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/core/Player.java" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/view/PlayerInfo.java" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/model/ScribblePlayer.java" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/view/ScribblePlayerViewAdapter.java" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/PlayerView.java" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/BoardView.java" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/model/ScribbleBoard.java" />
+        <option value="$PROJECT_DIR$/res/drawable/ui_player_online.xml" />
+        <option value="$PROJECT_DIR$/res/layout/player.xml" />
+        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/playground/ScribbleGameAdapter.java" />
+        <option value="$PROJECT_DIR$/res/layout/playground_dashboard_item.xml" />
+        <option value="$PROJECT_DIR$/res/color/d.xml" />
+        <option value="$PROJECT_DIR$/res/values/styles.xml" />
+        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/playground/ScribbleBoardActivity.java" />
+        <option value="$PROJECT_DIR$/res/color/ui_button.xml" />
+        <option value="$PROJECT_DIR$/res/drawable/ui_button.xml" />
+        <option value="$PROJECT_DIR$/res/drawable/ui_button_pressed.xml" />
+        <option value="$PROJECT_DIR$/res/drawable/ui_button_normal.xml" />
+        <option value="$PROJECT_DIR$/res/drawable/ui_button_focused.xml" />
+        <option value="$PROJECT_DIR$/res/drawable/ui_button_disabled.xml" />
+        <option value="$PROJECT_DIR$/res/values/colors.xml" />
+        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/ScribbleProgress.java" />
         <option value="$PROJECT_DIR$/res/layout/playground_board.xml" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/ScribbleBoardActivity.java" />
-        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
-        <option value="$PROJECT_DIR$/project.properties" />
       </list>
     </option>
+  </component>
+  <component name="MavenProjectNavigator">
+    <treeState>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+      </PATH>
+    </treeState>
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="1272" />
@@ -346,7 +405,393 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="library" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
               <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="library" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="internal" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="library" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="actionbarsherlock" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="library" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="actionbarsherlock" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="library" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="http" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="graphics" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="playground" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="playground" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scribble" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="playground" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scribble" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="model" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="account" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="values-ru" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="values" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layout" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="drawable" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="color" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -356,17 +801,17 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="SHOW_ALL_PROCESSES" value="false" />
-    <property name="project.structure.last.edited" value="Facets" />
-    <property name="project.structure.proportion" value="0.15" />
     <property name="OverrideImplement.combined" value="true" />
+    <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="Repository.Attach.JavaDocs" value="false" />
-    <property name="recentsLimit" value="5" />
-    <property name="MemberChooser.sorted" value="false" />
     <property name="ExportedApkPath" value="C:\Source\wm\clients\android\android.apk" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="recentsLimit" value="5" />
     <property name="ExportedModule" value="android" />
-    <property name="last_opened_file_path" value="C:/Software/adt/sdk/tools/apps/actionbarsherlock/libs/android-support-v4.jar!/" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/pom.xml" />
     <property name="DEBUGGABLE_DEVICE" value="emulator-5554 (test)" />
     <property name="DEBUGGABLE_PROCESS" value="wisematches.client.android" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
@@ -377,7 +822,7 @@
     <property name="Downloaded.Files.Path" value="C:\Source\wm\clients\android\lib" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="options.lastSelected" value="http.proxy" />
+    <property name="options.lastSelected" value="reference.projectsettings.compiler.javacompiler" />
     <property name="AndroidLayoutSelectedEditor" value="android-designer" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
@@ -388,17 +833,18 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Source\wm\clients\android\res\drawable" />
-    </key>
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="wisematches.client.android.view" />
-      <recent name="wisematches.client" />
-      <recent name="wisematches.client.android" />
+      <recent name="C:\Source\wm\clients\android" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Source\wm\clients\android\res\drawable" />
       <recent name="C:\Source\wm\clients\android\res\layout" />
       <recent name="C:\Source\wm\clients\android\res\layout\playground" />
       <recent name="C:\Source\wm\clients\android\res\layout\account" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="wisematches.client.android" />
+      <recent name="wisematches.client.android.view" />
+      <recent name="wisematches.client" />
     </key>
   </component>
   <component name="RunManager" selected="Android Application.android">
@@ -495,7 +941,7 @@
     </configuration>
     <configuration default="false" name="android" type="AndroidRunConfigurationType" factoryName="Android Application">
       <module name="android" />
-      <option name="ACTIVITY_CLASS" value="wisematches.client.android.app.playground.scribble.ScribbleBoardActivity" />
+      <option name="ACTIVITY_CLASS" value="wisematches.client.android.app.playground.ScribbleBoardActivity" />
       <option name="MODE" value="specific_activity" />
       <option name="DEPLOY" value="true" />
       <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
@@ -574,30 +1020,30 @@
     <frame x="1272" y="-8" width="1296" height="1010" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32837528" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22852512" sideWeight="0.74256295" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21474878" sideWeight="0.74256295" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32762557" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298217" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30549198" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33638445" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32762557" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298217" sideWeight="0.6716247" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25743708" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32837528" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25121555" sideWeight="0.74485123" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32837528" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30091533" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3272311" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32951945" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22690438" sideWeight="0.687643" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26337114" sideWeight="0.6716247" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3006483" sideWeight="0.6716247" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23257698" sideWeight="0.74256295" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33306322" sideWeight="0.74256295" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32951945" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17341977" sideWeight="0.694508" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32837528" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4197731" sideWeight="0.6533181" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25121555" sideWeight="0.694508" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298217" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32951945" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="EJB" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -667,145 +1113,121 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/ScribblePlayerViewAdapter.java">
+    <entry file="file://$PROJECT_DIR$/res/color/ui_button.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="25" selection-start="946" selection-end="946" vertical-scroll-proportion="0.0">
+        <state line="6" column="62" selection-start="426" selection-end="426" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable/ui_button_pressed.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="0" selection-start="339" selection-end="482" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable/ui_button_focused.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="0" selection-start="480" selection-end="480" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable/ui_button_disabled.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="46" selection-start="494" selection-end="494" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable/ui_button_normal.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="0" selection-start="484" selection-end="484" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/ScribbleBoard.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="13" selection-start="754" selection-end="754" vertical-scroll-proportion="0.19101124">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/values/colors.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="36" column="19" selection-start="1523" selection-end="1576" vertical-scroll-proportion="0.7216981">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Software/adt/sdk/sources/android-17/android/graphics/drawable/ShapeDrawable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="91" column="25" selection-start="3023" selection-end="3023" vertical-scroll-proportion="0.35473517">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Software/adt/sdk/sources/android-17/android/graphics/drawable/shapes/Shape.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="93" column="19" selection-start="2788" selection-end="2788" vertical-scroll-proportion="1.5553772">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Software/adt/sdk/sources/android-17/android/graphics/drawable/shapes/RectShape.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="43" column="18" selection-start="1361" selection-end="1361" vertical-scroll-proportion="0.4542536">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/model/ScribbleGame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="45" selection-start="773" selection-end="773" vertical-scroll-proportion="0.5904192">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Software/adt/sdk/sources/android-17/android/graphics/Path.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="492" column="16" selection-start="17853" selection-end="17853" vertical-scroll-proportion="0.33254716">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Software/adt/sdk/sources/android-17/android/graphics/drawable/shapes/RoundRectShape.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="98" column="77" selection-start="3939" selection-end="3939" vertical-scroll-proportion="0.5188679">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Software/adt/sdk/sources/android-17/android/widget/TextView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="215" column="34" selection-start="9039" selection-end="9043" vertical-scroll-proportion="0.33254716">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/ScribbleProgress.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="59" column="52" selection-start="2400" selection-end="2400" vertical-scroll-proportion="0.5269461">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/BoardView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="267" column="4" selection-start="8465" selection-end="8465" vertical-scroll-proportion="1.1962135">
-          <folding>
-            <element signature="docComment;class#BoardView#0" expanded="false" />
-            <element signature="method#BoardView#0;class#BoardView#0" expanded="false" />
-            <element signature="method#initBoardView#0;class#BoardView#0" expanded="false" />
-            <element signature="method#setTileSelectionListener#0;class#BoardView#0" expanded="false" />
-            <element signature="method#clearSelection#0;class#BoardView#0" expanded="false" />
-            <element signature="method#getSelectedWord#0;class#BoardView#0" expanded="false" />
-            <element signature="method#onDraw#0;class#BoardView#0" expanded="false" />
-            <element signature="method#processTouchEvent#0;class#BoardView#0" expanded="false" />
-            <element signature="method#changeTileSelected#0;class#BoardView#0" expanded="false" />
-            <element signature="method#rollbackDragging#0;class#BoardView#0" expanded="false" />
-            <element signature="method#finishDragging#0;class#BoardView#0" expanded="false" />
-            <element signature="method#beginDragging#0;class#BoardView#0" expanded="false" />
-            <element signature="method#getTilePosition#0;class#BoardView#0" expanded="false" />
-            <element signature="class#Position#0;class#BoardView#0" expanded="false" />
-            <element signature="method#Position#0;class#Position#0;class#BoardView#0" expanded="false" />
-            <element signature="class#PlacedScribbleTile#0;class#BoardView#0" expanded="false" />
-            <element signature="method#PlacedScribbleTile#0;class#PlacedScribbleTile#0;class#BoardView#0" expanded="false" />
-            <element signature="class#TheOnTouchListener#0;class#BoardView#0" expanded="false" />
-            <element signature="method#onTouch#0;class#TheOnTouchListener#0;class#BoardView#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/model/ScribbleBoard.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="42" selection-start="246" selection-end="246" vertical-scroll-proportion="0.16915423">
+    <entry file="file://$PROJECT_DIR$/res/layout/playground_board.xml">
+      <provider editor-type-id="text-editor">
+        <state line="9" column="4" selection-start="346" selection-end="346" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/playground_board.xml">
       <provider selected="true" editor-type-id="android-designer">
         <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/ScribbleBoardActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="243" column="43" selection-start="23463" selection-end="23463" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#1194#1221#0" expanded="true" />
-            <element signature="e#24082#24199#0" expanded="true" />
-            <element signature="e#24194#24195#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="35" selection-start="1801" selection-end="1801" vertical-scroll-proportion="0.5834768">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/project.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="39" selection-start="630" selection-end="630" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ant.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="70" column="45" selection-start="3039" selection-end="3039" vertical-scroll-proportion="0.16197184">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Software/adt/sdk/platforms/android-8/android.jar!/android/util/DisplayMetrics.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="24" selection-start="94" selection-end="94" vertical-scroll-proportion="0.04009434">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/src/com/actionbarsherlock/ActionBarSherlock.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="22" selection-start="1182" selection-end="1182" vertical-scroll-proportion="0.12215569">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/src/com/actionbarsherlock/app/ActionBar.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="22" selection-start="3018" selection-end="3018" vertical-scroll-proportion="-1.0023584">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/src/com/actionbarsherlock/app/SherlockFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="39" selection-start="626" selection-end="626" vertical-scroll-proportion="0.081437126">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/res/values/abs__styles.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="100" column="0" selection-start="6245" selection-end="6245" vertical-scroll-proportion="0.21796407">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/res/values-v14/abs__themes.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="21" selection-start="1411" selection-end="1411" vertical-scroll-proportion="0.5412736">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/res/values-v14/abs__styles.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="49" selection-start="1004" selection-end="1004" vertical-scroll-proportion="0.38682634">
-          <folding />
-        </state>
       </provider>
     </entry>
   </component>
@@ -825,7 +1247,7 @@
       </state>
       <state key="FacetStructureConfigurable.UI">
         <settings>
-          <last-edited>Android (actionbarsherlock)|Android</last-edited>
+          <last-edited>Detection</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -861,11 +1283,12 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>actionbarsherlock</last-edited>
+          <last-edited>android</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
                 <option value="0.2" />
+                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>
@@ -873,7 +1296,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>src</last-edited>
+          <last-edited>android-support-v4</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

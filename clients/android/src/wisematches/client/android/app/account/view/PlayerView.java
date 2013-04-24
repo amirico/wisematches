@@ -1,4 +1,4 @@
-package wisematches.client.android.app;
+package wisematches.client.android.app.account.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -8,18 +8,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import wisematches.client.android.R;
-import wisematches.client.android.core.Player;
+import wisematches.client.android.app.account.model.Player;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class PlayerView extends LinearLayout {
-	public PlayerView(Context context) {
-		super(context);
-	}
-
 	public PlayerView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+
 		LayoutInflater.from(context).inflate(R.layout.player, this, true);
 	}
 

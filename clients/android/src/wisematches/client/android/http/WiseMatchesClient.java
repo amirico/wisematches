@@ -20,8 +20,6 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.json.JSONException;
 import org.json.JSONObject;
-import wisematches.client.android.CommunicationException;
-import wisematches.client.android.CooperationException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,7 +29,7 @@ import java.io.InputStreamReader;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class WiseMatchesServer {
+public class WiseMatchesClient {
 	private final HttpClient client;
 	private final CookieStore cookieStore = new BasicCookieStore();
 	private final HttpContext localContext = new BasicHttpContext();
@@ -41,7 +39,7 @@ public class WiseMatchesServer {
 //	private static final HttpHost HOST = new HttpHost("www.wisematches.net");
 
 
-	public WiseMatchesServer() {
+	public WiseMatchesClient() {
 		final HttpParams params = new BasicHttpParams();
 		params.setParameter(CoreProtocolPNames.USER_AGENT, "Wisematches/1.0");
 		HttpClientParams.setRedirecting(params, false);
@@ -61,19 +59,19 @@ public class WiseMatchesServer {
 		context.startActivity(Intent.createChooser(intent, "Chose browser"));
 	}
 
-	public ServerResponse post(String url, Header... headers) throws CommunicationException, CooperationException {
+	public ClientResponse post(String url, Header... headers) throws CommunicationException, CooperationException {
 		return post(url, null, null, headers);
 	}
 
-	public ServerResponse post(String url, JSONObject data, Header... headers) throws CommunicationException, CooperationException {
+	public ClientResponse post(String url, JSONObject data, Header... headers) throws CommunicationException, CooperationException {
 		return post(url, null, data, headers);
 	}
 
-	public ServerResponse post(String url, HttpParams params, Header... headers) throws CommunicationException, CooperationException {
+	public ClientResponse post(String url, HttpParams params, Header... headers) throws CommunicationException, CooperationException {
 		return post(url, params, null, headers);
 	}
 
-	public ServerResponse post(String url, HttpParams params, JSONObject data, Header... headers) throws CommunicationException, CooperationException {
+	public ClientResponse post(String url, HttpParams params, JSONObject data, Header... headers) throws CommunicationException, CooperationException {
 		try {
 			final HttpPost request = new HttpPost(url);
 
@@ -113,7 +111,7 @@ public class WiseMatchesServer {
 			}
 
 			final JSONObject r = new JSONObject(builder.toString());
-			return new ServerResponse(r.getBoolean("success"), r.optJSONObject("data"));
+			return new ClientResponse(r.getBoolean("success"), r.optJSONObject("data"));
 		} catch (JSONException ex) {
 			throw new CooperationException(ex.getMessage(), ex);
 		} catch (IOException ex) {

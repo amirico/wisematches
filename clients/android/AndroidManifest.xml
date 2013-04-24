@@ -19,7 +19,7 @@
             android:required="true"/>
 
     <application
-            android:name=".WiseMatchesApplication"
+            android:name=".app.WiseMatchesApplication"
             android:icon="@drawable/ic_launcher"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar">
@@ -36,8 +36,9 @@
                 </activity>
         -->
         <activity
-                android:name=".app.playground.scribble.ScribbleBoardActivity"
-                android:screenOrientation="landscape">
+                android:name=".app.playground.ScribbleBoardActivity"
+                android:screenOrientation="landscape"
+                android:theme="@style/Theme.WM.ActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -50,7 +51,7 @@
 
         <activity android:name=".app.account.RegisterActivity"/>
 
-        <activity android:name=".app.playground.DashboardActivity"/>
+        <activity android:name=".app.playground.ActiveGamesActivity"/>
 
         <!--<activity android:name=".app.playground.GameBoardActivity"/>-->
     </application>

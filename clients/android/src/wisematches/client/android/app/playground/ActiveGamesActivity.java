@@ -8,20 +8,17 @@ import android.widget.ListView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import wisematches.client.android.CommunicationException;
-import wisematches.client.android.CooperationException;
 import wisematches.client.android.R;
 import wisematches.client.android.app.WiseMatchesActivity;
-import wisematches.client.android.app.playground.scribble.ScribbleBoardActivity;
-import wisematches.client.android.http.ServerResponse;
+import wisematches.client.android.http.ClientResponse;
+import wisematches.client.android.http.CommunicationException;
+import wisematches.client.android.http.CooperationException;
 import wisematches.client.android.os.ProgressTask;
-import wisematches.client.android.view.playground.ScribbleGameInfo;
-import wisematches.client.android.view.playground.ScribbleGameInfoAdapter;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class DashboardActivity extends WiseMatchesActivity {
+public class ActiveGamesActivity extends WiseMatchesActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.playground_dashboard);
@@ -45,7 +42,7 @@ public class DashboardActivity extends WiseMatchesActivity {
 			@Override
 			protected ScribbleGameInfo[] doInBackground(Void... voids) {
 				try {
-					final ServerResponse r = getWMServer().post("/playground/scribble/active.ajax");
+					final ClientResponse r = getWiseMatchesClient().post("/playground/scribble/active.ajax");
 					if (r.isSuccess()) {
 						final JSONObject data = r.getData();
 
@@ -68,7 +65,7 @@ public class DashboardActivity extends WiseMatchesActivity {
 			protected void onPostExecute(ScribbleGameInfo[] games) {
 				super.onPostExecute(games);
 
-				ScribbleGameInfoAdapter adapter = new ScribbleGameInfoAdapter(DashboardActivity.this, games);
+				ScribbleGameAdapter adapter = new ScribbleGameAdapter(ActiveGamesActivity.this, games);
 				listView.setAdapter(adapter);
 			}
 		};

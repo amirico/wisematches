@@ -1,20 +1,20 @@
-package wisematches.client.android.view.playground;
+package wisematches.client.android.app.playground;
 
 import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import wisematches.client.android.R;
-import wisematches.client.android.view.PlayerInfo;
+import wisematches.client.android.app.account.model.Player;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ScribbleGameInfoAdapter extends ArrayAdapter<ScribbleGameInfo> {
+public class ScribbleGameAdapter extends ArrayAdapter<ScribbleGameInfo> {
 	private final Activity context;
 	private final ScribbleGameInfo[] boardItems;
 
-	public ScribbleGameInfoAdapter(Activity context, ScribbleGameInfo[] boardItems) {
+	public ScribbleGameAdapter(Activity context, ScribbleGameInfo[] boardItems) {
 		super(context, R.layout.playground_dashboard_item, boardItems);
 		this.context = context;
 		this.boardItems = boardItems;
@@ -43,12 +43,12 @@ public class ScribbleGameInfoAdapter extends ArrayAdapter<ScribbleGameInfo> {
 //		holder.elapsedTime.setText(String.valueOf(boardItem.getElapsedTime()));
 		holder.players.removeAllViews();
 
-		final PlayerInfo[] players = null;// boardItem.getPlayers();
+		final Player[] players = null;// boardItem.getPlayers();
 		if (players != null) {
-			for (PlayerInfo playerItem : players) {
+			for (Player playerItem : players) {
 				final TableRow row = new TableRow(context);
 				if (playerItem.getId() == boardItem.getPlayerTurn()) {
-					row.setBackgroundResource(R.drawable.player_online);
+					row.setBackgroundResource(R.drawable.ui_state_online);
 				}
 
 				final View player = context.getLayoutInflater().inflate(R.layout.player, null);

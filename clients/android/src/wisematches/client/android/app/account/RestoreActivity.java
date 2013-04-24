@@ -13,6 +13,6 @@ public class RestoreActivity extends WiseMatchesActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.account_register);
 
-		getWMServer().open("/account/recovery/request", this);
+		getWiseMatchesClient().open("/account/recovery/request", this);
 	}
 }

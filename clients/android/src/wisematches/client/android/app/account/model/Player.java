@@ -1,4 +1,4 @@
-package wisematches.client.android.core;
+package wisematches.client.android.app.account.model;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

@@ -18,7 +18,7 @@ public class RegisterActivity extends WiseMatchesActivity {
 			final String username = extras.getString("username");
 		}
 */
-		getWMServer().open("/account/create", this);
+		getWiseMatchesClient().open("/account/create", this);
 /*
 		final WebView viewById = (WebView) findViewById(R.id.registerView);
 		WebSettings settings = viewById.getSettings();

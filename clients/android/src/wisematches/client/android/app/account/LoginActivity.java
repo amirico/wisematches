@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import wisematches.client.android.R;
 import wisematches.client.android.app.WiseMatchesActivity;
-import wisematches.client.android.app.playground.DashboardActivity;
+import wisematches.client.android.app.playground.ActiveGamesActivity;
 import wisematches.client.android.os.ProgressTask;
 
 /**
@@ -56,7 +56,7 @@ public class LoginActivity extends WiseMatchesActivity {
 					protected Exception doInBackground(String... strings) {
 						try {
 							getWMApplication().authenticate(strings[0], strings[1]);
-							startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+							startActivity(new Intent(LoginActivity.this, ActiveGamesActivity.class));
 							return null;
 						} catch (Exception ex) {
 							return ex;
@@ -78,7 +78,7 @@ public class LoginActivity extends WiseMatchesActivity {
 		registerButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				getWMServer().open("/account/create", LoginActivity.this);
+				getWiseMatchesClient().open("/account/create", LoginActivity.this);
 //				final Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
 //				intent.putExtra("username", usernameField.getText().toString());
 //				startActivity(intent);
@@ -88,7 +88,7 @@ public class LoginActivity extends WiseMatchesActivity {
 		restorePwdButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				getWMServer().open("/account/recovery/request", LoginActivity.this);
+				getWiseMatchesClient().open("/account/recovery/request", LoginActivity.this);
 //				final Intent intent = new Intent(LoginActivity.this, RestoreActivity.class);
 //				intent.putExtra("username", usernameField.getText().toString());
 //				startActivity(intent);

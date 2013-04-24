@@ -5,14 +5,14 @@ import java.util.List;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ScribbleBoard {
+public class ScribbleGame {
 	private final long boardId;
 	private final ScoreEngine scoreEngine;
 	private final ScribbleSettings settings;
 	private final List<ScribbleMove> moves;
 	private final List<ScribblePlayer> players;
 
-	public ScribbleBoard(long boardId, ScribbleSettings settings, List<ScribblePlayer> players, List<ScribbleMove> moves, ScoreEngine scoreEngine) {
+	public ScribbleGame(long boardId, ScribbleSettings settings, List<ScribblePlayer> players, List<ScribbleMove> moves, ScoreEngine scoreEngine) {
 		this.boardId = boardId;
 		this.settings = settings;
 		this.players = players;

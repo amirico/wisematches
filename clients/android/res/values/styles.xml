@@ -1,17 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="error">
-        <item name="android:textColor">#cd0a0a</item>
+    <style name="TextAppearance.WM" parent="Widget"/>
+
+    <style name="TextAppearance.WM.Error" parent="TextAppearance.WM">
+        <item name="android:textColor">#ffcd0a0a</item>
     </style>
 
-    <style name="link">
-        <item name="android:textColor">#0000FF</item>
+    <style name="TextAppearance.WM.Link" parent="TextAppearance.WM">
+        <item name="android:textColor">#ff0000FF</item>
     </style>
 
-    <style name="black"></style>
+    <style name="TextAppearance.WM.Player" parent="TextAppearance.WM">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#ffa52a2a</item>
+    </style>
 
-    <style name="GameButton" parent="@android:style/Widget.Button">
-        <item name="android:background">@drawable/board_gbtn</item>
+
+    <style name="Widget.WM" parent="Widget">
+        <item name="android:textColor">@color/widget.content.color</item>
+        <item name="android:background">@drawable/ui_widget_content</item>
+    </style>
+
+    <style name="Widget.WM.Button" parent="Widget.WM">
+        <item name="android:textColor">@color/ui_button</item>
+        <item name="android:background">@drawable/ui_button</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="Widget.WM.Header" parent="Widget.WM">
+        <item name="android:textColor">@color/widget.header.color</item>
+        <item name="android:background">@drawable/ui_widget_header</item>
+    </style>
+
+    <style name="Widget.WM.Content" parent="Widget.WM">
+        <item name="android:textColor">@color/widget.content.color</item>
+        <item name="android:background">@drawable/ui_widget_content</item>
+    </style>
+
+    <style name="Widget.WM.Active" parent="Widget.WM">
+        <item name="android:textColor">@color/state.active.color</item>
+        <item name="android:background">@drawable/ui_widget_active</item>
+    </style>
+
+    <style name="Widget.WM.Highlight" parent="Widget.WM">
+        <item name="android:textColor">@color/state.highlight.color</item>
+        <item name="android:background">@drawable/ui_widget_highlight</item>
+    </style>
+
+    <style name="Theme.WM.ActionBar" parent="Theme.Sherlock.Light">
+        <item name="actionBarSize">28dip</item>
+        <item name="android:actionBarSize">28dip</item>
     </style>
 </resources>

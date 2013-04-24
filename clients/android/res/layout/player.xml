@@ -3,19 +3,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:layout_width="wrap_content"
-              android:layout_height="wrap_content">
-
-    <ImageView android:id="@+id/playerState"
-               android:layout_width="8dip"
-               android:layout_height="8dip"
-               android:layout_gravity="center"
-               android:paddingRight="3dip"
-               android:src="@drawable/player_online"
-               android:visibility="gone"/>
-
-    <TextView android:id="@+id/playerNickname"
-              android:singleLine="true"
-              android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="test player"/>
+              style="@style/TextAppearance.WM.Player"
+              android:background="@android:color/transparent"
+              android:baselineAligned="false">
+
+    <ImageView
+            android:id="@+id/playerState"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:src="@drawable/ui_state_online"
+            android:padding="16dp"
+            android:layout_gravity="center_vertical"/>
+    <!--android:visibility="gone"-->
+
+    <TextView
+            android:id="@+id/playerNickname"
+            android:singleLine="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="test player"
+            style="@style/TextAppearance.WM.Player"/>
 </LinearLayout>

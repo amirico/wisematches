@@ -9,19 +9,18 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import wisematches.client.android.R;
-import wisematches.client.android.app.BitmapFactory;
-import wisematches.client.android.app.playground.TileSelectionListener;
 import wisematches.client.android.app.playground.scribble.model.*;
 import wisematches.client.android.app.playground.scribble.surface.BoardSurface;
 import wisematches.client.android.app.playground.scribble.surface.TileSurface;
+import wisematches.client.android.graphics.BitmapFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class BoardView extends FrameLayout {
+public class ScribbleBoard extends FrameLayout {
 	private static final int TILE_SIZE = 22;
 
 	private BoardSurface boardSurface;
@@ -41,9 +40,9 @@ public class BoardView extends FrameLayout {
 	private final TileSurface[] handTileSurfaces = new TileSurface[7];
 	private final TileSurface[][] boardTileSurfaces = new TileSurface[15][15];
 
-	private final List<TileSelectionListener> selectionListeners = new ArrayList<>();
+	private final List<ScribbleBoardListener> listeners = new ArrayList<>();
 
-	public BoardView(Context context, AttributeSet attrs) {
+	public ScribbleBoard(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
 		setWillNotDraw(false);
@@ -52,9 +51,9 @@ public class BoardView extends FrameLayout {
 		setOnTouchListener(new TheOnTouchListener());
 	}
 
-	protected void initBoardView(ScribbleBoard scribbleBord) {
-		boardSurface = new BoardSurface(scribbleBord, getResources());
-		bitmapFactory = new BitmapFactory(android.graphics.BitmapFactory.decodeResource(getResources(), R.drawable.board_tiles));
+	public void initBoardView(ScribbleGame scribbleBord, BitmapFactory bitmapFactory) {
+		this.bitmapFactory = bitmapFactory;
+		this.boardSurface = new BoardSurface(scribbleBord, getResources());
 
 		for (ScribbleMove move : scribbleBord.getMoves()) {
 			if (move instanceof ScribbleMove.Make) {
@@ -84,8 +83,8 @@ public class BoardView extends FrameLayout {
 	}
 
 
-	public void setTileSelectionListener(TileSelectionListener listener) {
-		this.selectionListeners.add(listener);
+	public void setScribbleBoardListener(ScribbleBoardListener listener) {
+		this.listeners.add(listener);
 	}
 
 
@@ -206,7 +205,7 @@ public class BoardView extends FrameLayout {
 	protected void changeTileSelected(TileSurface tileSurface, boolean selected) {
 		tileSurface.setSelected(selected);
 
-		for (TileSelectionListener selectionListener : selectionListeners) {
+		for (ScribbleBoardListener selectionListener : listeners) {
 			selectionListener.onTileSelected(tileSurface.getTile(), selected);
 		}
 
@@ -254,12 +253,12 @@ public class BoardView extends FrameLayout {
 
 		if (word != null) {
 			selectedWord = word;
-			for (TileSelectionListener selectionListener : selectionListeners) {
+			for (ScribbleBoardListener selectionListener : listeners) {
 				selectionListener.onWordSelected(selectedWord);
 			}
 		} else if (selectedWord != null) {
 			selectedWord = null;
-			for (TileSelectionListener selectionListener : selectionListeners) {
+			for (ScribbleBoardListener selectionListener : listeners) {
 				selectionListener.onWordSelected(selectedWord);
 			}
 		}
@@ -343,19 +342,6 @@ public class BoardView extends FrameLayout {
 			this.col = col;
 			this.rect = rect;
 			this.hand = hand;
-		}
-	}
-
-	@Deprecated
-	private static class PlacedScribbleTile {
-		private final int row;
-		private final int col;
-		private final ScribbleTile tile;
-
-		private PlacedScribbleTile(int row, int col, ScribbleTile tile) {
-			this.tile = tile;
-			this.col = col;
-			this.row = row;
 		}
 	}
 
