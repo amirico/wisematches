@@ -1,0 +1,80 @@
+package wisematches.client.android.app.playground;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import wisematches.client.android.R;
+import wisematches.client.android.app.WiseMatchesActivity;
+import wisematches.client.android.http.ClientResponse;
+import wisematches.client.android.http.CommunicationException;
+import wisematches.client.android.http.CooperationException;
+import wisematches.client.android.os.ProgressTask;
+
+/**
+ * @author Sergey Klimenko (smklimenko@gmail.com)
+ */
+public class ActiveGamesActivity extends WiseMatchesActivity {
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.playground_dashboard);
+
+		// TODO: for testing only
+		if (true) {
+			openBoard(2459);
+			return;
+		}
+
+		final ListView listView = (ListView) findViewById(R.id.scribbleViewActive);
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int position, long arg) {
+				final ScribbleGameInfo info = (ScribbleGameInfo) adapterView.getItemAtPosition(position);
+				openBoard(info.getBoardId());
+			}
+		});
+
+		ProgressTask<Void, Void, ScribbleGameInfo[]> a = new ProgressTask<Void, Void, ScribbleGameInfo[]>("Loading active games. Please wait...", this) {
+			@Override
+			protected ScribbleGameInfo[] doInBackground(Void... voids) {
+				try {
+					final ClientResponse r = getWiseMatchesClient().post("/playground/scribble/active.ajax");
+					if (r.isSuccess()) {
+						final JSONObject data = r.getData();
+
+
+						final JSONArray games = data.getJSONArray("games");
+						ScribbleGameInfo[] infos = new ScribbleGameInfo[games.length()];
+						for (int i = 0; i < games.length(); i++) {
+							final JSONObject obj = games.getJSONObject(i);
+							infos[i] = new ScribbleGameInfo(obj);
+						}
+						return infos;
+					}
+				} catch (JSONException | CooperationException | CommunicationException ex) {
+					ex.printStackTrace();
+				}
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(ScribbleGameInfo[] games) {
+				super.onPostExecute(games);
+
+				ScribbleGameAdapter adapter = new ScribbleGameAdapter(ActiveGamesActivity.this, games);
+				listView.setAdapter(adapter);
+			}
+		};
+		a.execute();
+	}
+
+	private void openBoard(final long boardId) {
+		final Intent intent = new Intent(this, ScribbleBoardActivity.class);
+		intent.putExtra("boardId", boardId);
+		startActivity(intent);
+	}
+}

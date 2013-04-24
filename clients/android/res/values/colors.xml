@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="widget.header.color">#ffffffff</color>
+    <color name="widget.header.border">#ff4297d7</color>
+    <color name="widget.header.background">#ff5c9ccc</color>
+
+    <color name="widget.content.color">#ff020202</color>
+    <color name="widget.content.border">#ffa6c9e2</color>
+    <color name="widget.content.background">#ffeaf4fc</color>
+
+    <color name="state.default.color">#ff2e6e9e</color>
+    <color name="state.default.border">#ffc5dbec</color>
+    <color name="state.default.background">#ffdfeffc</color>
+
+    <color name="state.hover.color">#ff1d5987</color>
+    <color name="state.hover.border">#ff79b7e7</color>
+    <color name="state.hover.background">#ffd0e5f5</color>
+
+    <color name="state.active.color">#fff5f8f9</color>
+    <color name="state.active.border">#ff79b7e7</color>
+    <color name="state.active.background">#ffd0e5f5</color>
+
+    <color name="state.highlight.color">#ff363636</color>
+    <color name="state.highlight.border">#fffad42e</color>
+    <color name="state.highlight.background">#fffbec88</color>
+
+    <color name="state.error.color">#ffcd0a0a</color>
+    <color name="state.error.border">#ffcd0a0a</color>
+    <color name="state.error.background">#fffef1ec</color>
+
+    <color name="state.disabled.color">#ff838383</color>
+    <color name="state.disabled.border">#ff7891a3</color>
+    <color name="state.disabled.background">#ffdbe3e9</color>
+
+    <color name="state.online.border">#ff24c237</color>
+    <color name="state.online.background">#ff188324</color>
+</resources>

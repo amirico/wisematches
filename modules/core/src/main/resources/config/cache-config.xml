@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+        <property name="caches">
+            <list>
+                <bean class="wisematches.core.cache.ReferenceMapCacheFactoryBean">
+                    <property name="name" value="personality"/>
+                    <property name="referenceType" value="SOFT"/>
+                </bean>
+
+                <bean class="wisematches.core.cache.ReferenceMapCacheFactoryBean">
+                    <property name="name" value="board"/>
+                    <property name="referenceType" value="SOFT"/>
+                </bean>
+
+                <bean class="wisematches.core.cache.ReferenceMapCacheFactoryBean">
+                    <property name="name" value="rating"/>
+                    <property name="referenceType" value="SOFT"/>
+                </bean>
+
+                <bean class="wisematches.core.cache.ReferenceMapCacheFactoryBean">
+                    <property name="name" value="statistic"/>
+                    <property name="referenceType" value="SOFT"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+</beans>

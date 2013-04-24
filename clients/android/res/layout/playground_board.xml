@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="5dp"
+              android:background="#ffeaf4fc">
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+        <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|top">
+
+            <view
+                    android:layout_width="356px"
+                    android:layout_height="370px"
+                    class="wisematches.client.android.app.playground.scribble.ScribbleBoard"
+                    android:id="@+id/scribbleBoardView"
+                    android:layout_gravity="left|top"
+                    android:background="@android:color/transparent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignWithParentIfMissing="false"
+                    android:layout_alignParentRight="false"
+                    android:layout_alignParentBottom="false"/>
+        </RelativeLayout>
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="5dp"
+                >
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.WM.Content">
+
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1 Апреля 2012"
+                            android:id="@+id/textView"
+                            android:layout_gravity="left|center_vertical"
+                            android:layout_weight="1"
+                            android:singleLine="true"/>
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="12 Апреля 2014"
+                            android:id="@+id/textView1"
+                            android:singleLine="true"
+                            android:editable="false"
+                            android:layout_gravity="center|right"/>
+                </LinearLayout>
+
+                <view
+                        android:layout_width="fill_parent"
+                        android:layout_height="16dp"
+                        class="wisematches.client.android.app.playground.scribble.ScribbleProgress"
+                        android:id="@+id/view"
+                        android:text="dsfasfdasdf asdf"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"/>
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="3dp"/>
+
+            <ListView
+                    android:layout_width="fill_parent"
+                    android:layout_height="60dp"
+                    android:id="@+id/scribbleBoardPlayersView"
+                    style="@style/Widget.WM.Content"
+                    android:clickable="false"
+                    android:dividerHeight="0dp"
+                    android:minHeight="40dp"
+                    android:longClickable="false"/>
+
+            <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="3dp"/>
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.WM.Content">
+
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content">
+
+                    <EditText
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/scribbleBoardDictField"
+                            android:layout_weight="1"
+                            android:text="adsfasfd"
+                            android:singleLine="true"
+                            style="@android:style/Widget.TextView"
+                            android:layout_gravity="center"
+                            android:editable="false"
+                            android:clickable="false"
+                            android:autoText="false"
+                            android:background="@android:drawable/editbox_background_normal"
+                            android:selectAllOnFocus="true"
+                            android:layout_margin="0dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"/>
+
+                    <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:text="N"
+                            android:id="@+id/button"
+                            android:layout_gravity="center"
+                            style="@style/Widget.WM.Button"
+                            android:padding="0dp"
+                            android:background="@android:drawable/ic_dialog_dialer"/>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content">
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:id="@+id/viewStub"
+                    android:layout_weight="1"/>
+
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+                <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ходить"
+                        android:id="@+id/scribbleBoardBtnMake"
+                        android:layout_weight="1"
+                        style="@style/Widget.WM.Button"
+                        android:layout_marginRight="2dp"
+                        android:enabled="false"
+                        android:singleLine="true"/>
+
+                <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Пропустить"
+                        android:id="@+id/scribbleBoardBtnPass"
+                        style="@style/Widget.WM.Button"
+                        android:layout_marginRight="2dp"
+                        android:layout_marginLeft="2dp"
+                        android:enabled="false"
+                        android:singleLine="true"/>
+
+                <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Обменять"
+                        android:id="@+id/scribbleBoardBtnExchange"
+                        style="@style/Widget.WM.Button"
+                        android:layout_marginLeft="2dp"
+                        android:enabled="false"
+                        android:singleLine="true"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

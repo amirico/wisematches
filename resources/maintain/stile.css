@@ -1,0 +1,65 @@
+body {
+    padding: 0;
+    margin: 0 0 8px;
+    background-color: white;
+}
+
+body, div, label, span, td {
+    font: 13px Arial, sans-serif;
+    line-height: 1.5;
+}
+
+table {
+    padding: 0;
+    border: 0;
+    border-spacing: 0;
+}
+
+#header {
+    width: 100%
+}
+
+#header-image {
+    float: left;
+}
+
+.header-welcome-label {
+    font-weight: bold;
+    font-size: 16px;
+    color: #003333;
+}
+
+.info-label {
+    font-weight: bold;
+}
+
+.shadow {
+    -webkit-box-shadow: 0 0 3px #B6B7BB;
+    -moz-box-shadow: 0 0 3px #B6B7BB;
+    box-shadow: 0 0 3px #B6B7BB;
+}
+
+.info-header .info-label {
+    font-size: 26px;
+    color: #551f1f;
+    padding-bottom: 15px;
+    line-height: normal;
+}
+
+.error-layout {
+    width: 100%;
+    padding-top: 50px;
+    padding-left: 15%;
+    padding-right: 15%;
+    text-align: justify;
+}
+
+.error-layout img {
+    padding-right: 10px;
+    padding-bottom: 10px;
+}
+
+.error-layout h1 {
+    margin: 0 !important;
+    color: #003333;
+}
