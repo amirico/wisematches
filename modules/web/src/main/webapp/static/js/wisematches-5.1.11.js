@@ -2945,9 +2945,9 @@ wm.scribble.Board = function (board, viewer, wildcardHandlerElement, controller,
             validateHandTile(board.handTiles);
         }
 
-        $(document).mouseup(onTileUp);
-        $(document).mousemove(onTileMove);
-        $(scribbleEl).mousedown(onBoardClick);
+        $(document).bind("mouseup touchend touchcancel", onTileUp);
+        $(document).bind("mousemove touchmove", onTileMove);
+        $(scribbleEl).bind("mousedown", onBoardClick);
     };
 
     var onTileSelected = function () {
@@ -2967,8 +2967,9 @@ wm.scribble.Board = function (board, viewer, wildcardHandlerElement, controller,
         }
         draggingTile = $(this);
         var offset = draggingTile.offset();
+        var pointer = getPointerPosition(ev);
         var relatedCell = getRelatedCell(ev, {left: 0, top: 0});
-        draggingTile.data('mouseOffset', {left: ev.pageX - offset.left, top: ev.pageY - offset.top});
+        draggingTile.data('mouseOffset', {left: pointer.x - offset.left, top: pointer.y - offset.top});
         draggingTile.data('originalState', {offset: offset, cell: relatedCell, zIndex: draggingTile.css('zIndex')});
         draggingTile.css('zIndex', 333);
         highlighting.start(draggingTile, relatedCell);
@@ -2980,12 +2981,13 @@ wm.scribble.Board = function (board, viewer, wildcardHandlerElement, controller,
             return;
         }
         if (draggingTile != null && draggingTile != undefined) {
+            var pointer = getPointerPosition(ev);
             var tileOffset = draggingTile.data('mouseOffset');
             var relatedCell = getRelatedCell(ev, {left: tileOffset.left - 5, top: tileOffset.top - 5});
-            draggingTile.offset({left: ev.pageX - tileOffset.left, top: ev.pageY - tileOffset.top});
+            draggingTile.offset({left: pointer.x - tileOffset.left, top: pointer.y - tileOffset.top});
             highlighting.highlight(relatedCell);
+            ev.preventDefault();
         }
-        ev.preventDefault();
     };
 
     var onTileUp = function (ev) {
@@ -3063,6 +3065,7 @@ wm.scribble.Board = function (board, viewer, wildcardHandlerElement, controller,
             return;
         }
         var relatedCell = getRelatedCell(ev, {left: 0, top: 0});
+
         if (relatedCell == null) {
             return;
         }
@@ -3078,19 +3081,33 @@ wm.scribble.Board = function (board, viewer, wildcardHandlerElement, controller,
 
     var getRelatedCell = function (ev, tileOffset) {
         var bo = boardEl.offset();
-        var x = (((ev.pageX - bo.left - tileOffset.left) / 22) | 0);
-        var y = (((ev.pageY - bo.top - tileOffset.top) / 22) | 0);
+        var pointer = getPointerPosition(ev);
+        var x = (((pointer.x - bo.left - tileOffset.left) / 22) | 0);
+        var y = (((pointer.y - bo.top - tileOffset.top) / 22) | 0);
         if (x >= 0 && x <= 14 && y >= 0 && y <= 14) {
             return {x: x, y: y, container: boardEl};
         }
 
         var ho = handEl.offset();
-        x = (((ev.pageX - ho.left - tileOffset.left) / 22) | 0);
-        y = (((ev.pageY - ho.top - tileOffset.top) / 22) | 0);
+        x = (((pointer.x - ho.left - tileOffset.left) / 22) | 0);
+        y = (((pointer.y - ho.top - tileOffset.top) / 22) | 0);
         if (x >= 0 && x <= 6 && y == 0) {
             return {x: x, y: y, container: handEl};
         }
         return null;
+    };
+
+    var getPointerPosition = function (e) {
+        var out = {x: 0, y: 0};
+        if (e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel') {
+            var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+            out.x = touch.pageX;
+            out.y = touch.pageY;
+        } else if (e.type == 'mousedown' || e.type == 'mouseup' || e.type == 'mousemove' || e.type == 'mouseover' || e.type == 'mouseout' || e.type == 'mouseenter' || e.type == 'mouseleave') {
+            out.x = e.pageX;
+            out.y = e.pageY;
+        }
+        return out;
     };
 
     var changeTileSelection = function (tileWidget, select, notifyWord) {
@@ -3120,7 +3137,7 @@ wm.scribble.Board = function (board, viewer, wildcardHandlerElement, controller,
         $.each(handTiles, function (i, handTile) {
             if (handTile == null || handTile == undefined) {
                 handTiles[i] = wm.scribble.tile.createTileWidget(tile).
-                    offset({top: 0, left: i * 22}).mousedown(onTileDown).appendTo(handEl);
+                    offset({top: 0, left: i * 22}).bind("mousedown touchstart", onTileDown).appendTo(handEl);
                 return false;
             }
         });
@@ -3311,11 +3328,11 @@ wm.scribble.Board = function (board, viewer, wildcardHandlerElement, controller,
         if (board.resolution != null && board.resolution != oldResolution) {
             setBoardEnabled(false, false);
             clearSelectionImpl();
-            scribbleEl.trigger('resolution', oldResolution, board.resolution);
+            scribbleEl.trigger('resolution', [oldResolution, board.resolution]);
         }
 
         if (board.playerTurn != oldPlayerTurn) {
-            scribbleEl.trigger('playerTurn', oldPlayerTurn, board.playerTurn);
+            scribbleEl.trigger('playerTurn', [oldPlayerTurn, board.playerTurn]);
         }
     };
 
@@ -3790,20 +3807,6 @@ wm.scribble.Monitoring = function (board) {
     var items = {};
     var monitoringInstance = this;
 
-    var robotGameOnly = false;
-    var validatingState = false;
-
-    var checkRobotGame = function () {
-        var robotsCount = 0;
-        var players = board.getPlayers();
-        $.each(players, function (i, e) {
-            if (e.info.type == "ROBOT") {
-                robotsCount++;
-            }
-        });
-        return robotsCount + 1 == players.length;
-    };
-
     var sendServerRequest = function () {
         var params = '';
         $.each(items, function (i, v) {
@@ -3851,23 +3854,17 @@ wm.scribble.Monitoring = function (board) {
         $(board).stopTime('BoardMonitoring-' + board.getBoardId());
     };
 
-    robotGameOnly = checkRobotGame();
-
     if (board.isBoardActive()) {
         board.bind('resolution', function (event, resolution) {
             monitoringInstance.stopMonitoring();
         });
 
-        if (robotGameOnly) {
-            board.bind('validated', function (event, resolution) {
-                if (!validatingState) {
-                    validatingState = true;
-                    setTimeout(sendServerRequest, 1000);
-                } else {
-                    validatingState = false;
-                }
-            });
-        }
+        board.bind('playerTurn', function (event, oldPlayerTurn, newPlayerTurn) {
+            var player = board.getPlayer(newPlayerTurn);
+            if (player != null && player != undefined && player.info.type == "ROBOT") {
+                setTimeout(sendServerRequest, 1000);
+            }
+        });
     }
 };
 
