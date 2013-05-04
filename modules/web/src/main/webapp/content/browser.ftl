@@ -13,7 +13,7 @@
                 <td><img src="<@wm.ui.static "images/browser/opera64.png"/>" alt="Opera"></td>
                 <td><img src="<@wm.ui.static "images/browser/firefox64.png"/>" alt="Firefox"></td>
                 <td><img src="<@wm.ui.static "images/browser/safari64.png"/>" alt="Safari"></td>
-                <td><img src="<@wm.ui.static "images/browser/yandex64.png"/>" alt="Safari"></td>
+                <td><img src="<@wm.ui.static "images/browser/yandex64.png"/>" alt="Yandex"></td>
             </tr>
             <tr>
                 <td><a href="http://www.google.com/chrome">Google Chrome 12</a></td>

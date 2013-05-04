@@ -33,7 +33,7 @@
                     <entry key="CHROME" value="12"/>
                     <entry key="OPERA" value="11"/>
                     <entry key="FIREFOX" value="4"/>
-                    <entry key="SAFARI" value="5"/>
+                    <entry key="SAFARI" value="4"/>
                 </map>
             </property>
         </bean>

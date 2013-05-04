@@ -54,32 +54,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="51d65069-92c6-43d0-bd58-3e2e6988c8fe" name="Default" comment="+Issue 124: login activity is ready (registration and restore are external - browser).">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/wisematches/client/android/core/Player.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/PlayerView.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/ScribblePlayerViewAdapter.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/playground_board_player.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidManifest.xml" afterPath="$PROJECT_DIR$/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/BoardView.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/BoardView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/view/PlayerInfo.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/view/PlayerInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/model/ScribbleBoard.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/model/ScribbleBoard.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/ScribbleBoardActivity.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/ScribbleBoardActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/view/playground/ScribbleGameInfoAdapter.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/view/playground/ScribbleGameInfoAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/model/ScribblePlayer.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/model/ScribblePlayer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/android.iml" afterPath="$PROJECT_DIR$/android.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/android.ipr" afterPath="$PROJECT_DIR$/android.ipr" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/android.iws" afterPath="$PROJECT_DIR$/android.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../modules/web/src/main/webapp/static/js/jquery.mousewheelIntent-1.2.0.js" afterPath="$PROJECT_DIR$/../../modules/web/src/main/webapp/static/js/jquery.mousewheelIntent-1.2.0.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/playground_board.xml" afterPath="$PROJECT_DIR$/res/layout/playground_board.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project.properties" afterPath="$PROJECT_DIR$/project.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../modules/web/src/main/webapp/static/js/wisematches-5.1.8.js" afterPath="$PROJECT_DIR$/../../modules/web/src/main/webapp/static/js/wisematches-5.1.8.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../modules/web/src/main/webapp/content/wisematches.ftl" afterPath="$PROJECT_DIR$/../../modules/web/src/main/webapp/content/wisematches.ftl" />
-      <change type="MOVED" beforePath="C:\Source\wm\clients\android\res\layout\core_player.xml" afterPath="$PROJECT_DIR$/res/layout/player.xml" />
     </list>
     <ignored path="android.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/strings.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365754135791" ignored="false" />
-    <file path="/a.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365071346978" ignored="false" />
-    <file path="/fragment.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366376494666" ignored="false" />
+    <file path="/a.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1367651924981" ignored="false" />
+    <file path="/fragment.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1367651985723" ignored="false" />
     <file path="/ApplicationAtivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365067739322" ignored="false" />
     <file path="/ServerRequest.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365066112309" ignored="false" />
     <file path="/AndroidManifest.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1366375105708" ignored="false" />
@@ -204,6 +185,23 @@
   </component>
   <component name="DebuggerManager">
     <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint url="file://$PROJECT_DIR$/src/wisematches/client/android/http/WiseMatchesServer.java" line="97" class="wisematches.client.android.http.WiseMatchesServer" package="wisematches.client.android.http">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </line_breakpoints>
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -240,23 +238,6 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint url="file://$PROJECT_DIR$/src/wisematches/client/android/http/WiseMatchesServer.java" line="97" class="wisematches.client.android.http.WiseMatchesServer" package="wisematches.client.android.http">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-    </line_breakpoints>
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -300,10 +281,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1272" />
+    <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1296" />
-    <option name="height" value="1010" />
+    <option name="width" value="1382" />
+    <option name="height" value="754" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -331,7 +312,7 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -350,26 +331,45 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="SHOW_ALL_PROCESSES" value="false" />
-    <property name="project.structure.last.edited" value="Facets" />
-    <property name="project.structure.proportion" value="0.15" />
     <property name="OverrideImplement.combined" value="true" />
+    <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="Repository.Attach.JavaDocs" value="false" />
-    <property name="recentsLimit" value="5" />
-    <property name="MemberChooser.sorted" value="false" />
     <property name="ExportedApkPath" value="C:\Source\wm\clients\android\android.apk" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="recentsLimit" value="5" />
     <property name="ExportedModule" value="android" />
-    <property name="last_opened_file_path" value="C:/Software/adt/sdk/tools/apps/actionbarsherlock/libs/android-support-v4.jar!/" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/android.ipr" />
     <property name="DEBUGGABLE_DEVICE" value="emulator-5554 (test)" />
     <property name="DEBUGGABLE_PROCESS" value="wisematches.client.android" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="FullScreen" value="false" />
@@ -389,37 +389,19 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Source\wm\clients\android\res\drawable" />
     </key>
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="wisematches.client.android.view" />
-      <recent name="wisematches.client" />
-      <recent name="wisematches.client.android" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Source\wm\clients\android\res\drawable" />
       <recent name="C:\Source\wm\clients\android\res\layout" />
       <recent name="C:\Source\wm\clients\android\res\layout\playground" />
       <recent name="C:\Source\wm\clients\android\res\layout\account" />
     </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="wisematches.client.android.view" />
+      <recent name="wisematches.client" />
+      <recent name="wisematches.client.android" />
+    </key>
   </component>
   <component name="RunManager" selected="Android Application.android">
-    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
-      <module name="" />
-      <option name="TESTING_TYPE" value="0" />
-      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
-      <option name="PREFERRED_AVD" value="" />
-      <option name="USE_COMMAND_LINE" value="true" />
-      <option name="COMMAND_LINE" value="" />
-      <option name="WIPE_USER_DATA" value="false" />
-      <option name="DISABLE_BOOT_ANIMATION" value="false" />
-      <option name="NETWORK_SPEED" value="full" />
-      <option name="NETWORK_LATENCY" value="none" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <method />
-    </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
       <option name="USE_SOCKET_TRANSPORT" value="true" />
       <option name="SERVER_MODE" value="false" />
@@ -571,23 +553,22 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1272" y="-8" width="1296" height="1010" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="754" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32837528" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30549198" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33638445" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33495146" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25121555" sideWeight="0.74485123" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32837528" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3272311" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32951945" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22690438" sideWeight="0.687643" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3006483" sideWeight="0.6716247" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3" sideWeight="0.66504854" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32951945" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17341977" sideWeight="0.694508" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32837528" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
@@ -595,12 +576,13 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4197731" sideWeight="0.6533181" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25121555" sideWeight="0.694508" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298217" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298217" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32951945" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32837528" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="EJB" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -669,55 +651,22 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/ScribblePlayerViewAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="25" selection-start="946" selection-end="946" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
+        <state line="29" column="25" selection-start="946" selection-end="946" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/BoardView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="267" column="4" selection-start="8465" selection-end="8465" vertical-scroll-proportion="1.1962135">
-          <folding>
-            <element signature="docComment;class#BoardView#0" expanded="false" />
-            <element signature="method#BoardView#0;class#BoardView#0" expanded="false" />
-            <element signature="method#initBoardView#0;class#BoardView#0" expanded="false" />
-            <element signature="method#setTileSelectionListener#0;class#BoardView#0" expanded="false" />
-            <element signature="method#clearSelection#0;class#BoardView#0" expanded="false" />
-            <element signature="method#getSelectedWord#0;class#BoardView#0" expanded="false" />
-            <element signature="method#onDraw#0;class#BoardView#0" expanded="false" />
-            <element signature="method#processTouchEvent#0;class#BoardView#0" expanded="false" />
-            <element signature="method#changeTileSelected#0;class#BoardView#0" expanded="false" />
-            <element signature="method#rollbackDragging#0;class#BoardView#0" expanded="false" />
-            <element signature="method#finishDragging#0;class#BoardView#0" expanded="false" />
-            <element signature="method#beginDragging#0;class#BoardView#0" expanded="false" />
-            <element signature="method#getTilePosition#0;class#BoardView#0" expanded="false" />
-            <element signature="class#Position#0;class#BoardView#0" expanded="false" />
-            <element signature="method#Position#0;class#Position#0;class#BoardView#0" expanded="false" />
-            <element signature="class#PlacedScribbleTile#0;class#BoardView#0" expanded="false" />
-            <element signature="method#PlacedScribbleTile#0;class#PlacedScribbleTile#0;class#BoardView#0" expanded="false" />
-            <element signature="class#TheOnTouchListener#0;class#BoardView#0" expanded="false" />
-            <element signature="method#onTouch#0;class#TheOnTouchListener#0;class#BoardView#0" expanded="false" />
-          </folding>
-        </state>
+        <state line="267" column="4" selection-start="8465" selection-end="8465" vertical-scroll-proportion="1.1962135" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/model/ScribbleBoard.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="42" selection-start="246" selection-end="246" vertical-scroll-proportion="0.16915423">
-          <folding />
-        </state>
+        <state line="9" column="42" selection-start="246" selection-end="246" vertical-scroll-proportion="0.16915423" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/layout/playground_board.xml">
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
       <provider editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/playground/scribble/ScribbleBoardActivity.java">
@@ -740,70 +689,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/project.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="39" selection-start="630" selection-end="630" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="14" column="39" selection-start="630" selection-end="630" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ant.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/build.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="70" column="45" selection-start="3039" selection-end="3039" vertical-scroll-proportion="0.16197184">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Software/adt/sdk/platforms/android-8/android.jar!/android/util/DisplayMetrics.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="24" selection-start="94" selection-end="94" vertical-scroll-proportion="0.04009434">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/src/com/actionbarsherlock/ActionBarSherlock.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="22" selection-start="1182" selection-end="1182" vertical-scroll-proportion="0.12215569">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/src/com/actionbarsherlock/app/ActionBar.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="22" selection-start="3018" selection-end="3018" vertical-scroll-proportion="-1.0023584">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/src/com/actionbarsherlock/app/SherlockFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="39" selection-start="626" selection-end="626" vertical-scroll-proportion="0.081437126">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/res/values/abs__styles.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="100" column="0" selection-start="6245" selection-end="6245" vertical-scroll-proportion="0.21796407">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/res/values-v14/abs__themes.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="21" selection-start="1411" selection-end="1411" vertical-scroll-proportion="0.5412736">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Software/adt/sdk/tools/apps/asd/actionbarsherlock/res/values-v14/abs__styles.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="49" selection-start="1004" selection-end="1004" vertical-scroll-proportion="0.38682634">
           <folding />
         </state>
       </provider>
@@ -825,7 +721,7 @@
       </state>
       <state key="FacetStructureConfigurable.UI">
         <settings>
-          <last-edited>Android (actionbarsherlock)|Android</last-edited>
+          <last-edited>Android</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -837,7 +733,7 @@
       </state>
       <state key="GlobalLibrariesConfigurable.UI">
         <settings>
-          <last-edited>openapi</last-edited>
+          <last-edited>plusone</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -849,7 +745,7 @@
       </state>
       <state key="JdkListConfigurable.UI">
         <settings>
-          <last-edited>Android 2.2 Platform</last-edited>
+          <last-edited>1.6</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -861,11 +757,12 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>actionbarsherlock</last-edited>
+          <last-edited>android</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
                 <option value="0.2" />
+                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>
