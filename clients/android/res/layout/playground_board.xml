@@ -4,8 +4,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:padding="5dp"
-              android:background="#ffeaf4fc">
+              android:padding="5dp">
 
     <LinearLayout
             android:orientation="horizontal"
@@ -20,7 +19,7 @@
             <view
                     android:layout_width="356px"
                     android:layout_height="370px"
-                    class="wisematches.client.android.app.playground.scribble.ScribbleBoard"
+                    class="wisematches.client.android.app.playground.scribble.view.BoardView"
                     android:id="@+id/scribbleBoardView"
                     android:layout_gravity="left|top"
                     android:background="@android:color/transparent"
@@ -38,65 +37,149 @@
                 android:layout_marginLeft="5dp"
                 >
 
-            <LinearLayout
-                    android:orientation="vertical"
+            <TableLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:stretchColumns="1"
                     style="@style/Widget.WM.Content">
 
-                <LinearLayout
-                        android:orientation="horizontal"
+                <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Started:"
+                            android:layout_gravity="top"
+                            android:textAppearance="@style/TextAppearance.WM.Label"/>
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1 Апреля 2013"
+                            android:id="@+id/textView1"/>
+                </TableRow>
+
+                <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Finished:"
+                            android:id="@+id/textView2"
+                            android:layout_gravity="top"
+                            android:textAppearance="@style/TextAppearance.WM.Label"/>
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="13 Мая 2013"
+                            android:id="@+id/textView3"/>
+                </TableRow>
+
+                <TableRow
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content">
 
                     <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="1 Апреля 2012"
-                            android:id="@+id/textView"
-                            android:layout_gravity="left|center_vertical"
-                            android:layout_weight="1"
-                            android:singleLine="true"/>
-
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="12 Апреля 2014"
-                            android:id="@+id/textView1"
+                            android:text="Progress:"
+                            android:id="@+id/textView4"
                             android:singleLine="true"
-                            android:editable="false"
-                            android:layout_gravity="center|right"/>
-                </LinearLayout>
+                            android:layout_column="0"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top"
+                            android:textAppearance="@style/TextAppearance.WM.Label"/>
 
-                <view
-                        android:layout_width="fill_parent"
-                        android:layout_height="16dp"
-                        class="wisematches.client.android.app.playground.scribble.ScribbleProgress"
-                        android:id="@+id/view"
-                        android:text="dsfasfdasdf asdf"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"/>
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_column="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-                <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent">
-                </LinearLayout>
-            </LinearLayout>
+                        <view
+                                android:layout_width="fill_parent"
+                                android:layout_height="16dp"
+                                class="wisematches.client.android.app.playground.scribble.view.ProgressView"
+                                android:id="@+id/scribbleBoardProgressView"
+                                android:text="dsfasfdasdf asdf"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"/>
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="фишек на доске/банке/руках"
+                                android:id="@+id/scribbleBoardProgressText"
+                                android:textSize="8dp"
+                                android:layout_gravity="right"/>
+                    </LinearLayout>
+                </TableRow>
+
+            </TableLayout>
 
             <View
                     android:layout_width="wrap_content"
                     android:layout_height="3dp"/>
 
-            <ListView
+            <TableLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="60dp"
-                    android:id="@+id/scribbleBoardPlayersView"
+                    android:layout_height="wrap_content"
                     style="@style/Widget.WM.Content"
-                    android:clickable="false"
-                    android:dividerHeight="0dp"
-                    android:minHeight="40dp"
-                    android:longClickable="false"/>
+                    android:stretchColumns="0"
+                    android:longClickable="false"
+                    android:id="@+id/scribbleBoardPlayers">
+
+                <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+
+                    <view
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            class="wisematches.client.android.app.account.view.PlayerView"
+                            android:id="@+id/view"
+                            android:layout_column="0"/>
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView5"/>
+
+                </TableRow>
+
+                <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+
+                    <view
+                            class="wisematches.client.android.app.account.view.PlayerView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/view1"
+                            android:layout_column="0"/>
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView6"/>
+                </TableRow>
+
+                <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:visibility="gone">
+                </TableRow>
+
+                <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:visibility="gone">
+                </TableRow>
+            </TableLayout>
 
             <View
                     android:layout_width="wrap_content"
@@ -118,7 +201,6 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/scribbleBoardDictField"
                             android:layout_weight="1"
-                            android:text="adsfasfd"
                             android:singleLine="true"
                             style="@android:style/Widget.TextView"
                             android:layout_gravity="center"
@@ -135,26 +217,48 @@
 
                     <Button
                             android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:text="N"
-                            android:id="@+id/button"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/scribbleBoardBtnDict"
                             android:layout_gravity="center"
                             style="@style/Widget.WM.Button"
-                            android:padding="0dp"
-                            android:background="@android:drawable/ic_dialog_dialer"/>
+                            android:drawableLeft="@drawable/board_dictionary_check"
+                            android:padding="3dp"/>
                 </LinearLayout>
 
                 <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:id="@+id/textView"
+                            android:singleLine="true"
+                            android:layout_weight="1"
+                            />
+
+                    <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Запомнить"
+                            android:id="@+id/button"
+                            android:drawableLeft="@drawable/board_memory_add"
+                            android:layout_gravity="center"
+                            style="@style/Widget.WM.Button"
+                            android:longClickable="false"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="2dp"
+                            android:paddingRight="5dp"
+                            android:paddingBottom="2dp"
+                            android:textSize="12dp"
+                            android:enabled="false"/>
                 </LinearLayout>
             </LinearLayout>
 
             <View
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:id="@+id/viewStub"
                     android:layout_weight="1"/>
 
             <LinearLayout
@@ -171,31 +275,37 @@
                         style="@style/Widget.WM.Button"
                         android:layout_marginRight="2dp"
                         android:enabled="false"
-                        android:singleLine="true"/>
+                        android:singleLine="true"
+                        android:drawableLeft="@drawable/board_control_make"/>
 
                 <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Пропустить"
+                        android:text="Пропуск"
                         android:id="@+id/scribbleBoardBtnPass"
                         style="@style/Widget.WM.Button"
                         android:layout_marginRight="2dp"
                         android:layout_marginLeft="2dp"
                         android:enabled="false"
-                        android:singleLine="true"/>
+                        android:singleLine="true"
+                        android:drawableLeft="@drawable/board_control_pass"
+                        android:layout_weight="1"/>
 
                 <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Обменять"
+                        android:text="Обмен"
                         android:id="@+id/scribbleBoardBtnExchange"
                         style="@style/Widget.WM.Button"
-                        android:layout_marginLeft="2dp"
                         android:enabled="false"
-                        android:singleLine="true"/>
+                        android:singleLine="true"
+                        android:layout_marginRight="2dp"
+                        android:layout_marginLeft="2dp"
+                        android:drawableLeft="@drawable/board_control_exchange"
+                        android:layout_weight="1"/>
             </LinearLayout>
 
         </LinearLayout>
-    </LinearLayout>
 
+    </LinearLayout>
 </LinearLayout>

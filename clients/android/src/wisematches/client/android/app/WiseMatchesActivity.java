@@ -8,7 +8,7 @@ import wisematches.client.android.http.WiseMatchesClient;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class WiseMatchesActivity extends SherlockActivity {
+public abstract class WiseMatchesActivity extends SherlockActivity {
 	public WiseMatchesActivity() {
 	}
 

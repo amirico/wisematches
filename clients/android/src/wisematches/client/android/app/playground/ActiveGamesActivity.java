@@ -65,7 +65,7 @@ public class ActiveGamesActivity extends WiseMatchesActivity {
 			protected void onPostExecute(ScribbleGameInfo[] games) {
 				super.onPostExecute(games);
 
-				ScribbleGameAdapter adapter = new ScribbleGameAdapter(ActiveGamesActivity.this, games);
+				ActiveGamesAdapter adapter = new ActiveGamesAdapter(ActiveGamesActivity.this, games);
 				listView.setAdapter(adapter);
 			}
 		};

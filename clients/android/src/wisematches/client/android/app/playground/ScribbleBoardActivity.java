@@ -2,24 +2,25 @@ package wisematches.client.android.app.playground;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import wisematches.client.android.R;
 import wisematches.client.android.app.WiseMatchesActivity;
-import wisematches.client.android.app.playground.scribble.ScribbleBoard;
-import wisematches.client.android.app.playground.scribble.ScribbleBoardListener;
+import wisematches.client.android.app.account.view.PlayerView;
 import wisematches.client.android.app.playground.scribble.model.*;
+import wisematches.client.android.app.playground.scribble.view.BoardView;
+import wisematches.client.android.app.playground.scribble.view.BoardViewListener;
+import wisematches.client.android.app.playground.scribble.view.ProgressView;
 import wisematches.client.android.http.ClientResponse;
 import wisematches.client.android.os.ProgressTask;
-
-import java.util.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -120,98 +121,7 @@ public class ScribbleBoardActivity extends WiseMatchesActivity {
 					final ClientResponse r = new ClientResponse(true, board);
 					//getWiseMatchesClient().post("/playground/scribble/board/load.ajax?b=" + boardId);
 					if (r.isSuccess()) {
-						final JSONObject data = r.getData();
-
-						Log.i("wm", data.toString());
-
-						final long id = data.getLong("id");
-
-						final JSONArray jsonBonuses = data.getJSONArray("bonuses");
-						final ScoreBonus[] bonuses = new ScoreBonus[jsonBonuses.length()];
-						for (int i = 0; i < bonuses.length; i++) {
-							JSONObject o = jsonBonuses.getJSONObject(i);
-							bonuses[i] = new ScoreBonus(o.getInt("row"), o.getInt("column"), ScoreBonus.Type.valueOf(o.getString("type")));
-						}
-
-						final JSONArray jsonPlayers = data.getJSONArray("players");
-						final List<ScribblePlayer> players = new ArrayList<>();
-						final Map<Long, ScribblePlayer> playersMap = new HashMap<>();
-						for (int i = 0; i < jsonPlayers.length(); i++) {
-							final JSONObject jsonPlayer = jsonPlayers.getJSONObject(i);
-
-							final long pid = jsonPlayer.getLong("id");
-
-							final JSONObject jsonInfo = jsonPlayer.getJSONObject("info");
-
-							final JSONObject jsonScore = jsonPlayer.getJSONObject("score");
-
-							ScribblePlayer p = new ScribblePlayer(pid,
-									jsonInfo.getString("nickname"),
-									jsonInfo.getString("type"),
-									jsonInfo.getString("membership"),
-									jsonInfo.getBoolean("online"));
-
-							p.setPoints(jsonScore.getInt("points"));
-							p.setNewRating(jsonScore.getInt("newRating"));
-							p.setOldRating(jsonScore.getInt("oldRating"));
-							p.setWinner(jsonScore.getBoolean("winner"));
-
-							players.add(p);
-							playersMap.put(p.getId(), p);
-						}
-
-						final JSONArray jsonMoves = data.getJSONArray("moves");
-						List<ScribbleMove> moves = new ArrayList<>();
-						for (int i = 0; i < jsonMoves.length(); i++) {
-							final JSONObject jsonMove = jsonMoves.getJSONObject(i);
-							final int number = jsonMove.getInt("number");
-							final int points = jsonMove.getInt("points");
-							final long pid = jsonMove.getLong("player");
-							final Date time = new Date(jsonMove.getJSONObject("time").getLong("millis"));
-
-							final MoveType moveType = MoveType.valueOf(jsonMove.getString("type"));
-
-							ScribbleMove move = null;
-							switch (moveType) {
-								case MAKE:
-									final JSONObject jsonWord = jsonMove.getJSONObject("word");
-
-									final JSONObject jsonPosition = jsonWord.getJSONObject("position");
-
-									final JSONArray jsonTiles = jsonWord.getJSONArray("tiles");
-									final ScribbleTile[] tiles = new ScribbleTile[jsonTiles.length()];
-									for (int j = 0; j < jsonTiles.length(); j++) {
-										final JSONObject jsonTile = jsonTiles.getJSONObject(j);
-										tiles[j] = new ScribbleTile(
-												jsonTile.getInt("cost"),
-												jsonTile.getInt("number"),
-												jsonTile.getString("letter"));
-									}
-									final ScribbleWord w = new ScribbleWord(
-											jsonPosition.getInt("row"),
-											jsonPosition.getInt("column"),
-											WordDirection.valueOf(jsonWord.getString("direction")),
-											tiles);
-									move = new ScribbleMove.Make(number, points, time, playersMap.get(pid), w);
-									break;
-								case PASS:
-									move = new ScribbleMove.Pass(number, points, time, playersMap.get(pid));
-									break;
-								case EXCHANGE:
-									move = new ScribbleMove.Exchange(number, points, time, playersMap.get(pid));
-									break;
-							}
-							moves.add(move);
-						}
-
-						final JSONObject jsonSettings = data.getJSONObject("settings");
-						final ScribbleSettings settings = new ScribbleSettings(
-								jsonSettings.getString("title"),
-								jsonSettings.getString("language"),
-								jsonSettings.getInt("daysPerMove"),
-								jsonSettings.getBoolean("scratch"));
-
-						return new ScribbleGame(id, settings, players, moves, new ScoreEngine(bonuses, 30));
+						return JSONScribbleParser.parseGame(r.getData());
 					} else {
 						Log.e("wm", "Board can't be loaded from server");
 						return null;
@@ -244,7 +154,7 @@ public class ScribbleBoardActivity extends WiseMatchesActivity {
 				return true;
 			}
 		});
-		test.setIcon(R.drawable.board_memory).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		test.setIcon(R.drawable.board_memory_add).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		return true;
 	}
@@ -259,10 +169,35 @@ public class ScribbleBoardActivity extends WiseMatchesActivity {
 
 		final TextView dictField = (TextView) findViewById(R.id.scribbleBoardDictField);
 
-		final ScribbleBoard viewById = (ScribbleBoard) findViewById(R.id.scribbleBoardView);
-		viewById.initBoardView(board, getBitmapFactory());
-		viewById.requestFocus();
-		viewById.setScribbleBoardListener(new ScribbleBoardListener() {
+		final BoardView boardView = (BoardView) findViewById(R.id.scribbleBoardView);
+		boardView.initBoardView(board, getBitmapFactory());
+		boardView.requestFocus();
+
+		final ProgressView progressView = (ProgressView) findViewById(R.id.scribbleBoardProgressView);
+		progressView.updateProgress(board);
+
+		final Button dictionaryBth = (Button) findViewById(R.id.scribbleBoardBtnDict);
+
+		int index = 0;
+		final TableLayout tableLayout = (TableLayout) findViewById(R.id.scribbleBoardPlayers);
+		for (ScribblePlayer player : board.getPlayers()) {
+			final TableRow row = (TableRow) tableLayout.getChildAt(index);
+
+			final PlayerView pv = (PlayerView) row.getChildAt(0);
+			pv.setPlayer(player);
+
+			final TextView view = (TextView) row.getChildAt(1);
+			view.setText(String.valueOf(player.getPoints()));
+
+			index++;
+		}
+/*
+		final ListView playersView = (ListView) findViewById(R.id.scribbleBoardPlayersView);
+		playersView.setDivider(null);
+		playersView.setAdapter(new ScribblePlayerAdapter(this, board.getPlayers()));
+*/
+
+		boardView.setScribbleBoardListener(new BoardViewListener() {
 			@Override
 			public void onTileSelected(ScribbleTile tile, boolean selected) {
 			}
@@ -283,19 +218,10 @@ public class ScribbleBoardActivity extends WiseMatchesActivity {
 			}
 		});
 
-		final ListView playerView = (ListView) findViewById(R.id.scribbleBoardPlayersView);
-		playerView.setDivider(null);
-		playerView.setAdapter(new ScribblePlayerAdapter(this, board.getPlayers()));
-
-
-/*
-		final Button viewById1 = (Button) findViewById(R.id.scribbleBoardBtnClear);
-		viewById1.setOnClickListener(new View.OnClickListener() {
+		dictionaryBth.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View view) {
-				viewById.clearSelection();
+			public void onClick(View v) {
 			}
 		});
-*/
 	}
 }

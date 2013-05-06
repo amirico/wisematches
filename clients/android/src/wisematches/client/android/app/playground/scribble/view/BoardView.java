@@ -1,4 +1,4 @@
-package wisematches.client.android.app.playground.scribble;
+package wisematches.client.android.app.playground.scribble.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ScribbleBoard extends FrameLayout {
+public class BoardView extends FrameLayout {
 	private static final int TILE_SIZE = 22;
 
 	private BoardSurface boardSurface;
@@ -40,9 +40,9 @@ public class ScribbleBoard extends FrameLayout {
 	private final TileSurface[] handTileSurfaces = new TileSurface[7];
 	private final TileSurface[][] boardTileSurfaces = new TileSurface[15][15];
 
-	private final List<ScribbleBoardListener> listeners = new ArrayList<>();
+	private final List<BoardViewListener> listeners = new ArrayList<>();
 
-	public ScribbleBoard(Context context, AttributeSet attrs) {
+	public BoardView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
 		setWillNotDraw(false);
@@ -83,7 +83,7 @@ public class ScribbleBoard extends FrameLayout {
 	}
 
 
-	public void setScribbleBoardListener(ScribbleBoardListener listener) {
+	public void setScribbleBoardListener(BoardViewListener listener) {
 		this.listeners.add(listener);
 	}
 
@@ -111,6 +111,19 @@ public class ScribbleBoard extends FrameLayout {
 
 	public ScribbleWord getSelectedWord() {
 		return selectedWord;
+	}
+
+
+	public int getBankCapacity() {
+		return 124;
+	}
+
+	public int getBankTilesCount() {
+		return 110;
+	}
+
+	public int getBoardTilesCount() {
+		return 0;
 	}
 
 
@@ -205,7 +218,7 @@ public class ScribbleBoard extends FrameLayout {
 	protected void changeTileSelected(TileSurface tileSurface, boolean selected) {
 		tileSurface.setSelected(selected);
 
-		for (ScribbleBoardListener selectionListener : listeners) {
+		for (BoardViewListener selectionListener : listeners) {
 			selectionListener.onTileSelected(tileSurface.getTile(), selected);
 		}
 
@@ -253,12 +266,12 @@ public class ScribbleBoard extends FrameLayout {
 
 		if (word != null) {
 			selectedWord = word;
-			for (ScribbleBoardListener selectionListener : listeners) {
+			for (BoardViewListener selectionListener : listeners) {
 				selectionListener.onWordSelected(selectedWord);
 			}
 		} else if (selectedWord != null) {
 			selectedWord = null;
-			for (ScribbleBoardListener selectionListener : listeners) {
+			for (BoardViewListener selectionListener : listeners) {
 				selectionListener.onWordSelected(selectedWord);
 			}
 		}

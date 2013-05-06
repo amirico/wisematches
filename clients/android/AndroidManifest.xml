@@ -9,9 +9,15 @@
             android:targetSdkVersion="8"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"/>
 
     <uses-feature
-            android:name="android.hardware.screen.portrait"
+            android:name="android.hardware.screen.landscape"
             android:required="true"/>
 
     <uses-feature
@@ -22,28 +28,32 @@
             android:name=".app.WiseMatchesApplication"
             android:icon="@drawable/ic_launcher"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar">
+            android:theme="@style/Theme.WM"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="landscape">
 
-        <!--
-                <activity
-                        android:name=".app.EntryPointActivity"
-                        android:noHistory="true"
-                        android:screenOrientation="portrait">
-                    <intent-filter>
-                        <action android:name="android.intent.action.MAIN"/>
-                        <category android:name="android.intent.category.LAUNCHER"/>
-                    </intent-filter>
-                </activity>
-        -->
+        <service
+                android:name=".app.account.auth.AuthenticationService"
+                android:exported="true">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+            <meta-data
+                    android:name="android.accounts.AccountAuthenticator"
+                    android:resource="@xml/authenticator"/>
+        </service>
+
         <activity
-                android:name=".app.playground.ScribbleBoardActivity"
-                android:screenOrientation="landscape"
-                android:theme="@style/Theme.WM.ActionBar">
+                android:name=".app.account.AuthenticationActivity"
+                android:theme="@style/Theme.WM.NoActionBar"
+                android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".app.playground.ScribbleBoardActivity"/>
 
         <activity android:name=".app.account.LoginActivity"/>
 
@@ -52,7 +62,5 @@
         <activity android:name=".app.account.RegisterActivity"/>
 
         <activity android:name=".app.playground.ActiveGamesActivity"/>
-
-        <!--<activity android:name=".app.playground.GameBoardActivity"/>-->
     </application>
 </manifest> 

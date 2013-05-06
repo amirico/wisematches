@@ -83,8 +83,8 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/actionbarsherlock.iml" filepath="$PROJECT_DIR$/actionbarsherlock.iml" />
       <module fileurl="file://$PROJECT_DIR$/android.iml" filepath="$PROJECT_DIR$/android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../../abs/library/library.iml" filepath="$PROJECT_DIR$/../../../abs/library/library.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" assert-keyword="true" jdk-15="true" project-jdk-name="Android 2.2 Platform" project-jdk-type="Android SDK">
@@ -96,7 +96,7 @@
   <component name="libraryTable">
     <library name="android-support-v4">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../../abs/library/libs/android-support-v4.jar!/" />
+        <root url="jar://$ACTION_BAR_SHERLOC_LIB$/libs/android-support-v4.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

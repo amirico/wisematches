@@ -1,5 +1,8 @@
 package wisematches.client.android.app.account;
 
+import android.accounts.Account;
+import android.accounts.AccountAuthenticatorResponse;
+import android.accounts.AccountManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,7 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import wisematches.client.android.R;
 import wisematches.client.android.app.WiseMatchesActivity;
-import wisematches.client.android.app.playground.ActiveGamesActivity;
+import wisematches.client.android.app.account.auth.Authenticator;
 import wisematches.client.android.os.ProgressTask;
 
 /**
@@ -19,6 +22,8 @@ public class LoginActivity extends WiseMatchesActivity {
 	private TextView errorMessage;
 	private EditText usernameField;
 	private EditText passwordField;
+
+	private AccountAuthenticatorResponse mAccountAuthenticatorResponse = null;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,6 +48,14 @@ public class LoginActivity extends WiseMatchesActivity {
 			setErrorMessage(extras.getString("ErrorCode"));
 		}
 
+		mAccountAuthenticatorResponse =
+				getIntent().getParcelableExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE);
+
+		if (mAccountAuthenticatorResponse != null) {
+			mAccountAuthenticatorResponse.onRequestContinued();
+		}
+
+
 		setErrorMessage(null);
 		initDefaultValues();
 
@@ -55,8 +68,29 @@ public class LoginActivity extends WiseMatchesActivity {
 					@Override
 					protected Exception doInBackground(String... strings) {
 						try {
-							getWMApplication().authenticate(strings[0], strings[1]);
-							startActivity(new Intent(LoginActivity.this, ActiveGamesActivity.class));
+//							WiseMatchesApplication.Principal authenticate = getWMApplication().authenticate(strings[0], strings[1]);
+//							startActivity(new Intent(LoginActivity.this, ActiveGamesActivity.class));
+
+							final String username = strings[0];
+							final String password = strings[1];
+
+							final Account account = new Account(username, Authenticator.ACCOUNT_TYPE);
+
+							AccountManager accountManager = AccountManager.get(LoginActivity.this);
+							accountManager.addAccountExplicitly(account, password, null);
+
+							final Intent intent = new Intent();
+							intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, username);
+							intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, Authenticator.ACCOUNT_TYPE);
+
+							if (mAccountAuthenticatorResponse != null) {
+								// send the result bundle back if set, otherwise send an error.
+								mAccountAuthenticatorResponse.onResult(intent.getExtras());
+								mAccountAuthenticatorResponse = null;
+							}
+							setResult(RESULT_OK, intent);
+//							finish();
+
 							return null;
 						} catch (Exception ex) {
 							return ex;

@@ -10,11 +10,11 @@ import wisematches.client.android.app.account.model.Player;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ScribbleGameAdapter extends ArrayAdapter<ScribbleGameInfo> {
+public class ActiveGamesAdapter extends ArrayAdapter<ScribbleGameInfo> {
 	private final Activity context;
 	private final ScribbleGameInfo[] boardItems;
 
-	public ScribbleGameAdapter(Activity context, ScribbleGameInfo[] boardItems) {
+	public ActiveGamesAdapter(Activity context, ScribbleGameInfo[] boardItems) {
 		super(context, R.layout.playground_dashboard_item, boardItems);
 		this.context = context;
 		this.boardItems = boardItems;
