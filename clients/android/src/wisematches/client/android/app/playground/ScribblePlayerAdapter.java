@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 class ScribblePlayerAdapter extends ArrayAdapter<ScribblePlayer> {
 	private final Activity context;
 	private final List<ScribblePlayer> players;

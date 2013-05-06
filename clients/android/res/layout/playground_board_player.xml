@@ -7,6 +7,13 @@
               android:baselineAligned="false"
         >
 
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/textView"
+            android:layout_gravity="center"/>
+
     <view
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -17,11 +24,10 @@
             android:layout_weight="1"/>
 
     <TextView
-            android:layout_width="200dp"
+            android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:id="@+id/scribbleBoardPlayerPoints"
             android:singleLine="true"
             android:text="points"
-            android:gravity="left"
-            android:layout_gravity="left"/>
+            />
 </LinearLayout>

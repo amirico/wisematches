@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="theme.color">#ffeaf4fc</color>
+
     <color name="widget.header.color">#ffffffff</color>
     <color name="widget.header.border">#ff4297d7</color>
     <color name="widget.header.background">#ff5c9ccc</color>
@@ -34,4 +36,16 @@
 
     <color name="state.online.border">#ff24c237</color>
     <color name="state.online.background">#ff188324</color>
+
+    <color name="progress.no.border">#ff999999</color>
+    <color name="progress.no.background">#ffcccccc</color>
+
+    <color name="progress.board.border">#ff137c13</color>
+    <color name="progress.board.background">#ff1aa21a</color>
+
+    <color name="progress.bank.border">#ffc46100</color>
+    <color name="progress.bank.background">#ffec7500</color>
+
+    <color name="progress.hand.border">#ffa19e01</color>
+    <color name="progress.hand.background">#ffdcd900</color>
 </resources>

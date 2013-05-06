@@ -1,34 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
               android:layout_gravity="center"
-              android:background="#67dfe1"
-        >
+              android:orientation="vertical">
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_logo"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_weight="1">
+    </ImageView>
 
     <LinearLayout
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:gravity="center_vertical">
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal|bottom"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15dp">
 
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/splashImgLogo"
-                android:src="@drawable/ic_launcher"
-                android:layout_gravity="center_horizontal">
-        </ImageView>
+        <ProgressBar
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginRight="10dp"/>
 
         <TextView
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/splashFldStatus"
-                android:layout_gravity="center"
                 android:autoText="false"
                 android:gravity="center"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:text="Загрузка приложения..."
+                android:layout_gravity="center"/>
 
     </LinearLayout>
 </LinearLayout>
