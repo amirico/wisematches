@@ -23,7 +23,7 @@
     <context:component-scan base-package="wisematches.server.web.servlet.mvc"/>
 
     <mvc:interceptors>
-        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <bean class="wisematches.server.web.i18n.LanguageChangeInterceptor">
             <property name="paramName" value="language"/>
         </bean>
 
@@ -33,7 +33,7 @@
                     <entry key="CHROME" value="12"/>
                     <entry key="OPERA" value="11"/>
                     <entry key="FIREFOX" value="4"/>
-                    <entry key="SAFARI" value="5"/>
+                    <entry key="SAFARI" value="4"/>
                 </map>
             </property>
         </bean>
@@ -140,21 +140,4 @@
         </property>
         <property name="viewClass" value="wisematches.server.web.servlet.view.freemarker.WMFreeMarkerView"/>
     </bean>
-
-
-    <!--
-
-        <bean id="annotationMethodHandlerExceptionResolver"
-              class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver">
-        </bean>
-
-        <bean id="responseStatusExceptionResolver"
-              class="org.springframework.web.servlet.mvc.annotation.ResponseStatusExceptionResolver">
-        </bean>
-
-        <bean id="defaultHandlerExceptionResolver"
-              class="org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver">
-        </bean>
-    -->
-
 </beans>
