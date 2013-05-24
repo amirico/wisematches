@@ -17,8 +17,8 @@ import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.playground.scribble.AbstractScribbleController;
 import wisematches.server.web.servlet.sdo.ServiceResponse;
+import wisematches.server.web.servlet.sdo.scribble.board.DescriptionInfo;
 import wisematches.server.web.servlet.sdo.scribble.game.ActiveGamesInfo;
-import wisematches.server.web.servlet.sdo.scribble.game.GameInfo;
 import wisematches.server.web.servlet.sdo.scribble.game.ProposalInfo;
 
 import java.util.ArrayList;
@@ -85,9 +85,9 @@ public class ActiveScribbleController extends AbstractScribbleController {
 
 	private ActiveGamesInfo createActiveGames(Personality principal, Locale locale) {
 		Collection<ScribbleDescription> activeBoards = searchManager.searchEntities(principal, ACTIVE_GAMES_CTX, null, null);
-		List<GameInfo> boards = new ArrayList<>(activeBoards.size());
+		List<DescriptionInfo> boards = new ArrayList<>(activeBoards.size());
 		for (ScribbleDescription board : activeBoards) {
-			boards.add(new GameInfo(board, messageSource, playerStateManager, locale));
+			boards.add(new DescriptionInfo(board, playerStateManager, messageSource, locale));
 		}
 
 		Collection<ProposalInfo> proposalInfos = null;

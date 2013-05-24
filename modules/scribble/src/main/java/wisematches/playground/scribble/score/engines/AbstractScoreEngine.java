@@ -11,8 +11,8 @@ import wisematches.playground.scribble.score.ScoreEngine;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class AbstractScoreEngine implements ScoreEngine {
-	private final ScoreBonus[] bonuses;
 	private final int allHandsBonus;
+	private final ScoreBonus[] bonuses;
 
 	private final ScoreBonus.Type[][] matrix;
 
@@ -39,10 +39,17 @@ public class AbstractScoreEngine implements ScoreEngine {
 		}
 	}
 
+	@Override
+	public int getAllHandBonus() {
+		return allHandsBonus;
+	}
+
+	@Override
 	public ScoreBonus[] getScoreBonuses() {
 		return bonuses;
 	}
 
+	@Override
 	public ScribbleMoveScore calculateWordScore(TilesPlacement tilesPlacement, Word word) {
 		ScoreBonus.Type[] bonuses = new ScoreBonus.Type[word.length()];
 

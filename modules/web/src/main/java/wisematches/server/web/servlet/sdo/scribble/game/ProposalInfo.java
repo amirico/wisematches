@@ -2,7 +2,6 @@ package wisematches.server.web.servlet.sdo.scribble.game;
 
 import wisematches.core.Player;
 import wisematches.playground.GameMessageSource;
-import wisematches.playground.propose.CriterionViolation;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.ProposalType;
 import wisematches.playground.scribble.ScribbleSettings;
@@ -23,9 +22,9 @@ import java.util.Locale;
 public class ProposalInfo extends InternationalisedInfo {
 	private final PlayerStateManager stateManager;
 	private final GameProposal<ScribbleSettings> proposal;
-	private final Collection<CriterionViolation> violations;
+	private final Collection<ViolationInfo> violations;
 
-	public ProposalInfo(GameProposal<ScribbleSettings> proposal, Collection<CriterionViolation> violations, PlayerStateManager stateManager, GameMessageSource messageSource, Locale locale) {
+	public ProposalInfo(GameProposal<ScribbleSettings> proposal, Collection<ViolationInfo> violations, PlayerStateManager stateManager, GameMessageSource messageSource, Locale locale) {
 		super(messageSource, locale);
 		this.stateManager = stateManager;
 		this.proposal = proposal;
@@ -79,7 +78,7 @@ public class ProposalInfo extends InternationalisedInfo {
 		return proposal.getProposalType();
 	}
 
-	public Collection<CriterionViolation> getViolations() {
+	public Collection<ViolationInfo> getViolations() {
 		return violations;
 	}
 }

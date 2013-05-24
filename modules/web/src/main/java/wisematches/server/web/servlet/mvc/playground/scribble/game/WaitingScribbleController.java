@@ -25,6 +25,7 @@ import wisematches.server.services.relations.blacklist.BlacklistManager;
 import wisematches.server.web.servlet.mvc.playground.scribble.AbstractScribbleController;
 import wisematches.server.web.servlet.sdo.ServiceResponse;
 import wisematches.server.web.servlet.sdo.scribble.game.ProposalInfo;
+import wisematches.server.web.servlet.sdo.scribble.game.ViolationInfo;
 import wisematches.server.web.servlet.sdo.scribble.game.WaitingGamesInfo;
 
 import java.util.*;
@@ -131,17 +132,28 @@ public class WaitingScribbleController extends AbstractScribbleController {
 	}
 
 	private WaitingGamesInfo createProposals(Player principal, Locale locale) {
-		final Collection<CriterionViolation> globalViolations = checkGlobalViolations(principal);
+		final Collection<ViolationInfo> globalViolations = convertViolations(checkGlobalViolations(principal), locale);
 		final List<ProposalInfo> activeProposals = new ArrayList<>();
 		for (GameProposal<ScribbleSettings> proposal : proposalManager.searchEntities(principal, ProposalRelation.AVAILABLE, null, null)) {
 			if (globalViolations == null) {
-				activeProposals.add(new ProposalInfo(proposal, checkProposalViolation(proposal), playerStateManager, messageSource, locale));
+				activeProposals.add(new ProposalInfo(proposal, convertViolations(checkProposalViolation(proposal), locale), playerStateManager, messageSource, locale));
 			} else {
 				activeProposals.add(new ProposalInfo(proposal, globalViolations, playerStateManager, messageSource, locale));
 			}
 		}
 		log.debug("Found {} proposals for personality: {}", activeProposals.size(), principal);
 		return new WaitingGamesInfo(activeProposals, globalViolations);
+	}
+
+	private Collection<ViolationInfo> convertViolations(Collection<CriterionViolation> violations, Locale locale) {
+		if (violations == null) {
+			return null;
+		}
+		final Collection<ViolationInfo> res = new ArrayList<>(violations.size());
+		for (CriterionViolation violation : violations) {
+			res.add(new ViolationInfo(violation, messageSource, locale));
+		}
+		return res;
 	}
 
 	private Collection<CriterionViolation> checkGlobalViolations(Player player) {

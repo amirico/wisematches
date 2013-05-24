@@ -12,6 +12,13 @@ import wisematches.playground.scribble.Word;
  */
 public interface ScoreEngine {
 	/**
+	 * Returns points for using all tiles from a hand.
+	 *
+	 * @return points for using all tiles from a hand.
+	 */
+	int getAllHandBonus();
+
+	/**
 	 * Returns array of bonuses for nord-west corner of board. In all board has six corners: from nord-west to
 	 * west-nord (nord-west, nord-east, east-nord, east-south, south-east, south-west, west-south, west-nord).
 	 *
