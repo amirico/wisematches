@@ -1,17 +1,15 @@
 package wisematches.server.web.servlet.sdo.scribble.game;
 
-import wisematches.playground.propose.CriterionViolation;
-
 import java.util.Collection;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class WaitingGamesInfo {
-	private final Collection<CriterionViolation> globalViolations;
+	private final Collection<ViolationInfo> globalViolations;
 	private final Collection<ProposalInfo> proposalViews;
 
-	public WaitingGamesInfo(Collection<ProposalInfo> proposalViews, Collection<CriterionViolation> globalViolations) {
+	public WaitingGamesInfo(Collection<ProposalInfo> proposalViews, Collection<ViolationInfo> globalViolations) {
 		this.globalViolations = globalViolations;
 		this.proposalViews = proposalViews;
 	}
@@ -20,7 +18,7 @@ public class WaitingGamesInfo {
 		return proposalViews;
 	}
 
-	public Collection<CriterionViolation> getGlobalViolations() {
+	public Collection<ViolationInfo> getGlobalViolations() {
 		return globalViolations;
 	}
 }

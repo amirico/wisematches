@@ -100,7 +100,7 @@ public class CreateScribbleController extends AbstractScribbleController {
 			return responseFactory.failure("game.create.opponent.err.blank", locale);
 		}
 
-		if (form.getChallengeMessage().length() > 254) {
+		if (form.getChallengeMessage() != null && form.getChallengeMessage().length() > 254) {
 			return responseFactory.failure("game.create.opponent.challenge.err", locale);
 		}
 
