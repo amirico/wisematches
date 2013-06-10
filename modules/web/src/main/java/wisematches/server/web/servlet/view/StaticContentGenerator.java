@@ -110,10 +110,9 @@ public final class StaticContentGenerator {
 			NodeModel informationHolder = holder.get(locale);
 			if (informationHolder == null) {
 				informationHolder = loadInfoHolder(name, locale);
-				if (informationHolder == null) {
-					throw new IllegalArgumentException("Information for name can't be loaded: " + name + " [" + locale + "]");
+				if (informationHolder != null) {
+					holder.put(locale, informationHolder);
 				}
-				holder.put(locale, informationHolder);
 			}
 			return informationHolder;
 		}
