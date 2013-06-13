@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import wisematches.core.Language;
 import wisematches.core.PersonalityManager;
 import wisematches.playground.*;
+import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tourney.regular.*;
 import wisematches.playground.tourney.regular.impl.referee.FinalGroupResultReferee;
@@ -102,15 +103,16 @@ class HibernateTourneyProcessor {
 			final HibernateTourneyRound round = new HibernateTourneyRound(division, nextRoundNumber);
 			session.save(round);
 
-			int roundGamesCount = 0;
+			int totalGames = 0;
 			final List<long[]> longs = splitByGroups(subscribedPlayers);
-			for (int i = 0, longsSize = longs.size(); i < longsSize; i++) {
+			final int groupsCount = longs.size();
+			for (int i = 0; i < groupsCount; i++) {
 				final HibernateTourneyGroup group = new HibernateTourneyGroup(i + 1, round, longs.get(i));
 				session.save(group);
-				roundGamesCount += group.initializeGames(gamePlayManager, settingsProvider, personalityManager);
+				totalGames += group.initializeGames(gamePlayManager, settingsProvider, personalityManager);
 				session.update(group);
 			}
-			round.gamesStarted(roundGamesCount);
+			round.initiateGames(totalGames, groupsCount);
 			session.update(round);
 
 			division.startRound(round);
@@ -126,11 +128,11 @@ class HibernateTourneyProcessor {
 			session.update(group);
 
 			final HibernateTourneyRound round = group.getRound();
-			round.gamesFinished(1);
+			round.finalizeGames(1);
 			session.update(round);
 
 			final HibernateTourneyDivision division = round.getDivision();
-			if (round.getFinishedDate() != null) { // finished
+			if (round.getState() == TourneyEntity.State.FINISHED) { // finished
 				log.info("Finalize tourney round: {}", round);
 				if (division.finishRound(round)) {
 					log.info("Finalize tourney division: {}", division);
@@ -144,7 +146,7 @@ class HibernateTourneyProcessor {
 			}
 
 			// if group finished and not final round
-			if (group.getFinishedDate() != null && !round.isFinal()) {
+			if (group.getState() == TourneyEntity.State.FINISHED && !round.isFinal()) {
 				final List<HibernateTourneyWinner> winnersList = tourneyReferee.getWinnersList(group, round, division);
 				for (HibernateTourneyWinner winner : winnersList) {
 					if (winner.getPlace() == TourneyPlace.FIRST) { // move only winners to next round

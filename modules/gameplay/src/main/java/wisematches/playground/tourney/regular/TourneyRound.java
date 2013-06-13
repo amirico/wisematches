@@ -19,11 +19,11 @@ public interface TourneyRound extends RegularTourneyEntity<TourneyRound, Tourney
 	int getRound();
 
 	/**
-	 * Returns division for this round
+	 * Returns total number of groups in this round.
 	 *
-	 * @return the division for this round
+	 * @return the total number of groups in this round.
 	 */
-	TourneyDivision getDivision();
+	int getGroupsCount();
 
 	/**
 	 * Returns nusmber of total games in the round.
@@ -38,6 +38,13 @@ public interface TourneyRound extends RegularTourneyEntity<TourneyRound, Tourney
 	 * @return the number of finished games.
 	 */
 	int getFinishedGamesCount();
+
+	/**
+	 * Returns division for this round
+	 *
+	 * @return the division for this round
+	 */
+	TourneyDivision getDivision();
 
 	/**
 	 * Indicates that this round is final.
@@ -100,6 +107,10 @@ public interface TourneyRound extends RegularTourneyEntity<TourneyRound, Tourney
 	public final class Context extends TourneyEntity.Context<TourneyRound, Context> {
 		private Tourney.Id tourneyId;
 		private TourneyDivision.Id divisionId;
+
+		public Context(EnumSet<State> states) {
+			super(states);
+		}
 
 		public Context(TourneyDivision.Id divisionId, EnumSet<State> states) {
 			super(states);

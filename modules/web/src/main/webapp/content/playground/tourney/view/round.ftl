@@ -77,7 +77,8 @@
                                 <td class="ui-state-default" style="padding-right: 40px">
                                 ${p_index+1}. <@wm.player.name personalityManager.getMember(p)/>
                                 </td>
-                                <#assign games=0/>
+                                <#assign totalGames=0/>
+                                <#assign finishedGames=0/>
                                 <#list g.players as o>
                                     <#assign success=g.getPlayerSuccess(p, o)!""/>
                                     <td class="ui-state-default">
@@ -85,9 +86,10 @@
                                             —
                                         <#else>
                                             <#assign gameId=g.getGameId(p, o)/>
+                                            <#assign totalGames=totalGames+1/>
                                             <a href="/playground/scribble/board?b=${gameId}">
                                                 <#if success?has_content>
-                                                    <#assign games=games+1/>
+                                                    <#assign finishedGames=finishedGames+1/>
                                                 ${success.points/2}
                                                     <span style="color: <@successColor success/>">
                                                         <@message code="tourney.success.${success.name()?lower_case}.label"/>
@@ -99,7 +101,7 @@
                                         </#if>
                                     </td>
                                 </#list>
-                                <td class="ui-state-default">${games} / ${g.totalGamesCount}</td>
+                                <td class="ui-state-default">${finishedGames} / ${totalGames}</td>
                                 <td class="ui-state-default">${(g.getPlayerScores(p)/2)?round}</td>
                             </tr>
                         </#list>

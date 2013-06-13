@@ -222,7 +222,7 @@ public class HibernateTourneyManagerTest {
 		session.save(r1);
 
 		final HibernateTourneyRound r2 = new HibernateTourneyRound(d, 2);
-		r2.gamesStarted(12);
+		r2.initiateGames(12, 2);
 		assertNotNull(r2.getStartedDate());
 		session.save(r2);
 

@@ -9,6 +9,7 @@ import java.util.*;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public class TourneyTree {
 	private final Map<Tourney, List<TourneyDivision>> divisionMap;
 	private final Map<TourneyDivision, List<TourneyRound>> roundMap;
@@ -31,6 +32,7 @@ public class TourneyTree {
 		}
 	}
 
+	@Deprecated
 	public TourneyTree(TourneyRound... rounds) {
 		groupMap = null;
 		roundMap = new HashMap<>();
@@ -56,6 +58,7 @@ public class TourneyTree {
 		}
 	}
 
+	@Deprecated
 	public TourneyTree(TourneyGroup... groups) {
 		groupMap = new HashMap<>();
 		roundMap = new HashMap<>();

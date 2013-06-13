@@ -10,7 +10,8 @@
         <#if d.language = language>
         <div>
             <@wm.tourney.section d.section/>,
-            <@wm.tourney.round {"round":d.activeRound, "divisionId":d.id}, true/>
+            <#assign round=divisionsTree.getRound(d, d.activeRound)/>
+            <@wm.tourney.round round.id, true, round.final/>
         </div>
         </#if>
     </#list>

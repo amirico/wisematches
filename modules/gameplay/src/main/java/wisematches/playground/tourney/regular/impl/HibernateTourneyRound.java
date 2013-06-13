@@ -19,6 +19,9 @@ public class HibernateTourneyRound implements TourneyRound {
 	@Column(name = "roundNumber", updatable = false)
 	private int round;
 
+	@Column(name = "groupsCount", updatable = false)
+	private int groupsCount;
+
 	@Column(name = "totalGamesCount", updatable = true)
 	private int totalGamesCount;
 
@@ -60,8 +63,8 @@ public class HibernateTourneyRound implements TourneyRound {
 	}
 
 	@Override
-	public HibernateTourneyDivision getDivision() {
-		return division;
+	public int getGroupsCount() {
+		return groupsCount;
 	}
 
 	@Override
@@ -76,7 +79,7 @@ public class HibernateTourneyRound implements TourneyRound {
 
 	@Override
 	public boolean isFinal() {
-		return totalGamesCount == 1; // 1 game - last round
+		return groupsCount == 1; // 1 group - last round
 	}
 
 	@Override
@@ -94,15 +97,21 @@ public class HibernateTourneyRound implements TourneyRound {
 		return finishedDate;
 	}
 
-	void gamesStarted(int gamesCount) {
+	@Override
+	public HibernateTourneyDivision getDivision() {
+		return division;
+	}
+
+	void initiateGames(int gamesCount, int groupsCount) {
 		if (startedDate != null) {
 			throw new IllegalStateException("Round already started");
 		}
-		this.totalGamesCount += gamesCount;
+		this.groupsCount = groupsCount;
+		this.totalGamesCount = gamesCount;
 		startedDate = new Date();
 	}
 
-	void gamesFinished(int gamesCount) {
+	void finalizeGames(int gamesCount) {
 		if (finishedDate != null) {
 			throw new IllegalStateException("Round already finished");
 		}
