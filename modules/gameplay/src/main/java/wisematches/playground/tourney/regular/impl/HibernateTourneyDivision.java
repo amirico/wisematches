@@ -1,6 +1,7 @@
 package wisematches.playground.tourney.regular.impl;
 
 import wisematches.core.Language;
+import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tourney.TourneyWinner;
 import wisematches.playground.tourney.regular.TourneyDivision;
 import wisematches.playground.tourney.regular.TourneyRound;
@@ -111,6 +112,16 @@ public class HibernateTourneyDivision implements TourneyDivision {
 	@Override
 	public Date getFinishedDate() {
 		return finishedDate;
+	}
+
+	@Override
+	public TourneyPlace getTourneyPlace(long pid) {
+		for (TourneyWinner tourneyWinner : tourneyWinners) {
+			if (tourneyWinner.getPlayer() == pid) {
+				return tourneyWinner.getPlace();
+			}
+		}
+		return null;
 	}
 
 	@Override

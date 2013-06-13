@@ -1457,6 +1457,11 @@ a.ui-icon {
     vertical-align: top;
 }
 
+.tourney-place {
+    color: #ff5200;
+    font-weight: bold;
+}
+
 .tourney-resolution-won {
     color: #008000;
 }

@@ -84,6 +84,7 @@ public interface TourneyGroup extends RegularTourneyEntity<TourneyGroup, Tourney
 	 */
 	long getGameId(long player, long opponent);
 
+	boolean isFinished();
 
 	public final class Id extends TourneyEntity.Id<TourneyGroup, Id> {
 		private TourneyRound.Id id;

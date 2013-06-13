@@ -181,6 +181,11 @@ public class HibernateTourneyGroup implements TourneyGroup {
 	}
 
 	@Override
+	public boolean isFinished() {
+		return finishedDate != null;
+	}
+
+	@Override
 	public TourneyGameResolution getPlayerSuccess(long p1, long p2) {
 		if (p1 == p2) {
 			return null;
