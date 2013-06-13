@@ -1,21 +1,9 @@
 <#-- @ftlvariable name="announce" type="wisematches.playground.tourney.regular.Tourney" -->
-<#-- @ftlvariable name="divisionsTree" type="wisematches.playground.tourney.regular.TourneyTree" -->
+<#-- @ftlvariable name="divisionsIterator" type="wisematches.playground.tourney.regular.TourneyEntryIterator<wisematches.playground.tourney.regular.TourneyDivision>" -->
 
 <#include "/core.ftl">
 
 <@wm.ui.table.dtinit/>
-
-<#macro divisionsInfo tourney language>
-    <#list divisionsTree.getDivisions(tourney) as d>
-        <#if d.language = language>
-        <div>
-            <@wm.tourney.section d.section/>,
-            <#assign round=divisionsTree.getRound(d, d.activeRound)/>
-            <@wm.tourney.round round.id, true, round.final/>
-        </div>
-        </#if>
-    </#list>
-</#macro>
 
 <@wm.ui.playground id="tourneyWidget">
 <table id="tourney" width="100%">
@@ -37,35 +25,45 @@
                 <table width="100%" class="display">
                     <thead>
                     <tr>
-                        <th rowspan="2"><@message code="tourney.tourney.label"/></th>
-                        <th rowspan="2"><@message code="tourney.started.label"/></th>
-                        <th width="100%" colspan="${Language.values()?size?string}"
-                            class="ui-state-default"
-                            style="font-size: small; border-bottom: 1px solid !important; white-space: nowrap">
-                            <@message code="tourney.active.rs"/>
-                        </th>
-                    </tr>
-                    <tr>
-                        <#list Language.values()?reverse as l>
-                            <th><@wm.tourney.language l/></th>
-                        </#list>
+                        <th><@message code="tourney.tourney.label"/></th>
+                        <th><@message code="tourney.language.label"/></th>
+                        <th><@message code="tourney.level.label"/></th>
+                        <th><@message code="tourney.started.label"/></th>
+                        <th><@message code="tourney.round.label"/></th>
                     </tr>
                     </thead>
                     <tbody>
-                        <#list divisionsTree.tourneys as tourney>
-                        <tr>
-                            <td>
-                                <@wm.tourney.tourney tourney.id, true/>
-                            </td>
-                            <td>
-                            ${messageSource.formatDate(tourney.startedDate, locale)}
-                            </td>
-                            <#list Language.values()?reverse as l>
+                        <#list divisionsIterator.itemsEntry as e>
+                            <#assign tourney=e.key/>
+                            <#list e.value as division>
+                            <tr>
                                 <td>
-                                    <@divisionsInfo tourney=tourney language=l/>
+                                    <@wm.tourney.tourney tourney.id, true/> <@wm.tourney.dates tourney "sample"/>
                                 </td>
+                                <td style="padding-left: 30px">
+                                    <@wm.tourney.language division.language/>
+                                </td>
+                                <td>
+                                    <@wm.tourney.section division.section/>
+                                </td>
+                                <td>
+                                ${messageSource.formatDate(division.startedDate, locale)}
+                                </td>
+                                <td>
+                                    <#assign activeRound=division.activeRound!"">
+                                    <#list 1..division.roundsCount as r>
+                                        <#assign final=false/>
+                                        <#if !r_has_next>
+                                            <#assign final=!activeRound?has_content || activeRound.final/>
+                                        </#if>
+                                        <#assign roundId={"divisionId": division.id, "round": r}/>
+                                        <@wm.tourney.round roundId, true, final/><#if r_has_next>, <#else></#if>
+                                    </#list>
+                                    (<@message code="tourney.completed.label"/>:
+                                ${((activeRound.finishedGamesCount / activeRound.totalGamesCount)*100)?round}%)
+                                </td>
+                            </tr>
                             </#list>
-                        </tr>
                         </#list>
                     </tbody>
                 </table>
@@ -83,14 +81,21 @@
 </@wm.ui.playground>
 
 <script type="text/javascript">
-    wm.ui.dataTable('#tourneyWidget #activeTourneys table', {
+    wm.ui.dataTable('#activeTourneys table', {
+        "fnDrawCallback": wm.ui.table.groupColumnDrawCallback('#activeTourneys'),
+        "aoColumnDefs": [
+            { "bVisible": false, "aTargets": [ 0 ] }
+        ],
+        "aaSortingFixed": [
+            [ 0, 'asc' ]
+        ],
         "bSortClasses": false,
         "aoColumns": [
             { "bSortable": true },
             { "bSortable": true },
-        <#list Language.values() as l>
-            { "bSortable": true }<#if l_has_next>,</#if>
-        </#list>
+            { "bSortable": true },
+            { "bSortable": true },
+            { "bSortable": true }
         ]
     });
 </script>

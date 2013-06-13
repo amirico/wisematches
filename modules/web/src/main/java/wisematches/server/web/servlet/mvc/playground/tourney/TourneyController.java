@@ -45,6 +45,15 @@ public class TourneyController extends WisematchesController {
 
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.TourneyController");
 
+	private static final TourneyRound.Context ACTIVE_ROUND_CONTEXT = new TourneyRound.Context(EnumSet.of(TourneyEntity.State.ACTIVE));
+	private static final TourneyGroup.Context ACTIVE_GROUP_CONTEXT = new TourneyGroup.Context(EnumSet.of(Tourney.State.ACTIVE));
+	private static final TourneyDivision.Context ACTIVE_DIVISION_CONTEXT = new TourneyDivision.Context(EnumSet.of(TourneyEntity.State.ACTIVE));
+
+	private static final Tourney.Context ACTIVE_TOURNEY_CONTEXT = new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE));
+	private static final Tourney.Context SCHEDULED_TOURNEY_CONTEXT = new Tourney.Context(EnumSet.of(Tourney.State.SCHEDULED));
+
+	private static final TourneyDivision.Context FINISHED_DIVISION_CONTEXT = new TourneyDivision.Context(EnumSet.of(TourneyEntity.State.FINISHED));
+
 	public TourneyController() {
 	}
 
@@ -52,8 +61,8 @@ public class TourneyController extends WisematchesController {
 	public String showDashboardPage(Model model) {
 		final Personality personality = getPrincipal();
 
-		final List<TourneyGroup> participated = tourneyManager.searchTourneyEntities(personality, new TourneyGroup.Context(EnumSet.of(Tourney.State.ACTIVE)), null, null);
-		model.addAttribute("participated", participated);
+		final List<TourneyGroup> participated = tourneyManager.searchTourneyEntities(personality, ACTIVE_GROUP_CONTEXT, null, null);
+		model.addAttribute("groupsIterator", TourneyEntryIterator.groups(participated));
 
 		setupAnnounce(model);
 
@@ -62,8 +71,8 @@ public class TourneyController extends WisematchesController {
 
 	@RequestMapping("active")
 	public String showActiveTourneysPage(Model model) {
-		final List<TourneyRound> tourneyRounds = tourneyManager.searchTourneyEntities(null, new TourneyRound.Context(EnumSet.of(TourneyEntity.State.ACTIVE)), null, null);
-		model.addAttribute("divisionsTree", new TourneyTree(tourneyRounds.toArray(new TourneyRound[tourneyRounds.size()])));
+		List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, ACTIVE_DIVISION_CONTEXT, null, null);
+		model.addAttribute("divisionsIterator", TourneyEntryIterator.divisions(divisions));
 
 		setupAnnounce(model);
 
@@ -72,10 +81,8 @@ public class TourneyController extends WisematchesController {
 
 	@RequestMapping("finished")
 	public String showFinishedTourneysPage(Model model) {
-		final TourneyDivision.Context context = new TourneyDivision.Context(EnumSet.of(TourneyEntity.State.FINISHED));
-		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, context, null, null);
-
-		model.addAttribute("divisionsTree", new TourneyTree(divisions.toArray(new TourneyDivision[divisions.size()])));
+		List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, FINISHED_DIVISION_CONTEXT, null, null);
+		model.addAttribute("divisionsIterator", TourneyEntryIterator.divisions(divisions));
 
 		setupAnnounce(model);
 
@@ -134,11 +141,10 @@ public class TourneyController extends WisematchesController {
 	}
 
 	private String showTourneyView(Tourney tourney, Model model) {
-		final TourneyRound.Context ctx = new TourneyRound.Context(tourney.getId(), null);
-		final List<TourneyRound> rounds = tourneyManager.searchTourneyEntities(null, ctx, null, null);
-		model.addAttribute("divisionsTree", new TourneyTree(rounds.toArray(new TourneyRound[rounds.size()])));
-
-		return "/content/playground/tourney/view/tourney";
+		final TourneyDivision.Context ctx = new TourneyDivision.Context(tourney.getId(), null);
+		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, ctx, null, null);
+		model.addAttribute("divisions", divisions);
+		return "/content/playground/tourney/tourney";
 	}
 
 	private String showRoundView(Model model, EntityIdForm form, int page) throws UnknownEntityException {
@@ -154,7 +160,7 @@ public class TourneyController extends WisematchesController {
 		model.addAttribute("currentPage", page);
 		model.addAttribute("groupsCount", totalCount);
 
-		return "/content/playground/tourney/view/round";
+		return "/content/playground/tourney/round";
 	}
 
 	private String showGroupView(Model model, EntityIdForm form) throws UnknownEntityException {
@@ -170,7 +176,7 @@ public class TourneyController extends WisematchesController {
 		model.addAttribute("currentPage", 0);
 		model.addAttribute("groupsCount", 1);
 
-		return "/content/playground/tourney/view/round";
+		return "/content/playground/tourney/round";
 	}
 
 	@RequestMapping("changeSubscription.ajax")
@@ -237,7 +243,7 @@ public class TourneyController extends WisematchesController {
 	private void setupAnnounce(Model model) {
 		final Player personality = getPrincipal();
 
-		final List<Tourney> announces = tourneyManager.searchTourneyEntities(null, new Tourney.Context(EnumSet.of(Tourney.State.SCHEDULED)), null, null);
+		final List<Tourney> announces = tourneyManager.searchTourneyEntities(null, SCHEDULED_TOURNEY_CONTEXT, null, null);
 		Tourney announce = null;
 		if (announces.size() > 1) {
 			log.warn("More than one scheduled tourney. Shouldn't be possible: {}", announces.size());
@@ -261,7 +267,7 @@ public class TourneyController extends WisematchesController {
 
 	private int getActiveTourneysCount(Personality personality) {
 		int totalCount = 0;
-		totalCount += tourneyManager.getTotalCount(personality, new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)));
+		totalCount += tourneyManager.getTotalCount(personality, ACTIVE_TOURNEY_CONTEXT);
 		totalCount += tourneyManager.getRegistrationSearchManager().getTotalCount(personality, new RegistrationRecord.Context(1));
 		return totalCount;
 	}

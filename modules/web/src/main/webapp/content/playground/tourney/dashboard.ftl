@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="announce" type="wisematches.playground.tourney.regular.Tourney" -->
-<#-- @ftlvariable name="participated" type="wisematches.playground.tourney.regular.TourneyGroup[]" -->
+<#-- @ftlvariable name="groupsIterator" type="wisematches.playground.tourney.regular.TourneyEntryIterator<wisematches.playground.tourney.regular.TourneyGroup>" -->
 
 <#include "/core.ftl">
 
@@ -27,65 +27,68 @@
                     <table width="100%" class="display">
                         <thead>
                         <tr>
-                            <th width="100%"><@message code="tourney.tourney.label"/></th>
-                            <th><@message code="tourney.language.label"/></th>
-                            <th><@message code="tourney.level.label"/></th>
-                            <th><@message code="tourney.round.label"/></th>
-                            <th><@message code="tourney.group.label"/></th>
+                            <th width="100%" rowspan="2"><@message code="tourney.tourney.label"/></th>
+                            <th rowspan="2"><@message code="tourney.language.label"/></th>
+                            <th rowspan="2"><@message code="tourney.level.label"/></th>
+                            <th rowspan="2"><@message code="tourney.round.label"/></th>
+                            <th rowspan="2"><@message code="tourney.group.label"/></th>
+                            <th colspan="2"
+                                class="ui-state-default colgroup"><@message code="tourney.opponents.label"/></th>
+                        </tr>
+                        <tr>
                             <th><@message code="tourney.opponent.label"/></th>
-                            <th><@message code="tourney.game.label"/></th>
                             <th><@message code="tourney.success.label"/></th>
                         </tr>
                         </thead>
                         <tbody>
-                            <#list participated as g>
-                                <#assign round=g.round/>
-                            <tr>
-                                <td>
-                                    <@wm.tourney.tourney round.id.divisionId.tourneyId, true/>
-                                </td>
-                                <td>
-                                    <@wm.tourney.language round.id.divisionId.language/>
-                                </td>
-                                <td>
-                                    <@wm.tourney.section round.id.divisionId.section/>
-                                </td>
-                                <td>
-                                    <@wm.tourney.round round.id, true, round.final/>
-                                </td>
-                                <td>
-                                    <@wm.tourney.group g.id , true/>
-                                </td>
+                            <#list groupsIterator.itemsEntry as e>
+                                <#assign tourney=e.key/>
+                                <#list e.value as group>
+                                    <#assign round=group.round/>
+                                    <#assign division=round.division/>
+                                <tr>
+                                    <td>
+                                        <@wm.tourney.tourney tourney.id, true/> <@wm.tourney.dates tourney "sample"/>
+                                    </td>
+                                    <td style="padding-left: 30px">
+                                        <@wm.tourney.language division.language/>
+                                    </td>
+                                    <td>
+                                        <@wm.tourney.section division.section/>
+                                    </td>
+                                    <td>
+                                        <@wm.tourney.round round.id, true, round.final/>
+                                    </td>
+                                    <td>
+                                        <@wm.tourney.group group.id , true/>
+                                    </td>
 
-                                <td align="center">
-                                    <#list g.players as p>
-                                        <#if p != pid>
-                                            <div>
-                                                <@wm.player.name personalityManager.getMember(p)/>
-                                            </div>
-                                        </#if>
-                                    </#list>
-                                </td>
-                                <td align="center">
-                                    <#list g.players as p>
-                                        <#if p != pid>
-                                            <div>
-                                                <#assign gid=g.getGameId(pid, p)?string/>
-                                                <@wm.board.href gid>#${gid?string}</@wm.board.href>
-                                            </div>
-                                        </#if>
-                                    </#list>
-                                </td>
-                                <td align="center">
-                                    <#list g.players as p>
-                                        <#if p != pid>
-                                            <div>
-                                            ${g.getPlayerScores(p) - g.getPlayerScores(pid)}
-                                            </div>
-                                        </#if>
-                                    </#list>
-                                </td>
-                            </tr>
+                                    <td align="left">
+                                        <#list group.players as p>
+                                            <#if p != pid>
+                                                <div>
+                                                    <@wm.player.name personalityManager.getMember(p)/>
+                                                </div>
+                                            </#if>
+                                        </#list>
+                                    </td>
+                                    <td align="left">
+                                        <#list group.players as p>
+                                            <#if p != pid>
+                                                <div>
+                                                    <#assign gid=group.getGameId(pid, p)/>
+                                                    <#assign success=group.getPlayerSuccess(pid, p)!""/>
+                                                    <a <#if success?has_content>class="game-finished" </#if>
+                                                       href="/playground/scribble/board?b=${gid}">#${gid}</a>
+                                                    <#if success?has_content>
+                                                        (<@wm.tourney.resolution success false/>)
+                                                    </#if>
+                                                </div>
+                                            </#if>
+                                        </#list>
+                                    </td>
+                                </tr>
+                                </#list>
                             </#list>
                         </tbody>
                     </table>
@@ -104,17 +107,24 @@
 </@wm.ui.playground>
 
 <script type="text/javascript">
-    wm.ui.dataTable('#tourney #participated table', {
-        "bSortClasses": false,
-        "aoColumns": [
-            { "bSortable": true },
-            { "bSortable": true },
-            { "bSortable": true },
-            { "bSortable": true },
-            { "bSortable": true },
-            { "bSortable": false },
-            { "bSortable": false },
-            { "bSortable": false }
-        ]
-    });
+    wm.ui.dataTable('#participated table', {
+                "fnDrawCallback": wm.ui.table.groupColumnDrawCallback('#participated'),
+                "aoColumnDefs": [
+                    { "bVisible": false, "aTargets": [ 0 ] }
+                ],
+                "aaSortingFixed": [
+                    [ 0, 'asc' ]
+                ],
+                "bSortClasses": false,
+                "aoColumns": [
+                    { "bSortable": true },
+                    { "bSortable": true },
+                    { "bSortable": true },
+                    { "bSortable": true },
+                    { "bSortable": true },
+                    { "bSortable": false },
+                    { "bSortable": false }
+                ]
+            }
+    );
 </script>

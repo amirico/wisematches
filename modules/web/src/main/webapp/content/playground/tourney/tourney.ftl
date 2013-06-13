@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="tourney" type="wisematches.playground.tourney.regular.Tourney" -->
-<#-- @ftlvariable name="divisionsTree" type="wisematches.playground.tourney.regular.TourneyTree" -->
+<#-- @ftlvariable name="divisions" type="wisematches.playground.tourney.regular.TourneyDivision[]" -->
 
 <#include "/core.ftl">
 
@@ -36,7 +36,13 @@
 
     <@wm.ui.table.content wrap=true>
         <#list TourneySection.values() as s>
-            <#assign division=divisionsTree.getDivision(tourney, language, s)!""/>
+
+            <#list divisions as d>
+                <#if d.language== language && d.section ==s>
+                    <#assign division=d/>
+                </#if>
+            </#list>
+
             <#if division?has_content>
                 <div class="division">
                     <div class="division-name">
@@ -44,18 +50,25 @@
                             class="sample">(<@wm.tourney.rating s, false/>)</span>
                     </div>
                     <div class="division-rounds">
-                        <#list divisionsTree.getRounds(division) as r>
-                            <@wm.tourney.round r.id, true, r.final/><#if r_has_next>, <#else></#if>
+                        <#assign activeRound=division.activeRound!"">
+
+                        <#list 1..division.roundsCount as r>
+                            <#assign final=false/>
+                            <#if !r_has_next>
+                                <#assign final=!activeRound?has_content || activeRound.final/>
+                            </#if>
+                            <#assign roundId={"divisionId": division.id, "round": r}/>
+                            <@wm.tourney.round roundId, true, final/><#if r_has_next>, <#else></#if>
                         </#list>
-                        <#if division.finishedDate??>
+
+                        <#if activeRound?has_content>
+                        <#--TODO: Issue 242-->
+                            (<@message code="tourney.completed.label"/>:
+                        ${((activeRound.finishedGamesCount / activeRound.totalGamesCount)*100)?round}%)
+                        <#else>
                             <span class="sample">
                                 — <@messageLower code="tourney.finished.label"/> ${messageSource.formatDate(division.finishedDate, locale)}
                                 </span>
-                        <#else>
-                            <#assign activeRound=divisionsTree.getRound(division, division.activeRound)/>
-                        <#-- TODO: Issue 242 -->
-                            (<@message code="tourney.completed.label"/>:
-                        ${((activeRound.finishedGamesCount / activeRound.totalGamesCount)*100)?round}%)
                         </#if>
                     </div>
                     <#if division.finishedDate??>
