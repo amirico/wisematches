@@ -2,6 +2,7 @@ package wisematches.playground.tourney.regular;
 
 import wisematches.core.Language;
 import wisematches.playground.tourney.TourneyEntity;
+import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tourney.TourneyWinner;
 
 import java.util.Collection;
@@ -49,6 +50,15 @@ public interface TourneyDivision extends RegularTourneyEntity<TourneyDivision, T
 	 * @return number of all current rounds in the division
 	 */
 	int getRoundsCount();
+
+	/**
+	 * Returns place of the player in the division. Returns null if player doesn't play in the tourney or
+	 * division is not finished.
+	 *
+	 * @param pid the player id to be checked
+	 * @return place of the player in the division or {@code null}
+	 */
+	TourneyPlace getTourneyPlace(long pid);
 
 	/**
 	 * Returns collection of all winners for this division.
