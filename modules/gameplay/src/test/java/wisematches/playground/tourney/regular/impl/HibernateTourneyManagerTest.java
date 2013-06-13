@@ -301,7 +301,7 @@ public class HibernateTourneyManagerTest {
 		assertEquals(1, divisions.size());
 
 		final TourneyDivision division = divisions.iterator().next();
-		assertEquals(1, division.getActiveRound());
+		assertEquals(1, division.getActiveRound().getRound());
 		assertEquals(tourney.getId(), division.getTourney().getId());
 		assertNull(division.getFinishedDate());
 		assertNotNull(division.getStartedDate());

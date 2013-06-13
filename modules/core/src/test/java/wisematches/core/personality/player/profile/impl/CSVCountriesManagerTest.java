@@ -44,6 +44,6 @@ public class CSVCountriesManagerTest {
 
 		assertEquals("Brazil", manager.getCountry("br", Language.EN).getName());
 		assertEquals("Бразилия", manager.getCountry("br", Language.RU).getName());
-		assertEquals("Brazil", manager.getCountry("br", null).getName());
+		assertEquals("Бразилия", manager.getCountry("br", null).getName());
 	}
 }
