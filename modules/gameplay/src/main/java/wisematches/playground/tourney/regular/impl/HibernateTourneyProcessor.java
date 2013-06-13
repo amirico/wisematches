@@ -86,7 +86,7 @@ class HibernateTourneyProcessor {
 	}
 
 	<S extends GameSettings> void initiateDivisions(Session session, GamePlayManager<S, ?> gamePlayManager, GameSettingsProvider<S, TourneyGroup> settingsProvider, PersonalityManager personalityManager) throws BoardCreationException {
-		final Query query = session.createQuery("from HibernateTourneyDivision d where d.activeRound = 0 and d.finishedDate is null");
+		final Query query = session.createQuery("from HibernateTourneyDivision d where d.activeRound.finishedDate is not null and d.finishedDate is null");
 		for (Object o : query.list()) {
 			final HibernateTourneyDivision division = (HibernateTourneyDivision) o;
 			log.info("Initiating finished division: {}", division.getId());
@@ -181,6 +181,8 @@ class HibernateTourneyProcessor {
 	}
 
 	public void clearRegistrations(Session session) {
+/*
+	Issue 348:	Subscriptions to a tourney were lost
 		final Query query = session.createSQLQuery("" +
 				"DELETE s.* " +
 				"FROM " +
@@ -191,6 +193,7 @@ class HibernateTourneyProcessor {
 
 		final int i = query.executeUpdate();
 		log.info("Clear not required registrations: {}", i);
+*/
 	}
 
 	Collection<TourneyResubscription> resortRegistrations(Session session, int tourney, int round) {

@@ -1457,6 +1457,18 @@ a.ui-icon {
     vertical-align: top;
 }
 
+.tourney-resolution-won {
+    color: #008000;
+}
+
+.tourney-resolution-draw {
+    color: #FF9900;
+}
+
+.tourney-resolution-lost {
+    color: #AA0033;
+}
+
 .division {
     padding-bottom: 10px;
 }
@@ -1624,6 +1636,10 @@ a.ui-icon {
     text-align: center;
     padding-left: 0 !important;
     padding-right: 0 !important;
+}
+
+.game-finished {
+    text-decoration: line-through !important;
 }
 
 .game-progress {
@@ -2262,6 +2278,12 @@ ul.bonuses .bonus-cell {
 .data-table-content th {
     border: none !important;
     background-image: none !important;
+}
+
+.data-table-content .colgroup {
+    font-size: small;
+    border-bottom: 1px solid !important;
+    white-space: nowrap;
 }
 
 .data-table-bottom .ui-widget-content {

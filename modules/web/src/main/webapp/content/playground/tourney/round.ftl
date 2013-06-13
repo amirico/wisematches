@@ -23,10 +23,6 @@
     </#if>
 </#macro>
 
-<#macro successColor s>
-    <#if s.points=0>#AA0033<#elseif s.points=1>#FF9900<#else>#008000</#if>
-</#macro>
-
 <@wm.ui.playground id="tourneyWidget">
 <div id="divisions">
     <@wm.ui.table.header align="left">
@@ -41,7 +37,7 @@
             <div>
                 <@message code="language.${round.division.language.name()?lower_case}"/>,
                 <@wm.tourney.section round.division.section/> <@message code="tourney.level.label"/>,
-                <@wm.tourney.round round.id, true/>
+                <@wm.tourney.round round.id, true, round.final/>
             </div>
             <div class="sample" style="padding-left: 10px">
                 (${messageSource.formatDate(round.startedDate, locale)}
@@ -90,10 +86,7 @@
                                             <a href="/playground/scribble/board?b=${gameId}">
                                                 <#if success?has_content>
                                                     <#assign finishedGames=finishedGames+1/>
-                                                ${success.points/2}
-                                                    <span style="color: <@successColor success/>">
-                                                        <@message code="tourney.success.${success.name()?lower_case}.label"/>
-                                                    </span>
+                                                    <@wm.tourney.resolution success true/>
                                                 <#else>
                                                     #${gameId}
                                                 </#if>
@@ -102,7 +95,7 @@
                                     </td>
                                 </#list>
                                 <td class="ui-state-default">${finishedGames} / ${totalGames}</td>
-                                <td class="ui-state-default">${(g.getPlayerScores(p)/2)?round}</td>
+                                <td class="ui-state-default">${g.getPlayerScores(p)/2}</td>
                             </tr>
                         </#list>
                     </table>

@@ -3,6 +3,7 @@ package wisematches.playground.tourney.regular.impl;
 import wisematches.core.Language;
 import wisematches.playground.tourney.TourneyWinner;
 import wisematches.playground.tourney.regular.TourneyDivision;
+import wisematches.playground.tourney.regular.TourneyRound;
 import wisematches.playground.tourney.regular.TourneySection;
 
 import javax.persistence.*;
@@ -22,8 +23,9 @@ public class HibernateTourneyDivision implements TourneyDivision {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long internalId;
 
-	@Column(name = "activeRound")
-	private int activeRound;
+	@OneToOne
+	@JoinColumn(name = "activeRound")
+	private HibernateTourneyRound activeRound;
 
 	@Enumerated(EnumType.ORDINAL)
 	@Column(name = "language", updatable = false)
@@ -35,6 +37,9 @@ public class HibernateTourneyDivision implements TourneyDivision {
 	@JoinColumn(name = "tourneyId")
 	@OneToOne(fetch = FetchType.LAZY)
 	private HibernateTourney tourney;
+
+	@Column(name = "roundsCount", updatable = false)
+	private int roundsCount;
 
 	@Column(name = "started")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -55,7 +60,7 @@ public class HibernateTourneyDivision implements TourneyDivision {
 		this.tourney = tourney;
 		this.language = language;
 		this.section = section;
-		this.activeRound = 0;
+		this.activeRound = null;
 	}
 
 
@@ -69,7 +74,7 @@ public class HibernateTourneyDivision implements TourneyDivision {
 	}
 
 	@Override
-	public int getActiveRound() {
+	public TourneyRound getActiveRound() {
 		return activeRound;
 	}
 
@@ -86,6 +91,11 @@ public class HibernateTourneyDivision implements TourneyDivision {
 	@Override
 	public HibernateTourney getTourney() {
 		return tourney;
+	}
+
+	@Override
+	public int getRoundsCount() {
+		return roundsCount;
 	}
 
 	@Override
@@ -112,34 +122,32 @@ public class HibernateTourneyDivision implements TourneyDivision {
 		if (finishedDate != null) {
 			throw new IllegalStateException("Division already finished");
 		}
-		if (activeRound == 0) {
+		if (activeRound == null) {
 			startedDate = new Date();
 		}
-		activeRound = round.getRound();
+		roundsCount++;
+		activeRound = round;
 	}
 
 	boolean finishRound(HibernateTourneyRound round) {
-		if (activeRound == 0) {
+		if (finishedDate != null) {
 			throw new IllegalStateException("Division already finished");
 		}
-
-		activeRound = 0;
-
-		if (round.isFinal()) {
-			finishedDate = new Date();
-			return true;
-		}
-		return false;
+		return round.isFinal();
 	}
 
 	void finishDivision(List<HibernateTourneyWinner> winners) {
-		if (finishedDate == null) {
+		if (finishedDate != null) {
 			throw new IllegalStateException("Division is not finished");
 		}
 
 		if (tourneyWinners != null && tourneyWinners.size() != 0) {
 			throw new IllegalStateException("Winners already set. Change is not possible.");
 		}
+
+		activeRound = null;
+		finishedDate = new Date();
+
 		tourneyWinners = new ArrayList<>();
 		tourneyWinners.addAll(winners);
 	}
@@ -148,7 +156,7 @@ public class HibernateTourneyDivision implements TourneyDivision {
 	public String toString() {
 		return "HibernateTourneyDivision{" +
 				"internalId=" + internalId +
-				", round=" + activeRound +
+				", round=" + (activeRound != null ? activeRound.getRound() : "null") +
 				", tourney=" + tourney +
 				", section=" + section +
 				", language=" + language +

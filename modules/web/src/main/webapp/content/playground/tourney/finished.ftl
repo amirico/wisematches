@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="announce" type="wisematches.playground.tourney.regular.Tourney" -->
-<#-- @ftlvariable name="divisionsTree" type="wisematches.playground.tourney.regular.TourneyTree" -->
+<#-- @ftlvariable name="divisionsIterator" type="wisematches.playground.tourney.regular.TourneyEntryIterator<wisematches.playground.tourney.regular.TourneyDivision>" -->
 
 <#include "/core.ftl">
 
@@ -28,9 +28,7 @@
                         <th rowspan="2"><@message code="tourney.tourney.label"/></th>
                         <th rowspan="2"><@message code="tourney.language.label"/></th>
                         <th rowspan="2"><@message code="tourney.level.label"/></th>
-                        <th colspan="${(TourneyPlace.values()?size)?string}"
-                            class="ui-state-default"
-                            style="font-size: small; border-bottom: 1px solid !important; white-space: nowrap">
+                        <th class="ui-state-default colgroup" colspan="${(TourneyPlace.values()?size)?string}">
                             <@message code="tourney.winners.label"/>
                         </th>
                         <th rowspan="2" width="100%"></th>
@@ -44,9 +42,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <#list divisionsTree.tourneys as tourney>
-                            <#assign divisions=divisionsTree.getDivisions(tourney)/>
-                            <#list divisions as d>
+                        <#list divisionsIterator.itemsEntry as e>
+                            <#assign tourney=e.key/>
+                            <#list e.value as division>
                             <tr>
                                 <td>
                                     <@wm.tourney.tourney tourney.id, true/>
@@ -60,15 +58,15 @@
                                 </td>
 
                                 <td>
-                                    <@wm.tourney.language d.language/>
+                                    <@wm.tourney.language division.language/>
                                 </td>
                                 <td>
-                                    <@wm.tourney.section d.section/>
+                                    <@wm.tourney.section division.section/>
                                 </td>
 
                                 <#list TourneyPlace.values() as p>
                                     <td>
-                                        <#list p.filter(d.tourneyWinners) as w>
+                                        <#list p.filter(division.tourneyWinners) as w>
                                             <div>
                                                 <@wm.player.name personalityManager.getMember(w.player)/>
                                             </div>
@@ -96,30 +94,8 @@
 </@wm.ui.playground>
 
 <script type="text/javascript">
-    wm.ui.dataTable('#tourneyWidget #finishedTourneys table', {
-        "fnDrawCallback": function (oSettings) {
-            if (oSettings.aiDisplay.length == 0) {
-                return;
-            }
-
-            var nTrs = $('#tourneyWidget').find('#finishedTourneys tbody tr');
-            var iColspan = nTrs[0].getElementsByTagName('td').length;
-            var sLastGroup = "";
-            for (var i = 0; i < nTrs.length; i++) {
-                var iDisplayIndex = oSettings._iDisplayStart + i;
-                var sGroup = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex] ]._aData[0];
-                if (sGroup != sLastGroup) {
-                    var nGroup = document.createElement('tr');
-                    var nCell = document.createElement('td');
-                    nCell.colSpan = iColspan;
-                    nCell.className = "group";
-                    nCell.innerHTML = sGroup;
-                    nGroup.appendChild(nCell);
-                    nTrs[i].parentNode.insertBefore(nGroup, nTrs[i]);
-                    sLastGroup = sGroup;
-                }
-            }
-        },
+    wm.ui.dataTable('#finishedTourneys table', {
+        "fnDrawCallback": wm.ui.table.groupColumnDrawCallback('#finishedTourneys'),
         "aoColumnDefs": [
             { "bVisible": false, "aTargets": [ 0 ] }
         ],
