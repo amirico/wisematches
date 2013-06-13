@@ -62,10 +62,8 @@ public class TourneyController extends WisematchesController {
 
 	@RequestMapping("active")
 	public String showActiveTourneysPage(Model model) {
-		final TourneyDivision.Context context = new TourneyDivision.Context(EnumSet.of(TourneyEntity.State.ACTIVE));
-		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, context, null, null);
-
-		model.addAttribute("divisionsTree", new TourneyTree(divisions.toArray(new TourneyDivision[divisions.size()])));
+		final List<TourneyRound> tourneyRounds = tourneyManager.searchTourneyEntities(null, new TourneyRound.Context(EnumSet.of(TourneyEntity.State.ACTIVE)), null, null);
+		model.addAttribute("divisionsTree", new TourneyTree(tourneyRounds.toArray(new TourneyRound[tourneyRounds.size()])));
 
 		setupAnnounce(model);
 

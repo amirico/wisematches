@@ -39,19 +39,19 @@
                         </thead>
                         <tbody>
                             <#list participated as g>
-                                <#assign groupId=g.id/>
+                                <#assign round=g.round/>
                             <tr>
                                 <td>
-                                    <@wm.tourney.tourney groupId.roundId.divisionId.tourneyId, true/>
+                                    <@wm.tourney.tourney round.id.divisionId.tourneyId, true/>
                                 </td>
                                 <td>
-                                    <@wm.tourney.language groupId.roundId.divisionId.language/>
+                                    <@wm.tourney.language round.id.divisionId.language/>
                                 </td>
                                 <td>
-                                    <@wm.tourney.section groupId.roundId.divisionId.section/>
+                                    <@wm.tourney.section round.id.divisionId.section/>
                                 </td>
                                 <td>
-                                    <@wm.tourney.round g.id.roundId, true/>
+                                    <@wm.tourney.round round.id, true, round.final/>
                                 </td>
                                 <td>
                                     <@wm.tourney.group g.id , true/>

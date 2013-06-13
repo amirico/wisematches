@@ -105,7 +105,8 @@ class HibernateQueryHelper {
 			query.setParameter("tourney", context.getTourneyId().getNumber());
 			return query;
 		} else {
-			throw new IllegalArgumentException("Invalid group context: " + context);
+			return session.createQuery((count ? "select count(*) " : "") +
+					"from HibernateTourneyRound r " + convertStateToQuery(context.getStates(), "r", "where"));
 		}
 	}
 
