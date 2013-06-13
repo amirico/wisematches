@@ -86,8 +86,10 @@ class HibernateTourneyProcessor {
 	}
 
 	<S extends GameSettings> void initiateDivisions(Session session, GamePlayManager<S, ?> gamePlayManager, GameSettingsProvider<S, TourneyGroup> settingsProvider, PersonalityManager personalityManager) throws BoardCreationException {
-		final Query query = session.createQuery("from HibernateTourneyDivision d where d.activeRound.finishedDate is not null and d.finishedDate is null");
-		for (Object o : query.list()) {
+		final List<Object> divisions = new ArrayList<>();
+		divisions.addAll(session.createQuery("from HibernateTourneyDivision d where d.finishedDate is null and d.activeRound is null").list()); // new
+		divisions.addAll(session.createQuery("from HibernateTourneyDivision d where d.finishedDate is null and d.activeRound.finishedDate is not null").list()); // finished
+		for (Object o : divisions) {
 			final HibernateTourneyDivision division = (HibernateTourneyDivision) o;
 			log.info("Initiating finished division: {}", division.getId());
 
