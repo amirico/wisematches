@@ -301,7 +301,6 @@ public class DictionaryController extends WisematchesController {
 			throw new IllegalArgumentException("dict.suggest.err.attributes.empty");
 		}
 
-
 		final WordAttribute[] attrs = new WordAttribute[attributes.length];
 		for (int i = 0; i < attributes.length; i++) {
 			try {
@@ -324,7 +323,7 @@ public class DictionaryController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setdictionaryReclaimManager(DictionaryReclaimManager dictionaryReclaimManager) {
+	public void setDictionaryReclaimManager(DictionaryReclaimManager dictionaryReclaimManager) {
 		this.dictionaryReclaimManager = dictionaryReclaimManager;
 	}
 }
