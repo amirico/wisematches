@@ -148,6 +148,10 @@
     $(document).ready(function () {
         var widget = $("#dictionaryWidget");
 
+        $("#predefinedComments").change(function () {
+            $("#commentary").val($("#predefinedComments").find("option:selected").text());
+        });
+
         var sendRequest = function (type, commentary) {
             var input = $("input[name='suggestion']:checked");
             var ids = [];
@@ -184,7 +188,7 @@
                         text: "Process",
                         click: function () {
                             wm.ui.lock(widget, "Processing your request, please wait...");
-                            sendRequest('reject', $("#resolutionCommentForm").find("textarea").val());
+                            sendRequest('reject', $("#commentary").val());
                         }
                     },
                     {
@@ -207,6 +211,20 @@
                 <label for="commentary">
                     Please enter your comment:
                 </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <select id="predefinedComments" style="width: 100%">
+                    <option>Разрешены только именя существительные единственного числа (если есть), именительного
+                        падежа.
+                    </option>
+                    <option>Разрешены только слова основной формы (запрещены уменьшительные, увеличительные,
+                        ласкательние и т.п. формы)
+                    </option>
+                    <option>Слово не найдено в основных словарях русского языка</option>
+                    <option>Описание совпадает с текущим</option>
+                </select>
             </td>
         </tr>
         <tr>
