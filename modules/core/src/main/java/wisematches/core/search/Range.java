@@ -11,6 +11,7 @@ public class Range {
 	private final int maxResults;
 
 	public static final Range NO = null;
+	public static final Range FIRST = Range.limit(1);
 
 	protected Range(int firstResult, int maxResults) {
 		this.firstResult = firstResult;

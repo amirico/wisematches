@@ -15,6 +15,7 @@ import wisematches.core.Language;
 import wisematches.core.Personality;
 import wisematches.core.search.Order;
 import wisematches.core.search.Orders;
+import wisematches.core.search.Range;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.*;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
@@ -27,6 +28,8 @@ import wisematches.server.web.servlet.sdo.dictionary.WordReclaimInfo;
 
 import java.util.*;
 
+import static java.util.EnumSet.of;
+
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
@@ -36,12 +39,13 @@ public class DictionaryController extends WisematchesController {
 	private DictionaryManager dictionaryManager;
 	private DictionaryReclaimManager dictionaryReclaimManager;
 
-	private static final EnumSet<ReclaimResolution> EXPECTANT_STATES = EnumSet.of(ReclaimResolution.WAITING);
+	private static final EnumSet<ReclaimType> RECLAIM_REMOVE = of(ReclaimType.REMOVE);
+	private static final EnumSet<ReclaimType> RECLAIM_CREATE = of(ReclaimType.CREATE);
 
-	private static final EnumSet<ReclaimType> RESOLUTION_TYPES = EnumSet.allOf(ReclaimType.class);
-	private static final EnumSet<ReclaimResolution> RESOLUTION_STATES = EnumSet.of(ReclaimResolution.APPROVED);
+	private static final EnumSet<ReclaimResolution> RESOLUTIONS_WAITING = of(ReclaimResolution.WAITING);
+	private static final EnumSet<ReclaimResolution> RESOLUTIONS_APPROVED = of(ReclaimResolution.APPROVED);
 
-	private static final Orders RESOLUTION_ORDERS = Orders.of(Order.asc("resolutionType"), Order.desc("resolutionDate"), Order.desc("requestDate"));
+	private static final Orders RESOLUTION_ORDERS = Orders.of(Order.desc("resolutionDate"), Order.desc("requestDate"), Order.asc("resolutionType"));
 
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.DictionaryController");
 
@@ -74,7 +78,7 @@ public class DictionaryController extends WisematchesController {
 	@RequestMapping("expectant")
 	public String expectantPage(@RequestParam(value = "l", required = false) String lang, Model model, Locale locale) throws UnknownEntityException {
 		final Language language = lang != null ? getLanguage(lang, locale) : null;
-		final WordReclaimContext ctx = new WordReclaimContext(language, null, EXPECTANT_STATES, null);
+		final WordReclaimContext ctx = new WordReclaimContext(language, null, RESOLUTIONS_WAITING, null);
 		model.addAttribute("reclaims", dictionaryReclaimManager.searchEntities(null, ctx, null, null));
 		return "/content/playground/dictionary/expectant";
 	}
@@ -153,7 +157,7 @@ public class DictionaryController extends WisematchesController {
 		}
 
 		final Date dt = new Date(System.currentTimeMillis() - 604800000L); // 7 days
-		final List<WordReclaim> reclaims = dictionaryReclaimManager.searchEntities(null, new WordReclaimContext(language, RESOLUTION_TYPES, RESOLUTION_STATES, dt), RESOLUTION_ORDERS, null);
+		final List<WordReclaim> reclaims = dictionaryReclaimManager.searchEntities(null, new WordReclaimContext(language, null, RESOLUTIONS_APPROVED, dt), RESOLUTION_ORDERS, null);
 		int index = 0;
 		final WordReclaimInfo[] res = new WordReclaimInfo[reclaims.size()];
 		for (WordReclaim reclaim : reclaims) {
@@ -214,7 +218,9 @@ public class DictionaryController extends WisematchesController {
 			}
 		}
 
-		final int cnt = dictionaryReclaimManager.getTotalCount(null, new WordReclaimContext(word, null, null, EnumSet.of(ReclaimResolution.WAITING), null));
+		List<WordReclaim> reclaims;
+		WordReclaimContext ctx = new WordReclaimContext(word, null, null, RESOLUTIONS_WAITING, null);
+		final int cnt = dictionaryReclaimManager.getTotalCount(null, ctx);
 		if (cnt != 0) {
 			return responseFactory.failure("dict.suggest.err.waiting", locale);
 		}
@@ -225,6 +231,11 @@ public class DictionaryController extends WisematchesController {
 				case CREATE:
 					if (contains) {
 						return responseFactory.failure("dict.suggest.err.word.exist", locale);
+					}
+					ctx = new WordReclaimContext(word, null, RECLAIM_REMOVE, RESOLUTIONS_APPROVED, null);
+					reclaims = dictionaryReclaimManager.searchEntities(null, ctx, RESOLUTION_ORDERS, Range.FIRST);
+					if (reclaims != null && !reclaims.isEmpty()) {
+						return responseFactory.failure("dict.suggest.err.word.removed", locale);
 					}
 					dictionaryReclaimManager.addWord(getPrincipal(), language, word, form.getDefinition(), attributes);
 					break;
@@ -237,6 +248,11 @@ public class DictionaryController extends WisematchesController {
 				case REMOVE:
 					if (!contains) {
 						return responseFactory.failure("dict.suggest.err.word.unknown", locale);
+					}
+					ctx = new WordReclaimContext(word, null, RECLAIM_CREATE, RESOLUTIONS_APPROVED, null);
+					reclaims = dictionaryReclaimManager.searchEntities(null, ctx, RESOLUTION_ORDERS, Range.FIRST);
+					if (reclaims != null && !reclaims.isEmpty()) {
+						return responseFactory.failure("dict.suggest.err.word.created", locale);
 					}
 					dictionaryReclaimManager.removeWord(getPrincipal(), language, word);
 					break;
