@@ -205,6 +205,11 @@ public class DictionaryController extends WisematchesController {
 			return responseFactory.failure("dict.suggest.err.short", locale);
 		}
 
+		final String definition = form.getDefinition();
+		if (definition.length() < 2) {
+			return responseFactory.failure("dict.suggest.err.desc", locale);
+		}
+
 		if (!language.getAlphabet().validate(word)) {
 			return responseFactory.failure("dict.suggest.err.alphabet", locale);
 		}
@@ -237,13 +242,13 @@ public class DictionaryController extends WisematchesController {
 					if (reclaims != null && !reclaims.isEmpty()) {
 						return responseFactory.failure("dict.suggest.err.word.removed", locale);
 					}
-					dictionaryReclaimManager.addWord(getPrincipal(), language, word, form.getDefinition(), attributes);
+					dictionaryReclaimManager.addWord(getPrincipal(), language, word, definition, attributes);
 					break;
 				case UPDATE:
 					if (!contains) {
 						return responseFactory.failure("dict.suggest.err.word.unknown", locale);
 					}
-					dictionaryReclaimManager.updateWord(getPrincipal(), language, word, form.getDefinition(), attributes);
+					dictionaryReclaimManager.updateWord(getPrincipal(), language, word, definition, attributes);
 					break;
 				case REMOVE:
 					if (!contains) {
