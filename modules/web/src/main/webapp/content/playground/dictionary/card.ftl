@@ -1,4 +1,16 @@
+<#-- @ftlvariable name="thesauruses" type="wisematches.playground.dictionary.Thesaurus[]" -->
 <#include "/core.ftl"/>
+
+<#assign enThesaruses={
+"WordReference": "http://www.wordreference.com/definition/{word}"}
+/>
+
+<#assign ruThesaruses={
+"Яндекс":"http://slovari.yandex.ru/{word}/правописание",
+"Wiktionary":"http://ru.wiktionary.org/wiki/{word}"}
+/>
+
+<#assign thesaruses={"en":enThesaruses, "ru":ruThesaruses}/>
 
 <div id="wordEntryEditor" class="ui-helper-hidden">
     <form>
@@ -10,7 +22,8 @@
             <tr>
                 <td width="100%" valign="top">
                     <div class="create" style="display: none">
-                        <label for="word"></label><input id="word" class="word-input" name="word" type="text" value="">
+                        <label for="word"></label><input id="word" class="word-input" name="word" type="text" value=""
+                                                         tabindex="1">
                     </div>
                     <div class="create">
                         <span class="word-view"></span>
@@ -18,8 +31,21 @@
                         <span class="attributes-view sample"></span>
                     </div>
                 </td>
-                <td>
-                    <div class="sample" style="text-align: right">(<span class="language-view"></span>)</div>
+                <td style="display: none">
+                <div class="sample" style="text-align: right">(<span class="language-view"></span>)</div>
+                </td>
+                <td align="right">
+                <#list thesaruses?keys as lang>
+                    <div class="thesauruses" id="Thesauruses${lang?upper_case}" style="display: none">
+                        <#assign thesarus=thesaruses[lang]/>
+                        <#list thesarus?keys as t>
+                            <#assign template=thesarus[t]/>
+                            <a tabindex="-1" class="thesaurus" href="${template?replace("{word}", "")}" target="_blank"
+                               template="${template}">${t}</a>
+                            <#if t_has_next> · </#if>
+                        </#list>
+                    </div>
+                </#list>
                 </td>
             </tr>
             <tr>

@@ -1571,6 +1571,10 @@ a.ui-icon {
     white-space: normal;
 }
 
+#wordEntryEditor .thesauruses {
+    white-space: nowrap;
+}
+
 .word-editor-dlg .ui-dialog-buttonset {
     width: 100%;
 }
