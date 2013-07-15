@@ -73,9 +73,12 @@
                                 <td class="ui-state-default" style="padding-right: 40px">
                                 ${p_index+1}. <@wm.player.name personalityManager.getMember(p)/>
                                     <#if g.finished && round.final>
-                                        <span class="tourney-place">
-                                            <@message code="tourney.place.${round.division.getTourneyPlace(p).place}.label"/>
-                                        </span>
+                                        <#assign place=round.division.getTourneyPlace(p)!""/>
+                                        <#if place?has_content>
+                                            <span class="tourney-place">
+                                                <@message code="tourney.place.${place.place}.label"/>
+                                            </span>
+                                        </#if>
                                     </#if>
                                 </td>
                                 <#assign totalGames=0/>
