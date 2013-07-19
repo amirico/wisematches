@@ -155,7 +155,7 @@ public class FileDictionary implements Dictionary {
 	public boolean contains(String word) {
 		readLock.lock();
 		try {
-			return entryMap.containsKey(word);
+			return word != null && entryMap.containsKey(word.toLowerCase());
 		} finally {
 			readLock.unlock();
 		}
@@ -165,7 +165,10 @@ public class FileDictionary implements Dictionary {
 	public WordEntry getWordEntry(String word) {
 		readLock.lock();
 		try {
-			return entryMap.get(word);
+			if (word == null) {
+				return null;
+			}
+			return entryMap.get(word.toLowerCase());
 		} finally {
 			readLock.unlock();
 		}
