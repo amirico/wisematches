@@ -19,160 +19,160 @@ import java.util.List;
 @Entity
 @Table(name = "tourney_regular_division")
 public class HibernateTourneyDivision implements TourneyDivision {
-	@Column(name = "id")
-	@javax.persistence.Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long internalId;
+    @Column(name = "id")
+    @javax.persistence.Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long internalId;
 
-	@OneToOne
-	@JoinColumn(name = "activeRound")
-	private HibernateTourneyRound activeRound;
+    @OneToOne
+    @JoinColumn(name = "activeRound")
+    private HibernateTourneyRound activeRound;
 
-	@Enumerated(EnumType.ORDINAL)
-	@Column(name = "language", updatable = false)
-	private Language language;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "language", updatable = false)
+    private Language language;
 
-	@Column(name = "section", updatable = false)
-	private TourneySection section;
+    @Column(name = "section", updatable = false)
+    private TourneySection section;
 
-	@JoinColumn(name = "tourneyId")
-	@OneToOne(fetch = FetchType.LAZY)
-	private HibernateTourney tourney;
+    @JoinColumn(name = "tourneyId")
+    @OneToOne(fetch = FetchType.LAZY)
+    private HibernateTourney tourney;
 
-	@Column(name = "roundsCount", updatable = false)
-	private int roundsCount;
+    @Column(name = "roundsCount")
+    private int roundsCount;
 
-	@Column(name = "started")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date startedDate;
+    @Column(name = "started")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date startedDate;
 
-	@Column(name = "finished")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date finishedDate;
+    @Column(name = "finished")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date finishedDate;
 
-	@ElementCollection(targetClass = HibernateTourneyWinner.class)
-	@CollectionTable(name = "tourney_regular_winner", joinColumns = @JoinColumn(name = "division"))
-	private Collection<TourneyWinner> tourneyWinners;
+    @ElementCollection(targetClass = HibernateTourneyWinner.class)
+    @CollectionTable(name = "tourney_regular_winner", joinColumns = @JoinColumn(name = "division"))
+    private Collection<TourneyWinner> tourneyWinners;
 
-	public HibernateTourneyDivision() {
-	}
+    public HibernateTourneyDivision() {
+    }
 
-	public HibernateTourneyDivision(HibernateTourney tourney, Language language, TourneySection section) {
-		this.tourney = tourney;
-		this.language = language;
-		this.section = section;
-		this.activeRound = null;
-	}
+    public HibernateTourneyDivision(HibernateTourney tourney, Language language, TourneySection section) {
+        this.tourney = tourney;
+        this.language = language;
+        this.section = section;
+        this.activeRound = null;
+    }
 
 
-	long getInternalId() {
-		return internalId;
-	}
+    long getInternalId() {
+        return internalId;
+    }
 
-	@Override
-	public State getState() {
-		return State.getState(startedDate, finishedDate);
-	}
+    @Override
+    public State getState() {
+        return State.getState(startedDate, finishedDate);
+    }
 
-	@Override
-	public TourneyRound getActiveRound() {
-		return activeRound;
-	}
+    @Override
+    public TourneyRound getActiveRound() {
+        return activeRound;
+    }
 
-	@Override
-	public Language getLanguage() {
-		return language;
-	}
+    @Override
+    public Language getLanguage() {
+        return language;
+    }
 
-	@Override
-	public TourneySection getSection() {
-		return section;
-	}
+    @Override
+    public TourneySection getSection() {
+        return section;
+    }
 
-	@Override
-	public HibernateTourney getTourney() {
-		return tourney;
-	}
+    @Override
+    public HibernateTourney getTourney() {
+        return tourney;
+    }
 
-	@Override
-	public int getRoundsCount() {
-		return roundsCount;
-	}
+    @Override
+    public int getRoundsCount() {
+        return roundsCount;
+    }
 
-	@Override
-	public Id getId() {
-		return new Id(tourney.getId(), language, section);
-	}
+    @Override
+    public Id getId() {
+        return new Id(tourney.getId(), language, section);
+    }
 
-	@Override
-	public Date getStartedDate() {
-		return startedDate;
-	}
+    @Override
+    public Date getStartedDate() {
+        return startedDate;
+    }
 
-	@Override
-	public Date getFinishedDate() {
-		return finishedDate;
-	}
+    @Override
+    public Date getFinishedDate() {
+        return finishedDate;
+    }
 
-	@Override
-	public TourneyPlace getTourneyPlace(long pid) {
-		for (TourneyWinner tourneyWinner : tourneyWinners) {
-			if (tourneyWinner.getPlayer() == pid) {
-				return tourneyWinner.getPlace();
-			}
-		}
-		return null;
-	}
+    @Override
+    public TourneyPlace getTourneyPlace(long pid) {
+        for (TourneyWinner tourneyWinner : tourneyWinners) {
+            if (tourneyWinner.getPlayer() == pid) {
+                return tourneyWinner.getPlace();
+            }
+        }
+        return null;
+    }
 
-	@Override
-	public Collection<TourneyWinner> getTourneyWinners() {
-		return tourneyWinners;
-	}
+    @Override
+    public Collection<TourneyWinner> getTourneyWinners() {
+        return tourneyWinners;
+    }
 
-	void startRound(HibernateTourneyRound round) {
-		if (finishedDate != null) {
-			throw new IllegalStateException("Division already finished");
-		}
-		if (activeRound == null) {
-			startedDate = new Date();
-		}
-		roundsCount++;
-		activeRound = round;
-	}
+    void startRound(HibernateTourneyRound round) {
+        if (finishedDate != null) {
+            throw new IllegalStateException("Division already finished");
+        }
+        if (activeRound == null) {
+            startedDate = new Date();
+        }
+        roundsCount++;
+        activeRound = round;
+    }
 
-	boolean finishRound(HibernateTourneyRound round) {
-		if (finishedDate != null) {
-			throw new IllegalStateException("Division already finished");
-		}
-		return round.isFinal();
-	}
+    boolean finishRound(HibernateTourneyRound round) {
+        if (finishedDate != null) {
+            throw new IllegalStateException("Division already finished");
+        }
+        return round.isFinal();
+    }
 
-	void finishDivision(List<HibernateTourneyWinner> winners) {
-		if (finishedDate != null) {
-			throw new IllegalStateException("Division is not finished");
-		}
+    void finishDivision(List<HibernateTourneyWinner> winners) {
+        if (finishedDate != null) {
+            throw new IllegalStateException("Division is not finished");
+        }
 
-		if (tourneyWinners != null && tourneyWinners.size() != 0) {
-			throw new IllegalStateException("Winners already set. Change is not possible.");
-		}
+        if (tourneyWinners != null && tourneyWinners.size() != 0) {
+            throw new IllegalStateException("Winners already set. Change is not possible.");
+        }
 
-		activeRound = null;
-		finishedDate = new Date();
+        activeRound = null;
+        finishedDate = new Date();
 
-		tourneyWinners = new ArrayList<>();
-		tourneyWinners.addAll(winners);
-	}
+        tourneyWinners = new ArrayList<>();
+        tourneyWinners.addAll(winners);
+    }
 
-	@Override
-	public String toString() {
-		return "HibernateTourneyDivision{" +
-				"internalId=" + internalId +
-				", round=" + (activeRound != null ? activeRound.getRound() : "null") +
-				", tourney=" + tourney +
-				", section=" + section +
-				", language=" + language +
-				", startedDate=" + startedDate +
-				", finishedDate=" + finishedDate +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "HibernateTourneyDivision{" +
+                "internalId=" + internalId +
+                ", round=" + (activeRound != null ? activeRound.getRound() : "null") +
+                ", tourney=" + tourney +
+                ", section=" + section +
+                ", language=" + language +
+                ", startedDate=" + startedDate +
+                ", finishedDate=" + finishedDate +
+                '}';
+    }
 }

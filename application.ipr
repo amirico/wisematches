@@ -5,7 +5,7 @@
   </component>
   <component name="ArtifactManager">
     <artifact type="exploded-war" build-on-make="true" name="web:war exploded">
-      <output-path>$PROJECT_DIR$/modules/web/target/web-5.1.15-SNAPSHOT</output-path>
+      <output-path>$PROJECT_DIR$/modules/web/target/web-5.1.18</output-path>
       <root id="root">
         <element id="javaee-facet-resources" facet="web/web/Web" />
         <element id="directory" name="WEB-INF">
@@ -13,7 +13,7 @@
             <element id="module-output" name="web" />
           </element>
           <element id="directory" name="lib">
-            <element id="archive" name="core-5.1.15-SNAPSHOT.jar">
+            <element id="archive" name="core-5.1.18.jar">
               <element id="module-output" name="core" />
             </element>
             <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:4.1.7.Final" />
@@ -54,14 +54,14 @@
             <element id="library" level="project" name="Maven: org.quartz-scheduler:quartz:2.1.6" />
             <element id="library" level="project" name="Maven: c3p0:c3p0:0.9.1.1" />
             <element id="library" level="project" name="Maven: org.freemarker:freemarker:2.3.19" />
-            <element id="archive" name="gameplay-5.1.15-SNAPSHOT.jar">
+            <element id="archive" name="gameplay-5.1.18.jar">
               <element id="module-output" name="gameplay" />
             </element>
             <element id="library" level="project" name="Maven: joda-time:joda-time:2.1" />
-            <element id="archive" name="scribble-5.1.15-SNAPSHOT.jar">
+            <element id="archive" name="scribble-5.1.18.jar">
               <element id="module-output" name="scribble" />
             </element>
-            <element id="archive" name="services-5.1.15-SNAPSHOT.jar">
+            <element id="archive" name="services-5.1.18.jar">
               <element id="module-output" name="services" />
             </element>
             <element id="library" level="project" name="Maven: javax.mail:mail:1.4.5" />
@@ -77,7 +77,7 @@
     </artifact>
     <artifact type="war" name="web:war">
       <output-path>$PROJECT_DIR$/modules/web/target</output-path>
-      <root id="archive" name="web-5.1.15-SNAPSHOT.war">
+      <root id="archive" name="web-5.1.18.war">
         <element id="artifact" artifact-name="web:war exploded" />
       </root>
     </artifact>

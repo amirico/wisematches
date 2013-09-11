@@ -19,14 +19,14 @@ public class HibernateTourneyRound implements TourneyRound {
 	@Column(name = "roundNumber", updatable = false)
 	private int round;
 
-	@Column(name = "groupsCount", updatable = false)
-	private int groupsCount;
+    @Column(name = "groupsCount")
+    private int groupsCount;
 
-	@Column(name = "totalGamesCount", updatable = true)
-	private int totalGamesCount;
+    @Column(name = "totalGamesCount")
+    private int totalGamesCount;
 
-	@Column(name = "finishedGamesCount", updatable = true)
-	private int finishedGamesCount;
+    @Column(name = "finishedGamesCount")
+    private int finishedGamesCount;
 
 	@OneToOne
 	@JoinColumn(name = "divisionId")
