@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <import resource="restriction-config.xml"/>
+
+    <bean id="dictionaryManager" class="wisematches.playground.dictionary.impl.FileDictionaryManager">
+        <property name="dictionariesFolder" value="${server.dictionary.path}"/>
+    </bean>
+
+    <bean id="dictionaryReclaimManager"
+          class="wisematches.playground.dictionary.impl.HibernateDictionaryReclaimManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="dictionaryManager" ref="dictionaryManager"/>
+    </bean>
+</beans>

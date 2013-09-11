@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    WARNING: this file can't be changed! Otherwise stored games will be loaded incorrect.
+    Taken from here: http://en.wikipedia.org/wiki/Scrabble_letter_distributions#Russian (for version after 1990).
+-->
+<bank version="1.0">
+    <letter char="А" count="10" cost="1"/>
+    <letter char="Б" count="3" cost="3"/>
+    <letter char="В" count="5" cost="2"/>
+    <letter char="Г" count="3" cost="3"/>
+    <letter char="Д" count="5" cost="2"/>
+    <letter char="Е" count="9" cost="1"/>
+    <letter char="Ж" count="2" cost="5"/>
+    <letter char="З" count="2" cost="5"/>
+    <letter char="И" count="10" cost="1"/>
+    <letter char="Й" count="4" cost="4"/>
+    <letter char="К" count="6" cost="2"/>
+    <letter char="Л" count="4" cost="2"/>
+    <letter char="М" count="5" cost="2"/>
+    <letter char="Н" count="8" cost="1"/>
+    <letter char="О" count="10" cost="1"/>
+    <letter char="П" count="6" cost="2"/>
+    <letter char="Р" count="6" cost="2"/>
+    <letter char="С" count="6" cost="2"/>
+    <letter char="Т" count="5" cost="2"/>
+    <letter char="У" count="3" cost="3"/>
+    <letter char="Ф" count="1" cost="10"/>
+    <letter char="Х" count="2" cost="5"/>
+    <letter char="Ц" count="1" cost="5"/>
+    <letter char="Ч" count="2" cost="5"/>
+    <letter char="Ш" count="2" cost="10"/>
+    <letter char="Щ" count="1" cost="10"/>
+    <letter char="Ъ" count="1" cost="10"/>
+    <letter char="Ы" count="2" cost="5"/>
+    <letter char="Ь" count="2" cost="5"/>
+    <letter char="Э" count="1" cost="8"/>
+    <letter char="Ю" count="1" cost="10"/>
+    <letter char="Я" count="4" cost="4"/>
+    <letter char="*" count="1" cost="0" forEachPlayer="true"/>
+</bank>
