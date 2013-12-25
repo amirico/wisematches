@@ -1,13 +1,14 @@
 package wisematches.server.web.servlet.mvc.account;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.WebAttributes;
+import org.springframework.social.security.SocialAuthenticationServiceLocator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,6 +30,8 @@ import java.util.Locale;
 @Controller
 @RequestMapping("/account")
 public class AuthenticationController extends WisematchesController {
+	private SocialAuthenticationServiceLocator authenticationServiceLocator;
+
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.AuthenticationController");
 
 	public AuthenticationController() {
@@ -170,6 +173,12 @@ public class AuthenticationController extends WisematchesController {
 		if (!staticContentGenerator.generatePage(page, "general", false, model, locale)) {
 			staticContentGenerator.generatePage("general", "general", false, model, locale);
 		}
+		model.addAttribute("socialProviders", authenticationServiceLocator.registeredAuthenticationProviderIds());
 		return "/content/account/general";
+	}
+
+	@Autowired
+	public void setAuthenticationServiceLocator(SocialAuthenticationServiceLocator authenticationServiceLocator) {
+		this.authenticationServiceLocator = authenticationServiceLocator;
 	}
 }

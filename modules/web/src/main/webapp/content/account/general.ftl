@@ -1,3 +1,4 @@
+<#-- @ftlvariable name="socialProviders" type="java.lang.String[]" -->
 <#-- @ftlvariable name="showRememberMe" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="showRegistration" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="showPredefinedUsername" type="java.lang.Boolean" -->
@@ -74,6 +75,17 @@
                                     <td align="left">
                                     <#--<button type="button" onclick="doLogin();">asd</button>-->
                                         <button type="submit"><@message code="account.login.signin.label"/></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" align="center">
+                                        <div class="social-signin">
+                                            <#list socialProviders as p>
+                                                <a class="social-signin-link"
+                                                   href="/account/social/start?provider=${p}"><i
+                                                        class="social-icon-24 social-icon-${p}"></i></a>
+                                            </#list>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
