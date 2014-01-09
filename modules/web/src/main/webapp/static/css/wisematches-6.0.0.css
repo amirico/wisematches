@@ -201,7 +201,7 @@ a.action {
     border-top: 1px solid #C5C8D0;
 }
 
-.footer>span {
+.footer > span {
     font-size: 85%;
 }
 
@@ -320,7 +320,7 @@ div.space-line {
     padding-right: 5px;
 }
 
-#info-navigation>ul {
+#info-navigation > ul {
     padding: 0 !important;
 }
 
@@ -477,7 +477,7 @@ div.space-line {
     margin: 0;
 }
 
-.info-awards-item.info-item-level1>.info-awards-label {
+.info-awards-item.info-item-level1 > .info-awards-label {
     font-size: larger;
     border-bottom: 1px solid gray;
 }
@@ -489,7 +489,7 @@ div.space-line {
     padding-right: 10px;
 }
 
-#info-tourney-items>ol {
+#info-tourney-items > ol {
     padding: 0;
     list-style: none;
 }
@@ -599,15 +599,15 @@ div.space-line {
     display: table;
 }
 
-.ui-layout-table>div {
+.ui-layout-table > div {
     display: table-row;
 }
 
-.ui-layout-table>div>div {
+.ui-layout-table > div > div {
     display: table-cell;
 }
 
-.ui-layout-table>div>div:first-child {
+.ui-layout-table > div > div:first-child {
     font-weight: bold;
     white-space: nowrap;
 }
@@ -773,7 +773,7 @@ a.ui-icon {
     height: 18px;
 }
 
-.data-table-content>.ui-widget-content {
+.data-table-content > .ui-widget-content {
     border-left: none;
     border-right: none;
 }
@@ -844,10 +844,10 @@ a.ui-icon {
     background: transparent;
 }
 
-.jspVerticalBar>.jspDisabled,
-.jspVerticalBar>.jspDisabled:hover,
-.jspHorizontalBar>.jspDisabled,
-.jspHorizontalBar>.jspDisabled:hover {
+.jspVerticalBar > .jspDisabled,
+.jspVerticalBar > .jspDisabled:hover,
+.jspHorizontalBar > .jspDisabled,
+.jspHorizontalBar > .jspDisabled:hover {
     background: transparent;
 }
 
@@ -860,12 +860,12 @@ a.ui-icon {
     width: 8px;
 }
 
-#gameToolbar>div {
+#gameToolbar > div {
     display: inline-block;
     padding-left: 15px;
 }
 
-#gameToolbar>div:first-child {
+#gameToolbar > div:first-child {
     padding-left: 0 !important;
 }
 
@@ -877,7 +877,7 @@ a.ui-icon {
     padding: 5px;
 }
 
-.restriction>div {
+.restriction > div {
     vertical-align: top;
     display: inline-block;
 }
@@ -1155,7 +1155,7 @@ a.ui-icon {
     background-image: none;
 }
 
-.profile .statistic .ui-layout-table>div>div {
+.profile .statistic .ui-layout-table > div > div {
     padding-right: 10px;
 }
 
@@ -1482,7 +1482,7 @@ a.ui-icon {
     border-bottom: 1px solid #daecf2;
 }
 
-.division-rounds>a {
+.division-rounds > a {
     color: #a52a2a;
     font-weight: bold;
 }
@@ -1528,7 +1528,7 @@ a.ui-icon {
     background-image: none;
 }
 
-#dictionary .navigation >div {
+#dictionary .navigation > div {
     width: 200px !important;
 }
 
@@ -1558,7 +1558,7 @@ a.ui-icon {
     border-bottom: 1px dashed #d0e5f5;
 }
 
-#dictionary .search-panel>.ui-widget-content, #dictionary .search-panel>.ui-state-hover {
+#dictionary .search-panel > .ui-widget-content, #dictionary .search-panel > .ui-state-hover {
     padding: 0 !important;
 }
 
@@ -1645,10 +1645,6 @@ a.ui-icon {
     text-align: center;
     padding-left: 0 !important;
     padding-right: 0 !important;
-}
-
-.game-finished {
-    text-decoration: line-through !important;
 }
 
 .game-progress {
@@ -2102,11 +2098,11 @@ ul.bonuses .bonus-cell {
     padding-left: 5px;
 }
 
-.points-tiles>div {
+.points-tiles > div {
     float: right;
 }
 
-.points-tiles>div, .count-tiles>div {
+.points-tiles > div, .count-tiles > div {
     height: 22px;
     position: relative;
 }
@@ -2263,7 +2259,7 @@ ul.bonuses .bonus-cell {
     border-left: 1px solid #CCC;
 }
 
-.data-table-toolbar>.ui-state-hover {
+.data-table-toolbar > .ui-state-hover {
     border-width: 0;
     border-top-width: 3px;
     margin: 0;
@@ -2345,7 +2341,7 @@ ul.bonuses .bonus-cell {
     font-weight: bold;
 }
 
-#membershipView>div, #membershipView .ui-widget-content>div {
+#membershipView > div, #membershipView .ui-widget-content > div {
     padding: 5px;
 }
 
@@ -2354,13 +2350,13 @@ ul.bonuses .bonus-cell {
     padding: 0 !important;
 }
 
-#membershipView .levels>div>div {
+#membershipView .levels > div > div {
     padding: 5px;
     text-align: center;
     vertical-align: top;
 }
 
-#membershipView .levels>div>div:first-child {
+#membershipView .levels > div > div:first-child {
     text-align: left;
 }
 
@@ -2371,4 +2367,59 @@ ul.bonuses .bonus-cell {
 
 #membershipView .levels .header.subscribe {
     border-bottom-width: 1px;
+}
+
+.social-signin {
+    text-align: center;
+}
+
+.social-signin-link {
+    border: none;
+    margin-left: 5px;
+}
+
+.social-icon-16 {
+    width: 16px;
+    height: 16px;
+    display: inline-block !important;
+    background: url("../images/social/icons16.png");
+}
+
+.social-logo {
+    width: 89px;
+    height: 30px;
+    overflow: hidden;
+    display: inline-block !important;
+    background: url("../images/social/logo.png");
+}
+
+.social-icon-24 {
+    width: 24px;
+    height: 24px;
+    display: inline-block !important;
+    background: url("../images/social/icons24.png");
+}
+
+.social-icon-vkontakte {
+    background-position: 0 0;
+}
+
+.social-icon-facebook {
+    background-position: 0 -32px;
+}
+
+.social-icon-twitter {
+    background-position: 0 -64px;
+}
+
+.social-icon-mailru {
+    background-position: 0 -96px;
+}
+
+.social-icon-google {
+    background-position: 0 -128px;
+}
+
+.social-icon-odnoklassniki {
+    background-position: 0 -160px;
 }

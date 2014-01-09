@@ -62,8 +62,10 @@
     </repositories>
 
     <properties>
-        <org.springframework.version>3.2.1.RELEASE</org.springframework.version>
-        <org.springframework.security.version>3.2.0.M1</org.springframework.security.version>
+        <org.springframework.version>3.2.5.RELEASE</org.springframework.version>
+        <org.springframework.security.version>3.2.0.RC2</org.springframework.security.version>
+
+        <org.springframework.social.version>1.1.0.M4</org.springframework.social.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
