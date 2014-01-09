@@ -53,6 +53,9 @@ public class ScribbleObservingController extends AbstractScribbleController {
 			@Override
 			public ObservedInfo call() throws Exception {
 				final ScribbleBoard board = playManager.openBoard(gameId);
+				if (board == null) {
+					return null;
+				}
 
 				Tile[] tiles = null;
 				MoveInfo[] movesInfo = null;

@@ -1,12 +1,8 @@
-<!--
-  ~ Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
-  -->
-
 <beans:beans xmlns="http://www.springframework.org/schema/security"
              xmlns:beans="http://www.springframework.org/schema/beans"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd"
              default-destroy-method="destroy">
 
     <global-method-security jsr250-annotations="enabled" secured-annotations="enabled"/>
@@ -104,6 +100,44 @@
         <beans:property name="authenticationFailureHandler" ref="authenticationFailureHandler"/>
     </beans:bean>
 
+    <beans:bean id="socialAuthenticationFilter"
+                class="wisematches.server.web.security.social.SocialAuthenticationFilter">
+        <beans:property name="filterProcessesUrl" value="/account/social"/>
+
+        <beans:constructor-arg name="authManager" ref="authenticationManager"/>
+        <beans:constructor-arg name="userIdSource">
+            <beans:bean class="wisematches.server.web.security.social.PersonalityUserIdSource"/>
+        </beans:constructor-arg>
+        <beans:constructor-arg name="authServiceLocator" ref="connectionFactoryLocator"/>
+        <beans:constructor-arg name="usersConnectionRepository" ref="usersConnectionRepository"/>
+
+        <beans:property name="updateConnections" value="true"/>
+
+        <beans:property name="signupUrl" value="/account/social/association"/>
+        <beans:property name="defaultFailureUrl" value="/account/social/finish"/>
+        <beans:property name="connectionAddedRedirectUrl"
+                        value="/account/social/finish?continue=/account/passport/social"/>
+
+        <beans:property name="rememberMeServices" ref="rememberMeServices"/>
+
+        <beans:property name="authenticationSuccessHandler">
+            <beans:bean class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler">
+                <beans:constructor-arg value="/account/social/finish"/>
+            </beans:bean>
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="accountAuthenticationFilter"
+                class="wisematches.server.web.security.filter.AccountAuthenticationFilter">
+        <beans:property name="filterProcessesUrl" value="/account/authorization"/>
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
+
+        <beans:property name="authenticationSuccessHandler" ref="authenticationSuccessHandler"/>
+        <beans:property name="authenticationFailureHandler" ref="authenticationFailureHandler"/>
+
+        <beans:property name="rememberMeServices" ref="rememberMeServices"/>
+    </beans:bean>
+
     <beans:bean id="visitorAuthenticationFilter"
                 class="wisematches.server.web.security.filter.VisitorAuthenticationFilter">
         <beans:property name="localeResolver" ref="localeResolver"/>
@@ -149,6 +183,9 @@
         <intercept-url pattern="/account/modify" access="isFullyAuthenticated()"/>
 
         <intercept-url pattern="/**" access="permitAll"/>
+
+        <custom-filter before="PRE_AUTH_FILTER" ref="accountAuthenticationFilter"/>
+        <custom-filter position="PRE_AUTH_FILTER" ref="socialAuthenticationFilter"/>
 
         <!--<custom-filter after="BASIC_AUTH_FILTER" ref="androidAuthenticationFilter"/>-->
         <custom-filter before="ANONYMOUS_FILTER" ref="visitorAuthenticationFilter"/>

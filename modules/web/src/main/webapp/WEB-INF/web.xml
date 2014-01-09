@@ -16,6 +16,7 @@
             classpath:/config/scribble-config.xml
             classpath:/config/wisematches-config.xml
             /WEB-INF/web-app-security.xml
+            /WEB-INF/web-app-social.xml
         </param-value>
     </context-param>
 
