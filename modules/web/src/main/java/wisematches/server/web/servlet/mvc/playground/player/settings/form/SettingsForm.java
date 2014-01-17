@@ -25,6 +25,9 @@ public class SettingsForm extends BoardSettingsForm {
 	@Length(max = 100, message = "account.register.pwd-cfr.err.max")
 	private String confirm;
 
+	private String[] providerId;
+	private String[] providerUserId;
+
 	private boolean changeEmail = false;
 
 	private boolean changePassword = false;
@@ -96,5 +99,21 @@ public class SettingsForm extends BoardSettingsForm {
 
 	public void setOpenedTab(String openedTab) {
 		this.openedTab = openedTab;
+	}
+
+	public String[] getProviderId() {
+		return providerId;
+	}
+
+	public void setProviderId(String[] providerId) {
+		this.providerId = providerId;
+	}
+
+	public String[] getProviderUserId() {
+		return providerUserId;
+	}
+
+	public void setProviderUserId(String[] providerUserId) {
+		this.providerUserId = providerUserId;
 	}
 }

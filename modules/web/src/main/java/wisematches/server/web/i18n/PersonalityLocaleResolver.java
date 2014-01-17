@@ -3,7 +3,7 @@ package wisematches.server.web.i18n;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import wisematches.core.Language;
 import wisematches.core.Player;
-import wisematches.core.security.PersonalityContext;
+import wisematches.server.web.security.context.PersonalityContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

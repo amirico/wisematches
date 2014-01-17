@@ -1,4 +1,4 @@
-package wisematches.core.security.authentication;
+package wisematches.server.web.security.authentication;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
@@ -6,14 +6,14 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
-import wisematches.core.security.userdetails.PlayerDetails;
-import wisematches.core.security.userdetails.PlayerDetailsService;
+import wisematches.server.web.security.PlayerDetails;
+import wisematches.server.web.security.PlayerDetailsService;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public abstract class PlayerAuthenticationProvider implements AuthenticationProvider, InitializingBean {
-	private PlayerDetailsService personalityDetailsService;
+	protected PlayerDetailsService playerDetailsService;
 	private UserDetailsChecker userDetailsChecker = new AccountStatusUserDetailsChecker();
 
 	protected PlayerAuthenticationProvider() {
@@ -21,7 +21,7 @@ public abstract class PlayerAuthenticationProvider implements AuthenticationProv
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if (personalityDetailsService == null) {
+		if (playerDetailsService == null) {
 			throw new IllegalStateException("PersonalityManager is not set");
 		}
 	}
@@ -42,15 +42,11 @@ public abstract class PlayerAuthenticationProvider implements AuthenticationProv
 
 	protected abstract PlayerDetails loadValidPersonalityDetails(Authentication authentication);
 
-	public PlayerDetailsService getPersonalityDetailsService() {
-		return personalityDetailsService;
-	}
-
 	public void setUserDetailsChecker(UserDetailsChecker userDetailsChecker) {
 		this.userDetailsChecker = userDetailsChecker;
 	}
 
-	public void setPersonalityDetailsService(PlayerDetailsService personalityDetailsService) {
-		this.personalityDetailsService = personalityDetailsService;
+	public void setPlayerDetailsService(PlayerDetailsService playerDetailsService) {
+		this.playerDetailsService = playerDetailsService;
 	}
 }

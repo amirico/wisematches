@@ -3,8 +3,8 @@ package wisematches.server.services.notify.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import wisematches.core.personality.player.account.Account;
 import wisematches.core.personality.player.account.AccountListener;
 import wisematches.core.personality.player.account.AccountManager;
@@ -18,13 +18,14 @@ import wisematches.server.services.abuse.AbuseReportManager;
 import wisematches.server.services.message.Message;
 import wisematches.server.services.notify.NotificationSender;
 
+import javax.mail.internet.MimeMessage;
 import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class AlertsOriginCenter {
-	private MailSender mailSender;
+	private JavaMailSender mailSender;
 	private AccountManager accountManager;
 	private ServerDescriptor serverDescriptor;
 	private AbuseReportManager abuseReportManager;
@@ -41,14 +42,16 @@ public class AlertsOriginCenter {
 
 	protected void raiseAlarm(String system, String subj, String msg) {
 		try {
-			final SimpleMailMessage message = new SimpleMailMessage();
+			final MimeMessage mimeMessage = mailSender.createMimeMessage();
+
+			final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, false, "UTF-8");
 			message.setTo(serverDescriptor.getAlertsMailBox());
 			message.setFrom(NotificationSender.SUPPORT.getMailAddress(serverDescriptor));
 			message.setSentDate(new Date());
 			message.setSubject("[" + system + "] " + subj);
 			message.setText(msg);
 
-			mailSender.send(message);
+			mailSender.send(mimeMessage);
 		} catch (Exception ex) {
 			log.error("Alerts can't be sent: system=[{}], subj=[{}], msg=[{}]", system, subj, msg);
 		}
@@ -58,7 +61,7 @@ public class AlertsOriginCenter {
 		this.serverDescriptor = serverDescriptor;
 	}
 
-	public void setMailSender(MailSender mailSender) {
+	public void setMailSender(JavaMailSender mailSender) {
 		this.mailSender = mailSender;
 	}
 

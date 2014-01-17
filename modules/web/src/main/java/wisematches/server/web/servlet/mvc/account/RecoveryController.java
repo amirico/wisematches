@@ -11,17 +11,16 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.request.NativeWebRequest;
 import wisematches.core.Member;
 import wisematches.core.personality.player.account.*;
 import wisematches.server.services.notify.NotificationSender;
 import wisematches.server.services.notify.NotificationService;
-import wisematches.server.web.security.captcha.CaptchaService;
+import wisematches.server.web.security.web.captcha.CaptchaService;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.account.form.RecoveryConfirmationForm;
 import wisematches.server.web.servlet.mvc.account.form.RecoveryRequestForm;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -79,7 +78,7 @@ public class RecoveryController extends WisematchesController {
 
 	@RequestMapping(value = "confirmation")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public String recoveredConfirmationAction(HttpServletRequest request, HttpServletResponse response, HttpSession session,
+	public String recoveredConfirmationAction(NativeWebRequest request, HttpSession session,
 											  @Valid @ModelAttribute("recovery") RecoveryConfirmationForm form,
 											  BindingResult result, Model model) {
 		log.info("Process recovery confirmation: {}", form);
@@ -98,16 +97,16 @@ public class RecoveryController extends WisematchesController {
 		}
 
 		if (form.isRecoveryAccount()) {
-			final Account account = checkRecoveryForm(request, response, form, result);
+			final Account account = checkRecoveryForm(request, form, result);
 			if (!result.hasErrors()) {
 				final AccountEditor e = new AccountEditor(account);
 				try {
 					recoveryTokenManager.clearToken(account); // remove token. Mandatory operation or expired exception will be thrown
-					accountManager.updateAccount(e.createAccount(), form.getPassword());
+					final Account account1 = accountManager.updateAccount(e.createAccount(), form.getPassword());
 
 					final Member member = personalityManager.getMember(account.getId());
 					notificationService.raiseNotification("account.updated", member, NotificationSender.ACCOUNTS, member);
-					return AccountController.forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
+					return AccountController.forwardToAuthorization(request, account1, form.isRememberMe(), null);
 				} catch (Exception e1) {
 					result.rejectValue("email", "account.recovery.err.system");
 				}
@@ -119,7 +118,7 @@ public class RecoveryController extends WisematchesController {
 		return "/content/assistance/help";
 	}
 
-	private Account checkRecoveryForm(HttpServletRequest request, HttpServletResponse response, RecoveryConfirmationForm form, BindingResult result) {
+	private Account checkRecoveryForm(NativeWebRequest request, RecoveryConfirmationForm form, BindingResult result) {
 		if (isEmpty(form.getEmail())) {
 			result.rejectValue("email", "account.register.email.err.blank");
 		}
@@ -139,7 +138,7 @@ public class RecoveryController extends WisematchesController {
 		}
 
 		if (captchaService != null) {
-			captchaService.validateCaptcha(request, response, result);
+			captchaService.validateCaptcha(request, result);
 		}
 
 		Account player = null;

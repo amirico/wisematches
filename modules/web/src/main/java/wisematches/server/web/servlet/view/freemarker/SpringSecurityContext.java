@@ -1,6 +1,6 @@
 package wisematches.server.web.servlet.view.freemarker;
 
-import wisematches.core.security.PersonalityContext;
+import wisematches.server.web.security.context.PersonalityContext;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

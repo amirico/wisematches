@@ -4051,25 +4051,25 @@ $(document).ready(function () {
                 primary: "ui-icon-triangle-1-s"
             }
         }).click(function () {
-                    if (globalSplitButtonMenu != null) {
-                        globalSplitButtonMenu.hide();
-                        globalSplitButtonMenu = null;
-                    }
+            if (globalSplitButtonMenu != null) {
+                globalSplitButtonMenu.hide();
+                globalSplitButtonMenu = null;
+            }
 
-                    globalSplitButtonMenu = $(ch[1]).menu().show().position({
-                        my: "left top",
-                        at: "left bottom",
-                        of: this
-                    });
+            globalSplitButtonMenu = $(ch[1]).menu().show().position({
+                my: "left top",
+                at: "left bottom",
+                of: this
+            });
 
-                    $(document).one("click", function () {
-                        if (globalSplitButtonMenu != null) {
-                            globalSplitButtonMenu.hide();
-                            globalSplitButtonMenu = null;
-                        }
-                    });
-                    return false;
-                });
+            $(document).one("click", function () {
+                if (globalSplitButtonMenu != null) {
+                    globalSplitButtonMenu.hide();
+                    globalSplitButtonMenu = null;
+                }
+            });
+            return false;
+        });
         buttons.buttonset();
     });
 });
@@ -4107,7 +4107,7 @@ $(document).ready(function () {
 
     $(".social-signin-link").click(function (event) {
         event.preventDefault();
-        wm.ui.popupwindow($(this).attr("href"), "WiseMatches: Авторизация", 500, 300).focus();
+        wm.ui.popupwindow($(this).attr("href"), "WiseMatches: Авторизация", 700, 520).focus();
         return false;
     });
 });

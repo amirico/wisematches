@@ -36,17 +36,13 @@ import wisematches.server.services.ServerDescriptor;
 import wisematches.server.services.notify.NotificationException;
 import wisematches.server.services.notify.NotificationSender;
 import wisematches.server.services.notify.NotificationService;
-import wisematches.server.web.security.captcha.CaptchaService;
+import wisematches.server.web.security.web.captcha.CaptchaService;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.account.form.AccountRegistrationForm;
 import wisematches.server.web.servlet.mvc.account.form.SocialAssociationForm;
 import wisematches.server.web.servlet.sdo.ServiceResponse;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -84,32 +80,33 @@ public class AccountController extends WisematchesController {
 	/**
 	 * This is action publisher for new account. Get model from HTTP POST request and creates new account, if possible.	 *
 	 *
-	 * @param model    the all model
-	 * @param request  original http request
-	 * @param response original http response
-	 * @param form     the form request form
-	 * @param result   the errors errors
-	 * @param status   the session status. Will be cleared in case of success
+	 * @param model   the all model
+	 * @param request original http request
+	 * @param form    the form request form
+	 * @param result  the errors errors
+	 * @param status  the session status. Will be cleared in case of success
 	 * @return the create account page in case of error of forward to {@code authMember} page in case of success.
 	 */
 	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_UNCOMMITTED)
 	@RequestMapping(value = "create", method = RequestMethod.POST)
-	public String createAccountAction(HttpServletRequest request, HttpServletResponse response,
+	public String createAccountAction(NativeWebRequest request,
 									  @Valid @ModelAttribute("registration") AccountRegistrationForm form,
 									  BindingResult result, Model model, SessionStatus status, Locale locale) {
 		log.info("Create new account request: {}", form);
 
 		if (captchaService != null) {
-			captchaService.validateCaptcha(request, response, result);
+			captchaService.validateCaptcha(request, result);
 		}
 		// Validate before next steps
 		validateRegistrationForm(form, result, locale);
 
 		Member member = null;
+		Account account = null;
 		// Create account if no errors
 		if (!result.hasErrors()) {
 			try {
-				member = new DefaultMember(createAccount(form, request), Membership.BASIC);
+				account = createAccount(form, request);
+				member = new DefaultMember(account, Membership.BASIC);
 			} catch (DuplicateAccountException ex) {
 				final Set<String> fieldNames = ex.getFieldNames();
 				if (fieldNames.contains("email")) {
@@ -138,7 +135,7 @@ public class AccountController extends WisematchesController {
 			} catch (NotificationException e) {
 				log.error("Notification about new account can't be sent", e);
 			}
-			return forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
+			return forwardToAuthorization(request, account, form.isRememberMe(), "/playground/welcome");
 		}
 	}
 
@@ -151,9 +148,9 @@ public class AccountController extends WisematchesController {
 	 */
 	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_UNCOMMITTED)
 	@RequestMapping(value = "create.ajax", method = RequestMethod.POST)
-	public ServiceResponse createAccountService(HttpServletRequest request,
+	public ServiceResponse createAccountService(NativeWebRequest request,
 												@Valid @RequestBody AccountRegistrationForm form,
-												BindingResult result, Model model, Locale locale) {
+												BindingResult result, Locale locale) {
 		log.info("Create new account request (ajax): {}", form);
 
 		if (result.hasErrors()) {
@@ -238,7 +235,7 @@ public class AccountController extends WisematchesController {
 
 	@RequestMapping(value = "/social/association", method = RequestMethod.GET)
 	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_UNCOMMITTED)
-	public String socialAssociation(@ModelAttribute("form") SocialAssociationForm form, Model model, NativeWebRequest request) {
+	public String socialAssociation(@ModelAttribute("registration") SocialAssociationForm form, Model model, NativeWebRequest request) {
 		final ProviderSignInAttempt attempt = (ProviderSignInAttempt) request.getAttribute(ProviderSignInAttempt.SESSION_ATTRIBUTE, RequestAttributes.SCOPE_SESSION);
 		if (attempt == null) {
 			return "redirect:/account/social/finish";
@@ -247,6 +244,7 @@ public class AccountController extends WisematchesController {
 		final Connection<?> connection = attempt.getConnection();
 		final UserProfile userProfile = connection.fetchUserProfile();
 		final String email = userProfile.getEmail();
+		final String username = userProfile.getUsername();
 
 		if (email != null && !email.isEmpty()) {
 			final Account account = accountManager.findByEmail(email);
@@ -262,6 +260,14 @@ public class AccountController extends WisematchesController {
 			for (String registeredUserId : registeredUserIds) {
 				accounts.add(accountManager.getAccount(Long.decode(registeredUserId)));
 			}
+		} else {
+			form.setEmail(email);
+			if (username != null) {
+				int index = username.lastIndexOf("@");
+				form.setNickname(index < 0 ? username : username.substring(0, index));
+			}
+			form.setConfirm("stub");
+			form.setPassword("stub");
 		}
 
 		model.addAttribute("plain", Boolean.TRUE);
@@ -272,37 +278,49 @@ public class AccountController extends WisematchesController {
 
 	@RequestMapping(value = "/social/association", method = RequestMethod.POST)
 	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_UNCOMMITTED)
-	public String socialAssociationAction(@ModelAttribute("form") SocialAssociationForm form, Errors errors, Model model, NativeWebRequest request) {
+	public String socialAssociationAction(@Valid @ModelAttribute("registration") SocialAssociationForm form, Errors errors, Model model, Locale locale, NativeWebRequest request) {
 		final ProviderSignInAttempt attempt = (ProviderSignInAttempt) request.getAttribute(ProviderSignInAttempt.SESSION_ATTRIBUTE, RequestAttributes.SCOPE_SESSION);
 		if (attempt == null) {
 			return "redirect:/account/social/finish";
 		}
 
 		final Connection<?> connection = attempt.getConnection();
-		if (form.getUserId() != null) { // selection
-			final Account account = accountManager.getAccount(form.getUserId());
-			if (account != null) {
-				return forwardToAuthorization(request, account, true, form.getFinish());
-			} else {
-				log.error("Very strange. No account after selection. Start again?");
-				errors.reject("Inadmissible username");
+		if (form.getUserId() != null) {
+			final List<String> registeredUserIds = usersConnectionRepository.findUserIdsWithConnection(attempt.getConnection());
+			if (registeredUserIds.contains(String.valueOf(form.getUserId()))) {
+				final Account account = accountManager.getAccount(form.getUserId());
+				if (account != null) {
+					return forwardToAuthorization(request, account, form.isRememberMe(), form.getFinish());
+				}
 			}
+			log.error("Very strange. No account after selection. Start again?");
+			errors.reject("Inadmissible username");
 		} else {
-			final UserProfile profile = connection.fetchUserProfile();
+			validateRegistrationForm(form, errors, locale);
 
-			final String email = profile.getEmail();
-			final String username = profile.getName() == null ? profile.getUsername() : profile.getName();
+			if (!errors.hasErrors()) {
+				try {
+					final String tempPwd = UUID.randomUUID().toString(); // regenerate password. More secure here
+					form.setConfirm(tempPwd);
+					form.setPassword(tempPwd);
 
-			try {
-				final Account account = accountManager.createAccount(null, "");
-				addAccountAssociation(account, connection);
-				return forwardToAuthorization(request, account, true, form.getFinish());
-			} catch (DuplicateAccountException e) {
-				log.error("Very strange. DuplicateAccountException shouldn't be here.", e);
-				errors.reject("Account with the same email already registered");
-			} catch (InadmissibleUsernameException e) {
-				log.error("Very strange. InadmissibleUsernameException is not what we suppose", e);
-				errors.reject("Inadmissible username");
+					final Account account = createAccount(form, request);
+					addAccountAssociation(account, connection);
+					return forwardToAuthorization(request, account, form.isRememberMe(), form.getFinish());
+				} catch (DuplicateAccountException ex) {
+					final Set<String> fieldNames = ex.getFieldNames();
+					if (fieldNames.contains("email")) {
+						errors.rejectValue("email", "account.register.email.err.busy");
+					}
+					if (fieldNames.contains("nickname")) {
+						errors.rejectValue("nickname", "account.register.nickname.err.busy");
+					}
+				} catch (InadmissibleUsernameException ex) {
+					errors.rejectValue("nickname", "account.register.nickname.err.incorrect");
+				} catch (Exception ex) {
+					log.error("Account can't be created", ex);
+					errors.reject("wisematches.error.internal");
+				}
 			}
 		}
 		return socialAssociation(form, model, request);
@@ -314,33 +332,12 @@ public class AccountController extends WisematchesController {
 		return "/content/account/social/finish";
 	}
 
-	protected static String forwardToAuthorization(final NativeWebRequest request, final Account account, final boolean rememberMe, final String continueUrl) {
+	public static String forwardToAuthorization(final NativeWebRequest request, final Account account, final boolean rememberMe, final String continueUrl) {
 		request.removeAttribute(ProviderSignInAttempt.SESSION_ATTRIBUTE, RequestAttributes.SCOPE_SESSION);
 
 		request.setAttribute("rememberMe", rememberMe, RequestAttributes.SCOPE_REQUEST);
 		request.setAttribute("PRE_AUTHENTICATED_ACCOUNT", account, RequestAttributes.SCOPE_REQUEST);
 		return "forward:/account/authorization" + (continueUrl != null ? "?continue=" + continueUrl : "");
-	}
-
-	@Deprecated
-	protected static String forwardToAuthentication(final String email, final String password, final boolean rememberMe) {
-		try {
-			final StringBuilder b = new StringBuilder();
-			b.append("j_username=").append(URLEncoder.encode(email, "UTF-8"));
-			b.append("&");
-			b.append("j_password=").append(URLEncoder.encode(password, "UTF-8"));
-			b.append("&");
-			b.append("continue=").append("/playground/welcome");
-			if (rememberMe) {
-				b.append("&").append("rememberMe=true");
-			}
-			//noinspection SpringMVCViewInspection
-			return "forward:/account/loginProcessing?" + b;
-		} catch (UnsupportedEncodingException ex) {
-			log.error("Very strange exception that mustn't be here", ex);
-			//noinspection SpringMVCViewInspection
-			return "redirect:/account/login";
-		}
 	}
 
 	private void addAccountAssociation(Account account, Connection<?> connection) {
@@ -370,7 +367,7 @@ public class AccountController extends WisematchesController {
 	 * @throws DuplicateAccountException     if account with the same email or nickname already exist
 	 * @throws InadmissibleUsernameException if nickname can't be used.
 	 */
-	private Account createAccount(AccountRegistrationForm registration, HttpServletRequest request) throws AccountException {
+	private Account createAccount(AccountRegistrationForm registration, NativeWebRequest request) throws AccountException {
 		final AccountEditor editor = new AccountEditor();
 		editor.setEmail(registration.getEmail());
 		editor.setNickname(registration.getNickname());
@@ -391,11 +388,6 @@ public class AccountController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setNotificationService(NotificationService notificationService) {
-		this.notificationService = notificationService;
-	}
-
-	@Autowired
 	public void setServerDescriptor(final ServerDescriptor descriptor) {
 		connectSupport = new ConnectSupport() {
 			@Override
@@ -404,6 +396,11 @@ public class AccountController extends WisematchesController {
 			}
 		};
 		connectSupport.setUseAuthenticateUrl(true);
+	}
+
+	@Autowired
+	public void setNotificationService(NotificationService notificationService) {
+		this.notificationService = notificationService;
 	}
 
 	@Autowired

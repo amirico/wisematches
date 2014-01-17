@@ -6,9 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
-import wisematches.core.security.PersonalityContext;
 import wisematches.playground.GameMessageSource;
 import wisematches.server.services.state.PlayerStateManager;
+import wisematches.server.web.security.context.PersonalityContext;
 import wisematches.server.web.servlet.sdo.ServiceResponseFactory;
 import wisematches.server.web.servlet.view.StaticContentGenerator;
 

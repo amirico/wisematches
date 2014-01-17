@@ -66,7 +66,7 @@
         </property>
     </bean>
 
-    <bean id="captchaService" class="wisematches.server.web.security.captcha.captchas.CaptchasCaptchaService">
+    <bean id="captchaService" class="wisematches.server.web.security.web.captcha.captchas.CaptchasCaptchaService">
         <property name="publicKey" value="${captchasNet.publickey}"/>
         <property name="privateKey" value="${captchasNet.privatekey}"/>
         <property name="lettersCount" value="4"/>

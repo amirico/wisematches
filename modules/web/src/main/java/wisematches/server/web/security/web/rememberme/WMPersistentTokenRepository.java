@@ -1,4 +1,4 @@
-package wisematches.server.web.security.authentication.rememberme;
+package wisematches.server.web.security.web.rememberme;
 
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 

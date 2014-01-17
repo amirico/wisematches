@@ -10,16 +10,39 @@
     <beans:bean id="localeResolver" class="wisematches.server.web.i18n.PersonalityLocaleResolver"/>
 
     <beans:bean id="sessionRegistryFixFilter"
-                class="wisematches.server.web.security.filter.SessionRegistryFilter">
+                class="wisematches.server.web.security.web.filter.SessionRegistryFilter">
         <beans:property name="sessionRegistry" ref="playerStateManager"/>
     </beans:bean>
 
+    <beans:bean id="playerDetailsService" class="wisematches.server.web.security.PlayerDetailsService">
+        <beans:property name="accountManager" ref="accountManager"/>
+        <beans:property name="accountLockManager" ref="accountLockManager"/>
+        <beans:property name="accountRecoveryManager" ref="accountRecoveryManager"/>
+
+        <beans:property name="moderators" value="${server.moderators}"/>
+        <beans:property name="administrators" value="${server.admins}"/>
+        <beans:property name="personalityManager" ref="personalityManager"/>
+    </beans:bean>
+
+    <beans:bean id="visitorAuthenticationProvider"
+                class="wisematches.server.web.security.authentication.VisitorAuthenticationProvider">
+        <beans:property name="visitorKey" value="visitor"/>
+        <beans:property name="userDetailsChecker" ref="userDetailsChecker"/>
+        <beans:property name="playerDetailsService" ref="playerDetailsService"/>
+    </beans:bean>
+
+    <beans:bean id="playerAuthenticationProvider"
+                class="wisematches.server.web.security.authentication.MemberAuthenticationProvider">
+        <beans:property name="userDetailsChecker" ref="userDetailsChecker"/>
+        <beans:property name="playerDetailsService" ref="playerDetailsService"/>
+    </beans:bean>
+
     <beans:bean id="rememberMeServices"
-                class="wisematches.server.web.security.authentication.rememberme.WMRememberMeServices">
+                class="wisematches.server.web.security.web.rememberme.WMRememberMeServices">
         <beans:constructor-arg name="key" value="${security.remember.token}"/>
-        <beans:constructor-arg name="userDetailsService" ref="personalityDetailsManager"/>
+        <beans:constructor-arg name="userDetailsService" ref="playerDetailsService"/>
         <beans:constructor-arg name="tokenRepository">
-            <beans:bean class="wisematches.server.web.security.authentication.rememberme.WMPersistentTokenRepository">
+            <beans:bean class="wisematches.server.web.security.web.rememberme.WMPersistentTokenRepository">
                 <beans:property name="dataSource" ref="dataSource"/>
                 <beans:property name="createTableOnStartup" value="false"/>
             </beans:bean>
@@ -29,7 +52,7 @@
         <beans:property name="cookieName" value="WM_RM"/>
     </beans:bean>
 
-    <beans:bean id="redirectStrategy" class="wisematches.server.web.security.WMRedirectStrategy">
+    <beans:bean id="redirectStrategy" class="wisematches.server.web.security.web.WMRedirectStrategy">
         <beans:property name="redirectParameters">
             <beans:set>
                 <beans:value>rememberMe</beans:value>
@@ -38,13 +61,13 @@
     </beans:bean>
 
     <beans:bean id="authenticationSuccessHandler"
-                class="wisematches.server.web.security.authentication.WMAuthenticationSuccessHandler">
+                class="wisematches.server.web.security.web.WMAuthenticationSuccessHandler">
         <beans:property name="defaultTargetUrl" value="/playground/scribble/active"/>
         <beans:property name="targetUrlParameter" value="continue"/>
     </beans:bean>
 
     <beans:bean id="authenticationFailureHandler"
-                class="wisematches.server.web.security.authentication.WMAuthenticationFailureHandler">
+                class="wisematches.server.web.security.web.WMAuthenticationFailureHandler">
         <beans:property name="redirectStrategy" ref="redirectStrategy"/>
         <beans:property name="failureUrl" value="/account/loginAuth?error="/>
         <beans:property name="defaultCode" value="system"/>
@@ -91,12 +114,12 @@
         </beans:property>
     </beans:bean>
 
-    <beans:bean id="accessDeniedHandler" class="wisematches.server.web.security.access.WMAccessDeniedHandler">
+    <beans:bean id="accessDeniedHandler" class="wisematches.server.web.security.web.access.WMAccessDeniedHandler">
         <beans:property name="insufficientErrorPage" value="/account/loginAuth?error=insufficient"/>
     </beans:bean>
 
     <beans:bean id="authenticationEntryPoint"
-                class="wisematches.server.web.security.authentication.WMAuthenticationEntryPoint">
+                class="wisematches.server.web.security.web.WMAuthenticationEntryPoint">
         <beans:property name="authenticationFailureHandler" ref="authenticationFailureHandler"/>
     </beans:bean>
 
@@ -116,19 +139,19 @@
         <beans:property name="signupUrl" value="/account/social/association"/>
         <beans:property name="defaultFailureUrl" value="/account/social/finish"/>
         <beans:property name="connectionAddedRedirectUrl"
-                        value="/account/social/finish?continue=/account/passport/social"/>
+                        value="/account/social/finish?continue=/account/modify#socialTab"/>
 
         <beans:property name="rememberMeServices" ref="rememberMeServices"/>
 
         <beans:property name="authenticationSuccessHandler">
             <beans:bean class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler">
-                <beans:constructor-arg value="/account/social/finish"/>
+                <beans:constructor-arg value="/account/social/finish?continue=/playground/scribble/active"/>
             </beans:bean>
         </beans:property>
     </beans:bean>
 
     <beans:bean id="accountAuthenticationFilter"
-                class="wisematches.server.web.security.filter.AccountAuthenticationFilter">
+                class="wisematches.server.web.security.web.filter.AccountAuthenticationFilter">
         <beans:property name="filterProcessesUrl" value="/account/authorization"/>
         <beans:property name="authenticationManager" ref="authenticationManager"/>
 
@@ -139,12 +162,23 @@
     </beans:bean>
 
     <beans:bean id="visitorAuthenticationFilter"
-                class="wisematches.server.web.security.filter.VisitorAuthenticationFilter">
+                class="wisematches.server.web.security.web.filter.VisitorAuthenticationFilter">
         <beans:property name="localeResolver" ref="localeResolver"/>
         <beans:property name="visitorProcessingUrl" value="/account/loginGuest"/>
         <beans:property name="failureHandle" ref="authenticationFailureHandler"/>
         <beans:property name="successHandler" ref="authenticationSuccessHandler"/>
         <beans:property name="authenticationManager" ref="authenticationManager"/>
+    </beans:bean>
+
+    <beans:bean id="socialAuthenticationProvider"
+                class="org.springframework.social.security.SocialAuthenticationProvider">
+        <beans:constructor-arg name="userDetailsService" ref="playerDetailsService"/>
+        <beans:constructor-arg name="usersConnectionRepository" ref="usersConnectionRepository"/>
+    </beans:bean>
+
+    <beans:bean id="rememberMeAuthenticationProvider"
+                class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
+        <beans:constructor-arg name="key" value="${security.remember.token}"/>
     </beans:bean>
 
     <beans:bean id="concurrentSessionFilter"
@@ -154,14 +188,16 @@
     </beans:bean>
 
     <beans:bean id="sessionControlStrategy"
-                class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
+                class="org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy">
         <beans:constructor-arg name="sessionRegistry" ref="playerStateManager"/>
         <beans:property name="maximumSessions" value="-1"/>
     </beans:bean>
 
     <authentication-manager alias="authenticationManager">
         <authentication-provider ref="playerAuthenticationProvider"/>
+        <authentication-provider ref="socialAuthenticationProvider"/>
         <authentication-provider ref="visitorAuthenticationProvider"/>
+        <authentication-provider ref="rememberMeAuthenticationProvider"/>
     </authentication-manager>
 
     <http pattern="/static/**" security="none"/>

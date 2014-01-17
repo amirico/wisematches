@@ -1,4 +1,4 @@
-package wisematches.server.web.security;
+package wisematches.server.web.security.web;
 
 import org.springframework.security.web.DefaultRedirectStrategy;
 

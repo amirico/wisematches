@@ -4,10 +4,8 @@ import org.junit.Test;
 import wisematches.core.Language;
 import wisematches.core.Player;
 import wisematches.core.personality.DefaultVisitor;
-import wisematches.core.security.userdetails.PlayerDetails;
+import wisematches.core.secure.PlayerContainer;
 import wisematches.server.services.state.PlayerStateListener;
-
-import java.util.Arrays;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertFalse;
@@ -39,13 +37,13 @@ public class SessionRegistryStateManagerTest {
 		replay(listener);
 
 		assertFalse(stateManager.isPlayerOnline(player1));
-		stateManager.registerNewSession("S1", new PlayerDetails(player1, "asd", "qwe", false, false, Arrays.asList("mock")));
+		stateManager.registerNewSession("S1", createContainer(player1));
 		assertTrue(stateManager.isPlayerOnline(player1));
-		stateManager.registerNewSession("S2", new PlayerDetails(player1, "asd", "qwe", false, false, Arrays.asList("mock")));
+		stateManager.registerNewSession("S2", createContainer(player1));
 		assertFalse(stateManager.isPlayerOnline(player2));
-		stateManager.registerNewSession("S3", new PlayerDetails(player2, "asd", "qwe", false, false, Arrays.asList("mock")));
+		stateManager.registerNewSession("S3", createContainer(player2));
 		assertTrue(stateManager.isPlayerOnline(player2));
-		stateManager.registerNewSession("S4", new PlayerDetails(player2, "asd", "qwe", false, false, Arrays.asList("mock")));
+		stateManager.registerNewSession("S4", createContainer(player2));
 		stateManager.refreshLastRequest("S5");
 		stateManager.refreshLastRequest("S1");
 		stateManager.refreshLastRequest("S1");
@@ -62,5 +60,12 @@ public class SessionRegistryStateManagerTest {
 		assertFalse(stateManager.isPlayerOnline(player1));
 
 		verify(listener);
+	}
+
+	private PlayerContainer createContainer(Player player) {
+		PlayerContainer container = createMock(PlayerContainer.class);
+		expect(container.getPlayer()).andReturn(player).anyTimes();
+		replay(container);
+		return container;
 	}
 }

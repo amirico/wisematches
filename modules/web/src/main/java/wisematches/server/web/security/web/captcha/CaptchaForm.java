@@ -1,4 +1,4 @@
-package wisematches.server.web.security.captcha;
+package wisematches.server.web.security.web.captcha;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

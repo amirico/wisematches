@@ -2,7 +2,7 @@ package wisematches.server.web.security.social;
 
 import org.springframework.social.UserIdSource;
 import wisematches.core.Player;
-import wisematches.core.security.PersonalityContext;
+import wisematches.server.web.security.context.PersonalityContext;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

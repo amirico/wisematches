@@ -1,14 +1,14 @@
-package wisematches.server.web.security.captcha.google;
+package wisematches.server.web.security.web.captcha.google;
 
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.Errors;
+import org.springframework.web.context.request.NativeWebRequest;
 import wisematches.playground.GameMessageSource;
-import wisematches.server.web.security.captcha.CaptchaService;
+import wisematches.server.web.security.web.captcha.CaptchaService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -61,8 +61,8 @@ public class GoogleCaptchaService implements CaptchaService {
 	}
 
 	@Override
-	public void validateCaptcha(HttpServletRequest request, HttpServletResponse response, Errors errors) {
-		final String removeAddress = request.getRemoteAddr();
+	public void validateCaptcha(NativeWebRequest request, Errors errors) {
+		final String removeAddress = request.getNativeRequest(HttpServletRequest.class).getRemoteAddr();
 		final String recaptcha_challenge_field = request.getParameter("recaptcha_challenge_field");
 		final String recaptcha_response_field = request.getParameter("recaptcha_response_field");
 

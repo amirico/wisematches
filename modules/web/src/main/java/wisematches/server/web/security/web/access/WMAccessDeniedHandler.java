@@ -1,4 +1,4 @@
-package wisematches.server.web.security.access;
+package wisematches.server.web.security.web.access;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationTrustResolver;

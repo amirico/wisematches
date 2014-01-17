@@ -7,7 +7,7 @@
 
     <groupId>wisematches</groupId>
     <artifactId>application</artifactId>
-    <version>5.1.18</version>
+    <version>6.0.0</version>
 
     <modules>
         <module>modules/core</module>
@@ -62,8 +62,10 @@
     </repositories>
 
     <properties>
-        <org.springframework.version>3.2.5.RELEASE</org.springframework.version>
-        <org.springframework.security.version>3.2.0.RC2</org.springframework.security.version>
+        <org.slf4j.version>1.7.5</org.slf4j.version>
+
+        <org.springframework.version>4.0.0.RELEASE</org.springframework.version>
+        <org.springframework.security.version>3.2.0.RELEASE</org.springframework.security.version>
 
         <org.springframework.social.version>1.1.0.M4</org.springframework.social.version>
 
@@ -75,34 +77,34 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.2</version>
+            <version>${org.slf4j.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.7.2</version>
+            <version>${org.slf4j.version}</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
-            <version>1.7.2</version>
+            <version>${org.slf4j.version}</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
-            <version>1.7.2</version>
+            <version>${org.slf4j.version}</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.0.9</version>
+            <version>1.0.13</version>
         </dependency>
 
         <dependency>
@@ -192,13 +194,13 @@
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
-            <version>2.1.6</version>
+            <version>2.2.1</version>
         </dependency>
 
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
-            <version>2.3.19</version>
+            <version>2.3.20</version>
         </dependency>
 
         <!-- Test dependencies -->
@@ -212,7 +214,7 @@
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
-            <version>3.1</version>
+            <version>3.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

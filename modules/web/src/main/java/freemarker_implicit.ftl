@@ -6,7 +6,7 @@
 [#-- @ftlvariable name="language" type="wisematches.core.Language" --]
 
 [#-- @ftlvariable name="messageSource" type="wisematches.playground.GameMessageSource" --]
-[#-- @ftlvariable name="captchaService" type="wisematches.server.web.security.captcha.CaptchaService" --]
+[#-- @ftlvariable name="captchaService" type="wisematches.server.web.security.web.captcha.CaptchaService" --]
 
 [#-- @ftlvariable name="personalityManager" type="wisematches.core.PersonalityManager" --]
 [#-- @ftlvariable name="playerStateManager" type="wisematches.server.services.state.PlayerStateManager" --]

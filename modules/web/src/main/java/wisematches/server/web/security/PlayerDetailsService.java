@@ -1,8 +1,9 @@
-package wisematches.core.security.userdetails;
+package wisematches.server.web.security;
 
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.social.security.SocialUserDetailsService;
 import wisematches.core.Language;
 import wisematches.core.Member;
 import wisematches.core.PersonalityManager;
@@ -20,7 +21,7 @@ import java.util.Set;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class PlayerDetailsService implements UserDetailsService {
+public class PlayerDetailsService implements UserDetailsService, SocialUserDetailsService {
 	private AccountManager accountManager;
 	private AccountLockManager accountLockManager;
 	private AccountRecoveryManager accountRecoveryManager;
@@ -34,14 +35,10 @@ public class PlayerDetailsService implements UserDetailsService {
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return loadMemberByEmail(username);
-	}
-
-	public PlayerDetails loadMemberByEmail(String email) throws UsernameNotFoundException {
-		final Account account = accountManager.findByEmail(email);
+	public PlayerDetails loadUserByUserId(String userId) throws UsernameNotFoundException, DataAccessException {
+		final Account account = accountManager.getAccount(Long.valueOf(userId));
 		if (account == null) {
-			throw new UsernameNotFoundException("Account with email " + email + " not found in the system");
+			throw new UsernameNotFoundException("Account with id " + userId + " not found in the system");
 		}
 
 		final Member member = personalityManager.getMember(account.getId());
@@ -63,9 +60,38 @@ public class PlayerDetailsService implements UserDetailsService {
 		return new PlayerDetails(member, account.getEmail(), null, locked, expired, authorities);
 	}
 
+	public PlayerDetails loadUserByAccount(Account account) {
+		final Member member = personalityManager.getMember(account.getId());
+		if (member == null) {
+			throw new UsernameNotFoundException("Player for account " + account + " can't be created");
+		}
+		final boolean locked = accountLockManager.isAccountLocked(account);
+		final boolean expired = (accountRecoveryManager.getToken(account) != null);
+
+		final Collection<String> authorities = new HashSet<>();
+		if (administrators.contains(account.getId())) {
+			authorities.add("admin");
+		}
+		if (moderators.contains(account.getId())) {
+			authorities.add("moderator");
+		}
+		authorities.add("player");
+		authorities.add(member.getMembership().name().toLowerCase());
+		return new PlayerDetails(member, account.getEmail(), null, locked, expired, authorities);
+	}
+
+	@Override
+	public PlayerDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		final Account account = accountManager.findByEmail(username);
+		if (account == null) {
+			throw new UsernameNotFoundException("Account with email " + username + " not found in the system");
+		}
+		return loadUserByAccount(account);
+	}
+
 	public PlayerDetails loadVisitorByLanguage(Language language) throws UsernameNotFoundException {
 		if (language == null) {
-			throw new UsernameNotFoundException("Unsupported guest language: " + language);
+			throw new UsernameNotFoundException("Null guest language");
 		}
 
 		final Visitor visitor = personalityManager.getVisitor(language);

@@ -1,6 +1,10 @@
 /*
  * Copyright (c) 2013, WiseMatches (by Sergey Klimenko).
  */
+table td {
+    vertical-align: top;
+}
+
 #registration form .ui-widget-content {
     background: none !important;
 }
@@ -15,11 +19,6 @@
 
 #registration .description {
     padding-bottom: 15px;
-}
-
-#registration td, #login-panel td, #recovery td {
-    text-align: left;
-    vertical-align: top;
 }
 
 #registration form table, #recovery form table, #login-panel form table {
@@ -1213,14 +1212,6 @@ a.ui-icon {
 
 .common-settings, .create-game {
     border-spacing: 5px !important;
-}
-
-.common-settings td, .create-game td {
-    vertical-align: top !important;
-}
-
-.settings-board td {
-    vertical-align: top;
 }
 
 .tiles-set-container {
@@ -2422,4 +2413,8 @@ ul.bonuses .bonus-cell {
 
 .social-icon-odnoklassniki {
     background-position: 0 -160px;
+}
+
+.social-view-link {
+    border: none;
 }

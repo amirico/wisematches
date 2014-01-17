@@ -187,7 +187,7 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 		}
 	}
 
-	public void setdictionaryReclaimManager(DictionaryReclaimManager dictionaryReclaimManager) {
+	public void setDictionaryReclaimManager(DictionaryReclaimManager dictionaryReclaimManager) {
 		if (this.dictionaryReclaimManager != null) {
 			this.dictionaryReclaimManager.removeDictionaryReclaimListener(dictionaryListener);
 		}

@@ -26,6 +26,20 @@ public class ReferenceMapCache implements Cache {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T get(Object key, Class<T> type) {
+		clearDeadReferences();
+
+		final ReferenceType.CacheValue cacheValue = cache.get(key);
+
+		final Object value = cacheValue.get();
+		if (type != null && !type.isInstance(value)) {
+			throw new IllegalStateException("Cached value is not of required type [" + type.getName() + "]: " + value);
+		}
+		return (T) value;
+	}
+
+	@Override
 	public String getName() {
 		return name;
 	}

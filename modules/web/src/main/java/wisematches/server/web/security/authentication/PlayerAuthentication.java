@@ -1,7 +1,7 @@
-package wisematches.core.security.authentication;
+package wisematches.server.web.security.authentication;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import wisematches.core.security.userdetails.PlayerDetails;
+import wisematches.server.web.security.PlayerDetails;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

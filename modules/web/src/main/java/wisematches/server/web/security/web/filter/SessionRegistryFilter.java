@@ -1,4 +1,4 @@
-package wisematches.server.web.security.filter;
+package wisematches.server.web.security.web.filter;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
