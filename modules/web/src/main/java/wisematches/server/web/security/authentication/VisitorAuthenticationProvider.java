@@ -1,10 +1,10 @@
-package wisematches.core.security.authentication;
+package wisematches.server.web.security.authentication;
 
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import wisematches.core.Language;
-import wisematches.core.security.userdetails.PlayerDetails;
+import wisematches.server.web.security.PlayerDetails;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -28,7 +28,7 @@ public class VisitorAuthenticationProvider extends PlayerAuthenticationProvider 
 		}
 
 		final Language lang = (Language) principal;
-		return getPersonalityDetailsService().loadVisitorByLanguage(lang);
+		return playerDetailsService.loadVisitorByLanguage(lang);
 	}
 
 	@Override

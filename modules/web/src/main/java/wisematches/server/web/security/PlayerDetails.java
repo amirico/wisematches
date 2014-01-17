@@ -1,10 +1,12 @@
-package wisematches.core.security.userdetails;
+package wisematches.server.web.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.social.security.SocialUserDetails;
 import wisematches.core.Member;
 import wisematches.core.Player;
+import wisematches.core.secure.PlayerContainer;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -14,7 +16,7 @@ import java.util.Set;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class PlayerDetails implements UserDetails {
+public final class PlayerDetails implements UserDetails, SocialUserDetails, PlayerContainer {
 	private final String username;
 	private final String password;
 
@@ -41,6 +43,11 @@ public final class PlayerDetails implements UserDetails {
 	}
 
 	@Override
+	public String getUserId() {
+		return String.valueOf(player.getId());
+	}
+
+	@Override
 	public String getUsername() {
 		return username;
 	}
@@ -49,6 +56,7 @@ public final class PlayerDetails implements UserDetails {
 	public String getPassword() {
 		return password;
 	}
+
 
 	@Override
 	public boolean isEnabled() {
@@ -62,6 +70,7 @@ public final class PlayerDetails implements UserDetails {
 		return "NO_NICKNAME";
 	}
 
+	@Override
 	public Player getPlayer() {
 		return player;
 	}

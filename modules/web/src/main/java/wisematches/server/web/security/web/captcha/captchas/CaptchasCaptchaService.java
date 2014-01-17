@@ -1,14 +1,13 @@
-package wisematches.server.web.security.captcha.captchas;
+package wisematches.server.web.security.web.captcha.captchas;
 
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.Errors;
+import org.springframework.web.context.request.NativeWebRequest;
 import wisematches.playground.GameMessageSource;
-import wisematches.server.web.security.captcha.CaptchaService;
+import wisematches.server.web.security.web.captcha.CaptchaService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
@@ -64,7 +63,7 @@ public class CaptchasCaptchaService implements CaptchaService {
 	}
 
 	@Override
-	public void validateCaptcha(HttpServletRequest request, HttpServletResponse response, Errors errors) {
+	public void validateCaptcha(NativeWebRequest request, Errors errors) {
 		final String captchaValue = request.getParameter("captchaValue");
 		final String captchaRandom = request.getParameter("captchaRandom");
 		if (captchaValue == null || captchaRandom == null) {

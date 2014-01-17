@@ -2,7 +2,7 @@ package wisematches.server.web.servlet.mvc.account.form;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
-import wisematches.server.web.security.captcha.CaptchaForm;
+import wisematches.server.web.security.web.captcha.CaptchaForm;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

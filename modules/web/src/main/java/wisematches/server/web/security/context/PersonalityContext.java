@@ -1,10 +1,10 @@
-package wisematches.core.security;
+package wisematches.server.web.security.context;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import wisematches.core.Player;
-import wisematches.core.security.userdetails.PlayerDetails;
+import wisematches.server.web.security.PlayerDetails;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

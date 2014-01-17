@@ -521,7 +521,7 @@ public class NotificationOriginCenterTest {
 		reclaimManager.removeDictionaryReclaimListener(capture(tourneyListener));
 		replay(reclaimManager);
 
-		publisherCenter.setdictionaryReclaimManager(reclaimManager);
+		publisherCenter.setDictionaryReclaimManager(reclaimManager);
 
 		final WordReclaim reclaim = createMock(WordReclaim.class);
 		expect(reclaim.getRequester()).andReturn(p1.getId()).times(2);
@@ -536,7 +536,7 @@ public class NotificationOriginCenterTest {
 		assertEquals(2, publishedNotifications.getValues().size());
 		System.out.println(publishedNotifications);
 
-		publisherCenter.setdictionaryReclaimManager(null);
+		publisherCenter.setDictionaryReclaimManager(null);
 
 		verify(reclaimManager, reclaim);
 	}

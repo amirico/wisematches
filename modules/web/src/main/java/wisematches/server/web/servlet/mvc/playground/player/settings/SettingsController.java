@@ -4,32 +4,36 @@ package wisematches.server.web.servlet.mvc.playground.player.settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.ConnectionKey;
+import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.connect.UsersConnectionRepository;
+import org.springframework.social.security.SocialAuthenticationServiceLocator;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.request.NativeWebRequest;
 import wisematches.core.Language;
 import wisematches.core.Member;
 import wisematches.core.personality.player.account.*;
-import wisematches.core.security.authentication.PlayerAuthentication;
-import wisematches.core.security.userdetails.PlayerDetails;
-import wisematches.core.security.userdetails.PlayerDetailsService;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
 import wisematches.server.services.notify.NotificationManager;
 import wisematches.server.services.notify.NotificationScope;
+import wisematches.server.web.security.PlayerDetailsService;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.WisematchesController;
+import wisematches.server.web.servlet.mvc.account.AccountController;
 import wisematches.server.web.servlet.mvc.playground.player.settings.form.NotificationsTreeView;
 import wisematches.server.web.servlet.mvc.playground.player.settings.form.SettingsForm;
 import wisematches.server.web.servlet.mvc.playground.player.settings.form.TimeZoneInfo;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -43,6 +47,9 @@ public class SettingsController extends WisematchesController {
 	private PlayerDetailsService detailsService;
 	private NotificationManager notificationManager;
 	private BoardSettingsManager boardSettingsManager;
+
+	private UsersConnectionRepository usersConnectionRepository;
+	private SocialAuthenticationServiceLocator authenticationServiceLocator;
 
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.SettingsController");
 
@@ -66,6 +73,13 @@ public class SettingsController extends WisematchesController {
 		}
 		model.addAttribute("notificationsView", new NotificationsTreeView(descriptors));
 
+		final String userId = String.valueOf(getPrincipal().getId());
+		final ConnectionRepository connectionRepository = usersConnectionRepository.createConnectionRepository(userId);
+		final MultiValueMap<String, Connection<?>> allConnections = connectionRepository.findAllConnections();
+
+		model.addAttribute("connections", allConnections);
+		model.addAttribute("socialProviders", authenticationServiceLocator.registeredAuthenticationProviderIds());
+
 		final BoardSettings settings = boardSettingsManager.getScribbleSettings(member);
 		form.setTilesClass(settings.getTilesClass());
 		form.setCheckWords(settings.isCheckWords());
@@ -73,6 +87,7 @@ public class SettingsController extends WisematchesController {
 		form.setClearByClick(settings.isClearByClick());
 		form.setShowCaptions(settings.isShowCaptions());
 		form.setEnableShare(settings.isEnableShare());
+
 		return "/content/playground/settings/template";
 	}
 
@@ -85,7 +100,7 @@ public class SettingsController extends WisematchesController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "save", method = RequestMethod.POST)
 	public String modifyAccountAction(@Valid @ModelAttribute("settings") SettingsForm form,
-									  BindingResult errors, Model model, HttpServletRequest request) throws UnknownEntityException {
+									  BindingResult errors, Model model, NativeWebRequest request) throws UnknownEntityException {
 		final Member member = getPrincipal(Member.class);
 		final Account account = accountManager.getAccount(member.getId());
 		if (account == null) {
@@ -160,15 +175,31 @@ public class SettingsController extends WisematchesController {
 				pwd = form.getPassword();
 			}
 
+			final String[] providerId = form.getProviderId();
+			final String[] providerUserId = form.getProviderUserId();
+
+			final Set<ConnectionKey> allowedKeys = new HashSet<>();
+			for (int i = 0; i < providerId.length && i < providerUserId.length; i++) {
+				allowedKeys.add(new ConnectionKey(providerId[i], providerUserId[i]));
+			}
+
+			final String userId = String.valueOf(getPrincipal().getId());
+			final ConnectionRepository connectionRepository = usersConnectionRepository.createConnectionRepository(userId);
+			final MultiValueMap<String, Connection<?>> allConnections = connectionRepository.findAllConnections();
+
+			for (List<Connection<?>> connections : allConnections.values()) {
+				for (Connection<?> connection : connections) {
+					final ConnectionKey key = connection.getKey();
+					if (!allowedKeys.contains(key)) {
+						connectionRepository.removeConnection(key);
+					}
+				}
+			}
+
 			if (changeRequired) {
 				try {
-					accountManager.updateAccount(editor.createAccount(), pwd);
-
-					final PlayerDetails details = detailsService.loadMemberByEmail(account.getEmail());
-					if (details != null) {
-						SecurityContextHolder.getContext().setAuthentication(new PlayerAuthentication(details));
-					}
-					return "redirect:/account/modify#" + form.getOpenedTab();
+					final Account account1 = accountManager.updateAccount(editor.createAccount(), pwd);
+					return AccountController.forwardToAuthorization(request, account1, true, "/account/modify#" + form.getOpenedTab());
 				} catch (UnknownAccountException e) {
 					throw new UnknownEntityException(null, "account");
 				} catch (DuplicateAccountException ex) {
@@ -201,6 +232,11 @@ public class SettingsController extends WisematchesController {
 	}
 
 	@Autowired
+	public void setUsersConnectionRepository(UsersConnectionRepository usersConnectionRepository) {
+		this.usersConnectionRepository = usersConnectionRepository;
+	}
+
+	@Autowired
 	public void setNotificationManager(NotificationManager notificationManager) {
 		this.notificationManager = notificationManager;
 	}
@@ -208,5 +244,10 @@ public class SettingsController extends WisematchesController {
 	@Autowired
 	public void setBoardSettingsManager(BoardSettingsManager boardSettingsManager) {
 		this.boardSettingsManager = boardSettingsManager;
+	}
+
+	@Autowired
+	public void setAuthenticationServiceLocator(SocialAuthenticationServiceLocator authenticationServiceLocator) {
+		this.authenticationServiceLocator = authenticationServiceLocator;
 	}
 }

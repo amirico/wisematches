@@ -10,10 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Language;
 import wisematches.core.Player;
 import wisematches.core.personality.DefaultVisitor;
-import wisematches.core.security.userdetails.PlayerDetails;
+import wisematches.core.secure.PlayerContainer;
 import wisematches.server.services.state.PlayerStateListener;
 
-import java.util.Arrays;
 import java.util.Date;
 
 import static org.easymock.EasyMock.*;
@@ -68,22 +67,22 @@ public class HibernatePlayerStateManagerTest {
 		assertFalse(stateManager.isPlayerOnline(player1));
 
 		Thread.sleep(100);
-		stateManager.registerNewSession("S1", new PlayerDetails(player1, "asd", "qwe", false, false, Arrays.asList("mock")));
+		stateManager.registerNewSession("S1", createContainer(player1));
 		assertTrue(stateManager.isPlayerOnline(player1));
 		assertTrue(lastActivity1.before(lastActivity1 = stateManager.getLastActivityDate(player1)));
 
 		Thread.sleep(100);
-		stateManager.registerNewSession("S2", new PlayerDetails(player1, "asd", "qwe", false, false, Arrays.asList("mock")));
+		stateManager.registerNewSession("S2", createContainer(player1));
 		assertFalse(stateManager.isPlayerOnline(player2));
 		assertTrue(lastActivity1.before(lastActivity1 = stateManager.getLastActivityDate(player1)));
 
 		Thread.sleep(100);
-		stateManager.registerNewSession("S3", new PlayerDetails(player2, "asd", "qwe", false, false, Arrays.asList("mock")));
+		stateManager.registerNewSession("S3", createContainer(player2));
 		assertTrue(stateManager.isPlayerOnline(player2));
 		assertTrue(lastActivity2.before(lastActivity2 = stateManager.getLastActivityDate(player2)));
 
 		Thread.sleep(100);
-		stateManager.registerNewSession("S4", new PlayerDetails(player2, "asd", "qwe", false, false, Arrays.asList("mock")));
+		stateManager.registerNewSession("S4", createContainer(player2));
 		assertTrue(lastActivity2.before(lastActivity2 = stateManager.getLastActivityDate(player2)));
 
 		Thread.sleep(100);
@@ -131,5 +130,12 @@ public class HibernatePlayerStateManagerTest {
 		assertEquals(lastActivity2, stateManager.getLastActivityDate(player2));
 
 		verify(listener);
+	}
+
+	private PlayerContainer createContainer(Player player) {
+		PlayerContainer container = createMock(PlayerContainer.class);
+		expect(container.getPlayer()).andReturn(player).anyTimes();
+		replay(container);
+		return container;
 	}
 }

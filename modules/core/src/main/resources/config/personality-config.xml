@@ -46,27 +46,4 @@
         <property name="accountManager" ref="accountManager"/>
         <property name="membershipManager" ref="membershipManager"/>
     </bean>
-
-    <bean id="personalityDetailsManager" class="wisematches.core.security.userdetails.PlayerDetailsService">
-        <property name="accountManager" ref="accountManager"/>
-        <property name="accountLockManager" ref="accountLockManager"/>
-        <property name="accountRecoveryManager" ref="accountRecoveryManager"/>
-
-        <property name="moderators" value="${server.moderators}"/>
-        <property name="administrators" value="${server.admins}"/>
-        <property name="personalityManager" ref="personalityManager"/>
-    </bean>
-
-    <bean id="visitorAuthenticationProvider"
-          class="wisematches.core.security.authentication.VisitorAuthenticationProvider">
-        <property name="visitorKey" value="visitor"/>
-        <property name="userDetailsChecker" ref="userDetailsChecker"/>
-        <property name="personalityDetailsService" ref="personalityDetailsManager"/>
-    </bean>
-
-    <bean id="playerAuthenticationProvider"
-          class="wisematches.core.security.authentication.MemberAuthenticationProvider">
-        <property name="userDetailsChecker" ref="userDetailsChecker"/>
-        <property name="personalityDetailsService" ref="personalityDetailsManager"/>
-    </bean>
 </beans>

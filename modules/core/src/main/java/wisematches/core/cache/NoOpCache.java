@@ -27,6 +27,11 @@ public final class NoOpCache implements Cache {
 	}
 
 	@Override
+	public <T> T get(Object o, Class<T> tClass) {
+		return null;
+	}
+
+	@Override
 	public void put(Object key, Object value) {
 	}
 
