@@ -15,7 +15,6 @@ import wisematches.core.personality.player.membership.MembershipCard;
 import wisematches.core.personality.player.membership.MembershipExpiration;
 import wisematches.core.personality.player.membership.MembershipListener;
 import wisematches.core.personality.player.membership.MembershipManager;
-import wisematches.core.task.CleaningDayListener;
 
 import java.util.Date;
 import java.util.Set;
@@ -24,7 +23,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class HibernateMembershipManager implements MembershipManager, CleaningDayListener {
+public class HibernateMembershipManager implements MembershipManager {
 	private SessionFactory sessionFactory;
 	private AccountManager accountManager;
 

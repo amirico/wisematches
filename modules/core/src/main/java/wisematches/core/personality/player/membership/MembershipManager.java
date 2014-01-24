@@ -3,6 +3,7 @@ package wisematches.core.personality.player.membership;
 import wisematches.core.Membership;
 import wisematches.core.expiration.ExpirationManager;
 import wisematches.core.personality.player.account.Account;
+import wisematches.core.task.CleaningDayListener;
 
 import java.util.Date;
 
@@ -12,7 +13,7 @@ import java.util.Date;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface MembershipManager extends ExpirationManager<Account, MembershipExpiration> {
+public interface MembershipManager extends ExpirationManager<Account, MembershipExpiration>, CleaningDayListener {
 	void addMembershipListener(MembershipListener l);
 
 	void removeMembershipListener(MembershipListener l);
@@ -38,7 +39,7 @@ public interface MembershipManager extends ExpirationManager<Account, Membership
 	 *
 	 * @param person the person who's membership card must be returned.
 	 * @return the person's membership card or {@code null} if person doesn't have
-	 *         any membership at this moment.
+	 * any membership at this moment.
 	 */
 	MembershipCard getPlayerMembership(Account person);
 

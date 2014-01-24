@@ -11,14 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.personality.player.account.Account;
 import wisematches.core.personality.player.account.AccountRecoveryManager;
 import wisematches.core.personality.player.account.RecoveryToken;
-import wisematches.core.task.CleaningDayListener;
 
 import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class HibernateAccountRecoveryManager implements AccountRecoveryManager, CleaningDayListener {
+public class HibernateAccountRecoveryManager implements AccountRecoveryManager {
 	private SessionFactory sessionFactory;
 
 	private long tokenExpirationTime = DEFAULT_EXPIRATION_TIME;

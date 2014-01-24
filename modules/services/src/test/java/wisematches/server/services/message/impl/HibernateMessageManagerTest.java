@@ -1,8 +1,5 @@
 package wisematches.server.services.message.impl;
 
-import org.easymock.EasyMock;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,10 +16,7 @@ import wisematches.server.services.message.Message;
 import wisematches.server.services.message.MessageDirection;
 import wisematches.server.services.message.MessageManager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -42,6 +36,9 @@ import static org.junit.Assert.assertEquals;
 public class HibernateMessageManagerTest {
 	@Autowired
 	MessageManager messageManager;
+
+	@Autowired
+	SessionFactory sessionFactory;
 
 	public HibernateMessageManagerTest() {
 	}
@@ -152,40 +149,11 @@ public class HibernateMessageManagerTest {
 
 		r.setRestrictions(a);
 
-		final SQLQuery query = EasyMock.createMock(SQLQuery.class);
-		EasyMock.expect(query.executeUpdate()).andReturn(1);
-		EasyMock.replay(query);
-
-		final Session session = EasyMock.createMock(Session.class);
-		EasyMock.expect(session.createSQLQuery(EasyMock.isA(String.class))).andReturn(query);
-		EasyMock.replay(session);
-
-		final SessionFactory sessionFactory = EasyMock.createMock(SessionFactory.class);
-		EasyMock.expect(sessionFactory.getCurrentSession()).andReturn(session);
-		EasyMock.replay(sessionFactory);
-/*
-		expect(template.bulkUpdate("DELETE m FROM player_message as m INNER JOIN account_personality as a ON a.id=m.recipient and " +
-                "((m.notification and " +
-                "(a.membership = 'GUEST' and created < DATE_SUB(curdate(), INTERVAL 0 DAY)) or " +
-                "(a.membership = 'BASIC' and created < DATE_SUB(curdate(), INTERVAL 20 DAY)) or " +
-                "(a.membership = 'SECOND' and created < DATE_SUB(curdate(), INTERVAL 40 DAY)) or " +
-                "(a.membership = 'FIRST' and created < DATE_SUB(curdate(), INTERVAL 40 DAY)) or " +
-                "(a.membership = 'PLATINUM' and created < DATE_SUB(curdate(), INTERVAL 40 DAY))) or " +
-                "(not m.notification and " +
-                "(a.membership = 'GUEST' and created < DATE_SUB(curdate(), INTERVAL 0 DAY)) or " +
-                "(a.membership = 'BASIC' and created < DATE_SUB(curdate(), INTERVAL 10 DAY)) or " +
-                "(a.membership = 'SECOND' and created < DATE_SUB(curdate(), INTERVAL 20 DAY)) or " +
-                "(a.membership = 'FIRST' and created < DATE_SUB(curdate(), INTERVAL 20 DAY)) or " +
-                "(a.membership = 'PLATINUM' and created < DATE_SUB(curdate(), INTERVAL 20 DAY))))")).andReturn(0);
-*/
-
 
 		final HibernateMessageManager m = new HibernateMessageManager();
 		m.setSessionFactory(sessionFactory);
 		m.setRestrictionManager(r);
 
-		m.cleanup();
-
-		EasyMock.verify(sessionFactory, session, query);
+		m.cleanup(new Date());
 	}
 }

@@ -1,6 +1,7 @@
 package wisematches.server.services.message;
 
 import wisematches.core.Player;
+import wisematches.core.task.CleaningDayListener;
 
 import java.util.Collection;
 
@@ -9,7 +10,7 @@ import java.util.Collection;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface MessageManager {
+public interface MessageManager extends CleaningDayListener {
 	void addMessageListener(MessageListener l);
 
 	void removeMessageListener(MessageListener l);
@@ -123,9 +124,4 @@ public interface MessageManager {
 	 * @param direction the message direction.
 	 */
 	void removeMessage(Player person, long messageId, MessageDirection direction);
-
-	/**
-	 * Clears all messages according to rules
-	 */
-	void cleanup();
 }

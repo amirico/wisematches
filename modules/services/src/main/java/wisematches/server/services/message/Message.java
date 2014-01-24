@@ -16,7 +16,7 @@ public interface Message {
 
 	String getText();
 
-	boolean isNotification();
-
 	long getOriginal();
+
+	boolean isNotification();
 }
