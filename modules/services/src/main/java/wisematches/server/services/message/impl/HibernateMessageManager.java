@@ -131,7 +131,7 @@ public class HibernateMessageManager implements MessageManager {
 		final Session session = sessionFactory.getCurrentSession();
 		final SQLQuery sqlQuery = session.createSQLQuery("SELECT count(*) " +
 				"FROM player_message AS m LEFT JOIN player_activity AS a ON m.recipient=a.pid " +
-				"WHERE m.recipient=:pid AND (a.last_messages_check IS null OR m.created>a.last_messages_check)");
+				"WHERE m.recipient=:pid AND (a.last_messages_check IS NULL OR m.created>a.last_messages_check)");
 		sqlQuery.setParameter("pid", person.getId());
 		return ((Number) sqlQuery.uniqueResult()).intValue();
 	}
@@ -214,49 +214,53 @@ public class HibernateMessageManager implements MessageManager {
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void cleanup() {
-		final StringBuilder b = new StringBuilder();
-		b.append("DELETE m FROM player_message as m INNER JOIN account_personality as a ON a.id=m.recipient where ");
-		b.append("(");
-		b.append("(state = 3 and created < DATE_SUB(curdate(), INTERVAL 1 DAY))");
-
-		final Membership[] values = Membership.values();
-		if (restrictionManager.containsRestriction("messages.hist.private")) {
-			b.append(" or ");
-			b.append("(m.notification and ");
-			for (Membership value : values) {
-				Comparable restriction = restrictionManager.getRestrictionThreshold("messages.hist.private", value);
-				if (restriction != null) {
-					b.append("(a.membership = '").append(value.name()).append("' and created < DATE_SUB(curdate(), INTERVAL ").append(restriction).append(" DAY)) or ");
-				}
-			}
-			b.setLength(b.length() - 4);
-			b.append(")");
-		}
-
-		if (restrictionManager.containsRestriction("messages.hist.notice")) {
-			b.append(" or ");
-			b.append("(not m.notification and ");
-			for (Membership value : values) {
-				Comparable restriction = restrictionManager.getRestrictionThreshold("messages.hist.notice", value);
-				if (restriction != null) {
-					b.append("(a.membership = '").append(value.name()).append("' and created < DATE_SUB(curdate(), INTERVAL ").append(restriction).append(" DAY)) or ");
-				}
-			}
-			b.setLength(b.length() - 4);
-			b.append(")");
-		}
-		b.append(")");
-
-		log.info("Cleanup old messages: {}", b);
-
+	@Transactional(propagation = Propagation.MANDATORY)
+	public void cleanup(Date today) {
+		int total = 0;
+		final Session session = sessionFactory.getCurrentSession();
 		removesLock.lock();
 		try {
-			sessionFactory.getCurrentSession().createSQLQuery(b.toString()).executeUpdate();
+			final SQLQuery removeExpired = session.createSQLQuery("DELETE m FROM player_message AS m WHERE m.state=3 AND m.created < (:date-INTERVAL 1 DAY)");
+			removeExpired.setDate("date", today);
+			total += removeExpired.executeUpdate();
+
+			final SQLQuery removeMessages = session.createSQLQuery(createCleanQuery(true));
+			removeMessages.setDate("date", today);
+			total += removeMessages.executeUpdate();
+
+			final SQLQuery removeNotifications = session.createSQLQuery(createCleanQuery(false));
+			removeNotifications.setDate("date", today);
+			total += removeNotifications.executeUpdate();
 		} finally {
 			removesLock.unlock();
 		}
+		log.info("Cleanup old messages: {}", total);
+	}
+
+	private String createCleanQuery(boolean message) {
+		final String name = message ? "messages.hist.private" : "messages.hist.notice";
+
+		if (restrictionManager.containsRestriction(name)) {
+			final StringBuilder b = new StringBuilder();
+			b.append("DELETE m FROM player_message as m LEFT JOIN account_membership as a ON a.pid=m.recipient where ");
+
+			b.append(message ? "m.sender!=0" : "m.sender=0"); // sender=0 - notification
+			b.append(" and (");
+			Comparable restriction = restrictionManager.getRestrictionThreshold(name, Membership.BASIC);
+			if (restriction != null) {
+				b.append("(a.membership is null and created < DATE_SUB(:date, INTERVAL ").append(restriction).append(" DAY)) or ");
+			}
+			for (Membership value : Membership.values()) {
+				restriction = restrictionManager.getRestrictionThreshold(name, value);
+				if (restriction != null) {
+					b.append("(a.membership = ").append(value.ordinal()).append(" and created < DATE_SUB(:date, INTERVAL ").append(restriction).append(" DAY)) or ");
+				}
+			}
+			b.setLength(b.length() - 4);
+			b.append(")");
+			return b.toString();
+		}
+		return "select 1";
 	}
 
 	public void setPersonalityManager(PersonalityManager playerManager) {

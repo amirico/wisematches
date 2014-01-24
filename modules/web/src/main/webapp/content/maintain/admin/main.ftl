@@ -12,14 +12,13 @@
         Last action result: ${result}.
     </div>
 </#if>
+    <div>
+        <a href="moves">Check Moves</a>
+    </div>
 
     <div>
         <a href="membership">Change Membership</a>
         <a href="awards">Grant Award</a>
-    </div>
-
-    <div>
-        <a href="moves">Check Moves</a>
     </div>
 
     <div>
@@ -30,6 +29,10 @@
     <div>
         <a href="regenerateRatings">Regenerate All Ratings</a>
         <a href="regenerateStatistic">Regenerate All Statistic</a>
+    </div>
+
+    <div>
+        <a href="clean/messages">Clean Messages</a>
     </div>
 
     <div>

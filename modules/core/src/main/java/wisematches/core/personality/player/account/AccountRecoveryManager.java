@@ -1,9 +1,11 @@
 package wisematches.core.personality.player.account;
 
+import wisematches.core.task.CleaningDayListener;
+
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public interface AccountRecoveryManager {
+public interface AccountRecoveryManager extends CleaningDayListener {
 	/**
 	 * Generates new recovery token for specified account.
 	 *

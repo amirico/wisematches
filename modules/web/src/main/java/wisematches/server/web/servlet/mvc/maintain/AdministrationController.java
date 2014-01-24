@@ -24,6 +24,7 @@ import wisematches.playground.scribble.ScribblePlayerHand;
 import wisematches.playground.scribble.robot.ScribbleRobotBrain;
 import wisematches.server.services.award.AwardWeight;
 import wisematches.server.services.award.impl.AwardExecutiveCommittee;
+import wisematches.server.services.message.MessageManager;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 
 import java.text.ParseException;
@@ -38,6 +39,7 @@ import java.util.Date;
 @RequestMapping("/maintain/admin")
 public class AdministrationController extends WisematchesController {
 	private AccountManager accountManager;
+	private MessageManager messageManager;
 	private ScribblePlayManager boardManager;
 	private MembershipManager membershipManager;
 	private DictionaryManager dictionaryManager;
@@ -137,6 +139,20 @@ public class AdministrationController extends WisematchesController {
 		return "/content/maintain/admin/awards";
 	}
 
+	@RequestMapping("/clean/messages")
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public String cleanMessagesAction() throws DictionaryException {
+		messageManager.cleanup(new Date());
+		return "redirect:/maintain/admin/main?result=ok";
+	}
+
+	@RequestMapping("/clean/membership")
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public String cleanMembershipAction() throws DictionaryException {
+		membershipManager.cleanup(new Date());
+		return "redirect:/maintain/admin/main?result=ok";
+	}
+
 	@RequestMapping("/dict/flush")
 	public String flushDictionaryAction() throws DictionaryException {
 		final Collection<Language> languages = dictionaryManager.getLanguages();
@@ -167,6 +183,11 @@ public class AdministrationController extends WisematchesController {
 	@Qualifier("awardsManager")
 	public void setExecutiveCommittee(AwardExecutiveCommittee executiveCommittee) {
 		this.executiveCommittee = executiveCommittee;
+	}
+
+	@Autowired
+	public void setMessageManager(MessageManager messageManager) {
+		this.messageManager = messageManager;
 	}
 
 	@Autowired
