@@ -132,7 +132,7 @@ public class HibernateMembershipManager implements MembershipManager {
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	@Transactional(propagation = Propagation.MANDATORY)
 	public void cleanup(Date today) {
 		log.info("Cleanup memberships");
 
