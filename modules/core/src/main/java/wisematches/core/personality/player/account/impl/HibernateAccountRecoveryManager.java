@@ -68,6 +68,7 @@ public class HibernateAccountRecoveryManager implements AccountRecoveryManager {
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
 	public void cleanup(Date today) {
 		try {
 			final Session session = sessionFactory.getCurrentSession();
