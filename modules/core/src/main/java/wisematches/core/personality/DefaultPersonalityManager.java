@@ -182,8 +182,8 @@ public class DefaultPersonalityManager implements PersonalityManager, Initializi
 		public void membershipCardUpdated(Account account, MembershipCard oldCard, MembershipCard newCard) {
 			final DefaultMember personality = getCachedMember(account.getId());
 			if (personality != null) {
-				personality.update(account, newCard.getValidMembership());
-			}
+                personality.update(account, membershipManager.getMembership(account));
+            }
 		}
 	}
 }
