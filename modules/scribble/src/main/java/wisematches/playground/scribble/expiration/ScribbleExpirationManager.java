@@ -75,8 +75,10 @@ public class ScribbleExpirationManager extends AbstractExpirationManager<Long, S
 					board.terminate();
 					return true;
 				} else {
-					log.info("Looks like the game still active: {}", boardId);
-				}
+                    log.info("Looks like the game still active: {}. Current time: {}, Last move time: {}/{}, Millis per move: {}",
+                            boardId, System.currentTimeMillis(), board.getLastMoveTime().getTime(), board.getLastMoveTime(),
+                            board.getSettings().getDaysPerMove() * 86400000);
+                }
 			} else {
 				return true; // no board - nothing to do
 			}

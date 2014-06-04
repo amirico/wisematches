@@ -220,8 +220,8 @@ public class AbstractBoardDescription<S extends GameSettings, H extends Abstract
 	protected boolean isGameExpired() {
 		lock.lock();
 		try {
-			return System.currentTimeMillis() - getLastMoveTime().getTime() > settings.getDaysPerMove() * 86400000;
-		} finally {
+            return (System.currentTimeMillis() - getLastMoveTime().getTime()) >= settings.getDaysPerMove() * 86400000;
+        } finally {
 			lock.unlock();
 		}
 	}
